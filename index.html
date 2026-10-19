@@ -3,12 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Elevguiden – öva i din egen takt | Norvay</title>
-<script>
-  /* Norvay-tema: sätt sparat ljust/mörkt läge innan sidan ritas */
-  (function(){ try { var t = localStorage.getItem('norvay-tema'); if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t); } catch(e) {} })();
-</script>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✏️</text></svg>">
+<title>Elevguiden – öva och väx i din egen takt | Norvay</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23f5f3ec' stroke='%23123f37' stroke-width='1.5'/%3E%3Ctext x='16' y='21' font-family='Georgia,serif' font-size='15' text-anchor='middle' fill='%23123f37'%3EN%3C/text%3E%3C/svg%3E">
 <meta name="description" content="Elevguiden från Norvay: öva svenska, engelska och matte i din egen takt, och lär dig mer om vänskap, att be om hjälp och livet på nätet.">
 <style>
 /* Lokala typsnitt (inga anrop till Google) */
@@ -17,14 +13,18 @@
 @font-face{font-family:'DM Sans';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/dm-sans-latin-600-normal.woff2) format('woff2')}
 @font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/newsreader-latin-400-normal.woff2) format('woff2')}
 @font-face{font-family:'Newsreader';font-style:italic;font-weight:400;font-display:swap;src:url(/fonts/newsreader-latin-400-italic.woff2) format('woff2')}
+
+/* Norvay-listen (samma som i alla Norvay-appar) */
+body{margin:0;}
+.norvay-bar, .norvay-bar * { margin:0; text-transform:none; font-style:normal; } .norvay-bar { box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%; min-height:44px; padding:8px 20px; background:#f5f3ec; border-bottom:1px solid rgba(18,63,55,0.14); font-family:'DM Sans',system-ui,sans-serif; font-size:14px; line-height:1.2; } .norvay-bar a { color:#123f37; text-decoration:none; } .norvay-bar a:hover { text-decoration:underline; text-underline-offset:3px; } .norvay-bar a:focus-visible { outline:3px solid #2f6b5a; outline-offset:3px; border-radius:6px; } .norvay-bar-back { font-weight:500; } .norvay-bar-brand { display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:12px; letter-spacing:0.2em; } .norvay-bar-mark { width:24px; height:24px; border:1.5px solid #123f37; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-size:13px; letter-spacing:0; } @media print { .norvay-bar { display:none !important; } }
+
 /* ==========================================================
    NORVAY TEMA v1 – gemensam bas (kategori: skola)
    ========================================================== */
 :root{
-  color-scheme: light;
   --n-bg:#f5f3ec; --n-surface:#ffffff; --n-ink:#123f37; --n-ink-soft:#4f6b63;
   --n-line:rgba(18,63,55,.14);
-  --n-terracotta:#c9785f; --n-terracotta-soft:#dd9479; --n-terracotta-ink:#a4533c;
+  --n-terracotta:#a4533c; --n-terracotta-soft:#c9785f; --n-terracotta-ink:#a4533c;
   --n-radius:20px; --n-radius-sm:12px;
   --n-font-display:'Newsreader',Georgia,'Times New Roman',serif;
   --n-font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -35,66 +35,39 @@
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme: dark;
-    --n-bg:#0f2a24; --n-surface:#163731; --n-ink:#ece7da; --n-ink-soft:#a9bdb5;
-    --n-line:rgba(236,231,218,.14);
-    --n-terracotta:#d08a72; --n-terracotta-soft:#d08a72; --n-terracotta-ink:#e3a58f;
-    --n-accent:#8fc2a8; --n-tint:#1f4239; --n-on-accent:#0f2a24;
-    --e-bad-bg:#3b2a24; --e-bad-ink:#e3a58f;
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme: dark;
-  --n-bg:#0f2a24; --n-surface:#163731; --n-ink:#ece7da; --n-ink-soft:#a9bdb5;
-  --n-line:rgba(236,231,218,.14);
-  --n-terracotta:#d08a72; --n-terracotta-soft:#d08a72; --n-terracotta-ink:#e3a58f;
-  --n-accent:#8fc2a8; --n-tint:#1f4239; --n-on-accent:#0f2a24;
-  --e-bad-bg:#3b2a24; --e-bad-ink:#e3a58f;
-}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-.n-body{margin:0;background:var(--n-bg);color:var(--n-ink);font-family:var(--n-font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100%}
+.n-body{margin:0;background:var(--n-bg);color:var(--n-ink);font-family:var(--n-font-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100%}
 .n-body *,.n-body *::before,.n-body *::after{box-sizing:border-box}
 @media (prefers-reduced-motion:no-preference){ .n-body{transition:background-color .3s,color .3s} }
-.n-wrap{max-width:1040px;margin:0 auto;padding:0 24px}
-.n-h{font-family:var(--n-font-display);font-weight:400;letter-spacing:-.01em;line-height:1.08;margin:0 0 16px}
-.n-h1{font-size:clamp(2.4rem,6vw,4rem)}
-.n-h2{font-size:clamp(1.7rem,3.6vw,2.4rem)}
+.n-wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.n-h{font-family:var(--n-font-display);font-weight:400;letter-spacing:-.01em;line-height:1.12;margin:0 0 16px}
+.n-h1{font-size:clamp(2.5rem,6.4vw,4.4rem);max-width:15ch}
+.n-h2{font-size:clamp(2rem,4.4vw,2.9rem)}
 .n-h3{font-size:1.3rem;line-height:1.2}
 .n-h em{font-style:italic;color:var(--n-terracotta)}
-.n-lead{font-size:1.1rem;color:var(--n-ink-soft);max-width:52ch;margin:0 0 8px}
+.n-lead{font-size:1.08rem;color:var(--n-ink);max-width:62ch;margin:0 0 8px}
 .n-small{font-size:.9rem;color:var(--n-ink-soft)}
 a{color:inherit}
-.n-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-bottom:1px solid var(--n-line)}
-.n-back{font-size:.95rem;font-weight:500;text-decoration:none;color:var(--n-ink-soft)}
-.n-back:hover{color:var(--n-ink)}
-.n-head-right{display:flex;align-items:center;gap:14px}
-.n-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;font-size:.8rem;letter-spacing:.22em}
-.n-mark{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--n-ink);display:inline-flex;align-items:center;justify-content:center;font-family:var(--n-font-display);font-size:1rem;letter-spacing:0}
-.n-theme{width:40px;height:40px;border-radius:50%;border:1px solid var(--n-line);background:var(--n-surface);color:var(--n-ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
-.n-theme:hover{background:var(--n-tint)}
-.n-theme svg{width:18px;height:18px}
-.n-footer{display:flex;flex-wrap:wrap;gap:8px 24px;padding:28px 0 40px;margin-top:64px;border-top:1px solid var(--n-line);font-size:.9rem;color:var(--n-ink-soft)}
-.n-footer a{text-underline-offset:3px}
-.n-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--n-font-body);font-size:1rem;font-weight:600;padding:13px 24px;border-radius:999px;border:1.5px solid var(--n-accent);background:var(--n-accent);color:var(--n-on-accent);text-decoration:none;cursor:pointer;transition:transform .15s ease,background .15s ease}
-.n-btn:hover:not([disabled]){transform:translateY(-1px)}
+.n-footer{border-top:1px solid var(--n-line);padding:30px 0 48px;margin-top:64px;font-size:.92rem;color:var(--n-ink-soft)}
+.n-footer p{margin:0 0 .8em;max-width:70ch}
+.n-footer a{color:var(--n-accent);text-underline-offset:3px}
+.n-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--n-font-body);font-size:1rem;font-weight:500;padding:10px 20px;min-height:44px;border-radius:999px;border:1px solid var(--n-accent);background:var(--n-accent);color:#fff;text-decoration:none;cursor:pointer;transition:background .15s ease,border-color .15s ease}
+.n-btn:hover:not([disabled]){background:var(--n-ink);border-color:var(--n-ink);color:#fff}
 .n-btn--ghost{background:transparent;color:var(--n-accent)}
-.n-btn--ghost:hover:not([disabled]){background:var(--n-tint)}
+.n-btn--ghost:hover:not([disabled]){background:var(--n-tint);color:var(--n-ink);border-color:var(--n-accent)}
 .n-btn[disabled]{opacity:.5;cursor:default}
 .n-card{background:var(--n-surface);border:1px solid var(--n-line);border-radius:var(--n-radius);padding:24px}
 .n-card--tint{background:var(--n-tint);border-color:transparent}
-.n-chip{display:inline-block;font-size:.82rem;font-weight:600;padding:5px 12px;border-radius:999px;background:var(--n-tint);color:var(--n-accent)}
-.n-hero{padding:48px 0 24px}
-.n-hero--split{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
-.n-motif{position:relative;width:100%;aspect-ratio:1;max-width:300px;justify-self:center}
-.n-motif::before,.n-motif::after{content:"";position:absolute}
-.n-motif--circle::before{inset:10%;border-radius:50%;background:var(--n-tint)}
-.n-motif--circle::after{inset:0;border-radius:50%;border:2px dotted var(--n-accent);opacity:.55}
-@media (max-width:720px){
-  .n-hero--split{grid-template-columns:1fr;gap:24px}
-  .n-motif{max-width:160px;justify-self:start;order:-1}
-}
+.n-chip{display:inline-block;font-size:.85rem;font-weight:500;padding:3px 12px;border-radius:999px;background:var(--n-tint);color:var(--n-ink)}
+.n-hero{padding:44px 0 28px}
+.hero-circle{display:block;width:120px;height:auto;margin:0 0 18px -4px}
+.circle-line{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.8s ease-out .2s forwards}
+.circle-dot{opacity:0;animation:appear 1.2s ease-out 1.5s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes appear{to{opacity:1}}
+.hero-for{color:var(--n-ink-soft);font-size:1rem;margin:0 0 10px}
+.hero-lede{font-size:1.15rem;max-width:56ch;margin:18px 0 0;color:var(--n-ink)}
+@media (prefers-reduced-motion: reduce){ .circle-line{stroke-dashoffset:0} .circle-dot{opacity:1} }
 .n-body :focus-visible{outline:3px solid var(--n-accent);outline-offset:3px;border-radius:6px}
 @media (prefers-reduced-motion:reduce){
   .n-body *,.n-body *::before,.n-body *::after{animation:none!important;transition:none!important}
@@ -247,32 +220,26 @@ textarea:focus{border-color:var(--n-accent);outline:none}
 .plan li:first-child{border-top:0}
 .plan .day{font-weight:600;color:var(--n-accent)}
 @media print{
-  .n-header,.n-footer,.crumbs,.page-head,.facts,.scens,.help,.section-title,.plan-form,.actions{display:none!important}
+  .n-footer,.crumbs,.page-head,.facts,.scens,.help,.section-title,.plan-form,.actions{display:none!important}
   .exercise{border:0!important;padding:0!important}
 }
 
 @media print{
-  :root,:root[data-theme="dark"]{--n-bg:#fff;--n-surface:#fff;--n-ink:#000;--n-ink-soft:#333;--n-line:#ccc;--n-tint:#eee;--n-accent:#000;--n-on-accent:#fff}
+    :root{--n-bg:#fff;--n-surface:#fff;--n-ink:#000;--n-ink-soft:#333;--n-line:#ccc;--n-tint:#eee;--n-accent:#000;--n-on-accent:#fff}
   .n-theme,.actions,.crumbs{display:none!important}
 }
 </style>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="2e81b730-fb1d-4183-9323-de51c8949318" data-tag="elevguiden" data-do-not-track="true"></script>
 </head>
 <body class="n-body" data-kategori="skola">
-<div class="n-wrap">
-  <header class="n-header">
-    <a class="n-back" href="https://norvayapp.se">← Alla verktyg</a>
-    <div class="n-head-right">
-      <a class="n-brand" href="https://norvayapp.se"><span class="n-mark">N</span><span>NORVAY</span></a>
-      <button class="n-theme" id="themeBtn" type="button"></button>
-    </div>
-  </header>
+<div class="norvay-bar"><a class="norvay-bar-back" href="https://norvayapp.se/#verktyg">← Alla verktyg</a><a class="norvay-bar-brand" href="https://norvayapp.se/" aria-label="Norvay startsida"><span class="norvay-bar-mark">N</span><span>NORVAY</span></a></div>
 
+<div class="n-wrap">
   <main class="main" id="app"></main>
 
   <footer class="n-footer">
-    <span>Ett verktyg från <a href="https://norvayapp.se">Norvay</a></span>
-    <a href="https://norvayapp.se/integritet">Integritet</a>
-    <a href="mailto:kontakt@norvayapp.se">Kontakt</a>
+    <p>Sparas bara i den här webbläsaren: hur långt du har kommit i skolämnena. Det du skriver i skrivuppgifter och meddelanden sparas inte. När du ber om feedback skickas texten till en AI-tjänst som skriver svaret, men den sparas inte av Elevguiden.</p>
+    <p>Elevguiden är ett verktyg från Norvay. Frågor och synpunkter: <a href="mailto:kontakt@norvayapp.se">kontakt@norvayapp.se</a></p>
   </footer>
 </div>
 
@@ -947,14 +914,15 @@ function viewHome(){
       <span class="s">${done ? 'Klart för idag. Du kan köra en runda till om du vill.' : 'Fem blandade frågor från det du redan har klarat. Repetition gör att du minns längre.'}</span></button>`);
   }
   const any = Object.keys(progress.areas).some(k => progress.areas[k].best.some(Boolean));
-  return `<section class="n-hero n-hero--split">
-    <div>
-      <span class="n-chip">För elever i åk 7–9</span>
-      <h1 class="n-h n-h1" style="margin-top:16px">Öva i din <em>egen takt.</em></h1>
-      <p class="n-lead">Välj årskurs, ämne och område. Du börjar på en lätt nivå och går vidare när du är redo. Fastnar du får du ledtrådar som hjälper dig att tänka vidare.</p>
-    </div>
-    <div class="n-motif n-motif--circle" aria-hidden="true"></div>
-  </section>
+  return `<header class="n-hero">
+    <svg class="hero-circle" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+      <circle class="circle-line" pathLength="1" cx="60" cy="60" r="52" fill="none" stroke="#2f6b5a" stroke-width="1.6" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+      <circle class="circle-dot" cx="97" cy="23" r="8" fill="#c9785f"/>
+    </svg>
+    <p class="hero-for">Elevguiden, för elever i årskurs 7–9</p>
+    <h1 class="n-h n-h1">Öva och väx i din <em>egen</em> takt</h1>
+    <p class="hero-lede">Öva svenska, engelska och matte på din nivå, med ledtrådar när du fastnar. Lär dig också mer om vänskap, att be om hjälp och livet på nätet.</p>
+  </header>
   ${cards.length ? `<div class="home-cards">${cards.join('')}</div>` : ''}
   <section class="path">
     <h2 class="n-h n-h2">Skolämnen</h2>
@@ -1457,29 +1425,6 @@ $app.addEventListener('input', e => {
     if (wc) wc.textContent = `${countWords(e.target.value)} ord`;
   }
 });
-
-/* ==========================================================
-   NATTLÄGE (samma lösning som i alla Norvay-appar)
-   ========================================================== */
-const MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
-const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
-const themeBtn = document.getElementById('themeBtn');
-const mq = window.matchMedia('(prefers-color-scheme: dark)');
-function isDark(){ const t = document.documentElement.getAttribute('data-theme'); return t ? t === 'dark' : mq.matches; }
-function paintThemeBtn(){
-  const dark = isDark();
-  themeBtn.innerHTML = dark ? SUN : MOON;
-  themeBtn.setAttribute('aria-label', dark ? 'Byt till ljust läge' : 'Byt till mörkt läge');
-  themeBtn.setAttribute('aria-pressed', String(dark));
-}
-themeBtn.addEventListener('click', () => {
-  const nextTheme = isDark() ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', nextTheme);
-  try { localStorage.setItem('norvay-tema', nextTheme); } catch(e) {}
-  paintThemeBtn();
-});
-if (mq.addEventListener) mq.addEventListener('change', paintThemeBtn);
-paintThemeBtn();
 
 render();
 </script>
