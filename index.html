@@ -1,0 +1,1487 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Elevguiden – öva i din egen takt | Norvay</title>
+<script>
+  /* Norvay-tema: sätt sparat ljust/mörkt läge innan sidan ritas */
+  (function(){ try { var t = localStorage.getItem('norvay-tema'); if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t); } catch(e) {} })();
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✏️</text></svg>">
+<meta name="description" content="Elevguiden från Norvay: öva svenska, engelska och matte i din egen takt, och lär dig mer om vänskap, att be om hjälp och livet på nätet.">
+<style>
+/* Lokala typsnitt (inga anrop till Google) */
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/dm-sans-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/dm-sans-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/dm-sans-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/newsreader-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Newsreader';font-style:italic;font-weight:400;font-display:swap;src:url(/fonts/newsreader-latin-400-italic.woff2) format('woff2')}
+/* ==========================================================
+   NORVAY TEMA v1 – gemensam bas (kategori: skola)
+   ========================================================== */
+:root{
+  color-scheme: light;
+  --n-bg:#f5f3ec; --n-surface:#ffffff; --n-ink:#123f37; --n-ink-soft:#4f6b63;
+  --n-line:rgba(18,63,55,.14);
+  --n-terracotta:#c9785f; --n-terracotta-soft:#dd9479; --n-terracotta-ink:#a4533c;
+  --n-radius:20px; --n-radius-sm:12px;
+  --n-font-display:'Newsreader',Georgia,'Times New Roman',serif;
+  --n-font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --n-accent:#2f6b5a; --n-tint:#d7e2d7; --n-on-accent:#ffffff;
+  /* Appens egna rättmarkeringar, härledda ur temat */
+  --e-bad-bg:#f6e4dd; --e-bad-ink:#a4533c;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --n-bg:#0f2a24; --n-surface:#163731; --n-ink:#ece7da; --n-ink-soft:#a9bdb5;
+    --n-line:rgba(236,231,218,.14);
+    --n-terracotta:#d08a72; --n-terracotta-soft:#d08a72; --n-terracotta-ink:#e3a58f;
+    --n-accent:#8fc2a8; --n-tint:#1f4239; --n-on-accent:#0f2a24;
+    --e-bad-bg:#3b2a24; --e-bad-ink:#e3a58f;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --n-bg:#0f2a24; --n-surface:#163731; --n-ink:#ece7da; --n-ink-soft:#a9bdb5;
+  --n-line:rgba(236,231,218,.14);
+  --n-terracotta:#d08a72; --n-terracotta-soft:#d08a72; --n-terracotta-ink:#e3a58f;
+  --n-accent:#8fc2a8; --n-tint:#1f4239; --n-on-accent:#0f2a24;
+  --e-bad-bg:#3b2a24; --e-bad-ink:#e3a58f;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+.n-body{margin:0;background:var(--n-bg);color:var(--n-ink);font-family:var(--n-font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100%}
+.n-body *,.n-body *::before,.n-body *::after{box-sizing:border-box}
+@media (prefers-reduced-motion:no-preference){ .n-body{transition:background-color .3s,color .3s} }
+.n-wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+.n-h{font-family:var(--n-font-display);font-weight:400;letter-spacing:-.01em;line-height:1.08;margin:0 0 16px}
+.n-h1{font-size:clamp(2.4rem,6vw,4rem)}
+.n-h2{font-size:clamp(1.7rem,3.6vw,2.4rem)}
+.n-h3{font-size:1.3rem;line-height:1.2}
+.n-h em{font-style:italic;color:var(--n-terracotta)}
+.n-lead{font-size:1.1rem;color:var(--n-ink-soft);max-width:52ch;margin:0 0 8px}
+.n-small{font-size:.9rem;color:var(--n-ink-soft)}
+a{color:inherit}
+.n-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;border-bottom:1px solid var(--n-line)}
+.n-back{font-size:.95rem;font-weight:500;text-decoration:none;color:var(--n-ink-soft)}
+.n-back:hover{color:var(--n-ink)}
+.n-head-right{display:flex;align-items:center;gap:14px}
+.n-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;font-size:.8rem;letter-spacing:.22em}
+.n-mark{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--n-ink);display:inline-flex;align-items:center;justify-content:center;font-family:var(--n-font-display);font-size:1rem;letter-spacing:0}
+.n-theme{width:40px;height:40px;border-radius:50%;border:1px solid var(--n-line);background:var(--n-surface);color:var(--n-ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.n-theme:hover{background:var(--n-tint)}
+.n-theme svg{width:18px;height:18px}
+.n-footer{display:flex;flex-wrap:wrap;gap:8px 24px;padding:28px 0 40px;margin-top:64px;border-top:1px solid var(--n-line);font-size:.9rem;color:var(--n-ink-soft)}
+.n-footer a{text-underline-offset:3px}
+.n-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--n-font-body);font-size:1rem;font-weight:600;padding:13px 24px;border-radius:999px;border:1.5px solid var(--n-accent);background:var(--n-accent);color:var(--n-on-accent);text-decoration:none;cursor:pointer;transition:transform .15s ease,background .15s ease}
+.n-btn:hover:not([disabled]){transform:translateY(-1px)}
+.n-btn--ghost{background:transparent;color:var(--n-accent)}
+.n-btn--ghost:hover:not([disabled]){background:var(--n-tint)}
+.n-btn[disabled]{opacity:.5;cursor:default}
+.n-card{background:var(--n-surface);border:1px solid var(--n-line);border-radius:var(--n-radius);padding:24px}
+.n-card--tint{background:var(--n-tint);border-color:transparent}
+.n-chip{display:inline-block;font-size:.82rem;font-weight:600;padding:5px 12px;border-radius:999px;background:var(--n-tint);color:var(--n-accent)}
+.n-hero{padding:48px 0 24px}
+.n-hero--split{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+.n-motif{position:relative;width:100%;aspect-ratio:1;max-width:300px;justify-self:center}
+.n-motif::before,.n-motif::after{content:"";position:absolute}
+.n-motif--circle::before{inset:10%;border-radius:50%;background:var(--n-tint)}
+.n-motif--circle::after{inset:0;border-radius:50%;border:2px dotted var(--n-accent);opacity:.55}
+@media (max-width:720px){
+  .n-hero--split{grid-template-columns:1fr;gap:24px}
+  .n-motif{max-width:160px;justify-self:start;order:-1}
+}
+.n-body :focus-visible{outline:3px solid var(--n-accent);outline-offset:3px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){
+  .n-body *,.n-body *::before,.n-body *::after{animation:none!important;transition:none!important}
+}
+
+/* ==========================================================
+   ELEVGUIDEN – appens egna delar (form: cirkel, layout: delad)
+   ========================================================== */
+.main{max-width:760px}
+.crumbs{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;padding:20px 0 4px;font-size:.92rem;color:var(--n-ink-soft)}
+.crumbs button{font:inherit;background:none;border:0;padding:0;color:var(--n-ink-soft);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.crumbs button:hover{color:var(--n-ink)}
+.crumbs .here{color:var(--n-ink)}
+.page-head{padding:20px 0 8px}
+.section-title{margin-top:40px}
+
+.grades{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:640px}
+.grade{font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--n-surface);border:1px solid var(--n-line);border-radius:var(--n-radius);padding:18px 20px 16px;transition:background .15s,border-color .15s}
+.grade:hover{background:var(--n-tint);border-color:transparent}
+.grade .num{display:block;font-family:var(--n-font-display);font-size:clamp(3.2rem,12vw,5.2rem);line-height:.95}
+.grade .lbl{color:var(--n-ink-soft);font-size:.95rem}
+
+.list{display:grid;gap:12px}
+.row{display:flex;align-items:center;gap:16px;width:100%;font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--n-surface);border:1px solid var(--n-line);border-radius:var(--n-radius);padding:16px 20px;transition:border-color .15s,background .15s}
+.row:hover:not([disabled]){border-color:var(--n-accent)}
+.row .txt{flex:1;min-width:0}
+.row .t{display:block;font-weight:600;font-size:1.06rem}
+.row .s{display:block;color:var(--n-ink-soft);font-size:.92rem}
+.row .go{color:var(--n-accent);font-size:1.4rem;line-height:1}
+.row[disabled]{background:transparent;border-style:dashed;cursor:default;color:var(--n-ink-soft)}
+.badge{flex:none;width:46px;height:46px;border-radius:50%;border:1.5px solid var(--n-ink);display:inline-flex;align-items:center;justify-content:center;font-family:var(--n-font-display);font-size:1.1rem}
+
+.intro p{margin:0 0 10px;max-width:60ch}
+.example{margin-top:18px;padding-top:16px;border-top:1px solid var(--n-line)}
+.example ol{margin:8px 0 0;padding-left:22px}
+.example li{margin:4px 0}
+
+.stairs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:end;margin-top:12px}
+.step{display:flex;flex-direction:column;justify-content:flex-end;gap:4px;font:inherit;color:inherit;text-align:left;background:var(--n-surface);border:1px solid var(--n-line);border-radius:var(--n-radius);padding:16px;cursor:pointer;min-height:calc(8rem + var(--i) * 2.6rem);transition:border-color .15s,background .15s}
+.step:hover{border-color:var(--n-accent)}
+.step .name{font-family:var(--n-font-display);font-size:1.4rem;line-height:1.1}
+.step .d{font-size:.88rem;color:var(--n-ink-soft);line-height:1.4}
+.step .st{margin-top:8px;align-self:flex-start}
+.step.done{background:var(--n-tint);border-color:transparent}
+.step.done .st{background:var(--n-surface)}
+.step.locked{background:transparent;border-style:dashed;cursor:default;color:var(--n-ink-soft)}
+.step.locked:hover{border-color:var(--n-line)}
+.step.locked .name{color:var(--n-ink-soft)}
+.step .try{font:inherit;font-size:.86rem;background:none;border:0;padding:0;margin-top:6px;color:var(--n-accent);text-decoration:underline;text-underline-offset:3px;cursor:pointer;align-self:flex-start}
+.step .lockinfo{font-size:.86rem;margin-top:8px}
+@media (max-width:560px){
+  .stairs{grid-template-columns:1fr;align-items:stretch}
+  .step{min-height:0;margin-left:calc(var(--i) * 18px)}
+}
+
+.qhead{display:flex;justify-content:space-between;gap:16px;font-size:.92rem;color:var(--n-ink-soft);padding-top:20px}
+.bar{height:6px;background:var(--n-tint);border-radius:999px;overflow:hidden;margin:8px 0 24px}
+.bar span{display:block;height:100%;background:var(--n-accent);border-radius:999px;transition:width .3s}
+.instr{color:var(--n-ink-soft);margin:0}
+.prompt{font-family:var(--n-font-display);font-size:clamp(1.5rem,4vw,1.9rem);line-height:1.25;margin:6px 0 20px;max-width:34ch}
+.opts{display:grid;gap:10px;max-width:520px}
+.opt{font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--n-surface);border:1.5px solid var(--n-line);border-radius:var(--n-radius-sm);padding:12px 16px;transition:border-color .15s,background .15s}
+.opt:hover:not([disabled]){border-color:var(--n-accent)}
+.opt[aria-pressed="true"]{border-color:var(--n-accent);background:var(--n-tint)}
+.opt.right{border-color:var(--n-accent);background:var(--n-tint);font-weight:600}
+.opt.wrong{border-color:transparent;background:var(--e-bad-bg);color:var(--e-bad-ink);text-decoration:line-through}
+.opt[disabled]{cursor:default}
+.lbl-field{display:block;font-weight:600;margin-bottom:6px}
+.answer{font:inherit;font-size:1.15rem;width:100%;max-width:280px;padding:11px 16px;border:1.5px solid var(--n-line);border-radius:var(--n-radius-sm);background:var(--n-surface);color:var(--n-ink)}
+.answer:focus{border-color:var(--n-accent);outline:none}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:20px}
+.textlink{font:inherit;background:none;border:0;padding:8px 4px;color:var(--n-accent);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.msg{margin-top:18px;padding:12px 18px;border-radius:var(--n-radius-sm);font-weight:600;max-width:560px}
+.msg.ok{background:var(--n-tint);color:var(--n-accent)}
+.msg.bad{background:var(--e-bad-bg);color:var(--e-bad-ink)}
+.hint{margin-top:12px;padding:12px 18px;background:var(--n-surface);border:1px solid var(--n-line);border-left:4px solid var(--n-terracotta-soft);border-radius:var(--n-radius-sm);max-width:560px}
+.solution{margin-top:12px;max-width:560px;padding:16px 18px}
+
+details.text{margin:0 0 24px;padding:16px 24px}
+details.text summary{cursor:pointer;font-weight:600}
+.story{max-width:60ch;font-size:1.05rem;line-height:1.75}
+.story h3{margin:14px 0 4px}
+.story p{margin:0 0 12px}
+
+.score{margin:8px 0 12px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.score .big{font-family:var(--n-font-display);font-size:clamp(3.6rem,13vw,5.4rem);line-height:1}
+.task{font-family:var(--n-font-display);font-size:1.35rem;line-height:1.3;margin:0 0 14px}
+.check{margin:6px 0 0;padding-left:22px}
+.check li{margin:3px 0}
+textarea{width:100%;min-height:13rem;font:inherit;line-height:1.65;padding:14px 16px;border:1.5px solid var(--n-line);border-radius:var(--n-radius-sm);background:var(--n-surface);color:var(--n-ink);resize:vertical}
+textarea:focus{border-color:var(--n-accent);outline:none}
+.feedback{margin-top:20px;white-space:pre-wrap}
+.feedback strong{display:block;margin-bottom:6px;white-space:normal}
+
+.home-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:0 0 40px}
+.home-card{font:inherit;color:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:20px 22px;border-radius:var(--n-radius);border:1px solid var(--n-line);background:var(--n-surface);transition:border-color .15s,background .15s}
+.home-card:hover{border-color:var(--n-accent)}
+.home-card.tint{background:var(--n-tint);border-color:transparent}
+.home-card .k{font-size:.86rem;font-weight:600;color:var(--n-accent)}
+.home-card .h{font-family:var(--n-font-display);font-size:1.45rem;line-height:1.2}
+.home-card .s{font-size:.92rem;color:var(--n-ink-soft)}
+.prompt-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.story-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.speak{flex:none;display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:.86rem;font-weight:600;color:var(--n-accent);background:var(--n-surface);border:1px solid var(--n-line);border-radius:999px;padding:6px 12px;cursor:pointer;margin-top:6px}
+.speak:hover{background:var(--n-tint)}
+.speak svg{width:16px;height:16px}
+.meta{font-size:.86rem;font-weight:600;color:var(--n-accent);margin:0 0 4px}
+.diag-card{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;margin-top:16px;padding:18px 24px}
+.diag-card p{margin:0;max-width:46ch}
+.review{margin-top:28px;padding:16px 24px}
+.review summary{cursor:pointer;font-weight:600}
+.review-item{padding:12px 0;border-top:1px solid var(--n-line)}
+.review-item:first-of-type{margin-top:8px}
+.review-item p{margin:0}
+.review-item .p{font-weight:600}
+.prog-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;padding:14px 0;border-top:1px solid var(--n-line)}
+.prog-row:first-child{border-top:0;padding-top:0}
+.prog-row:last-child{padding-bottom:0}
+.prog-row .chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip-off{display:inline-block;font-size:.82rem;font-weight:600;padding:4px 11px;border-radius:999px;border:1px dashed var(--n-line);color:var(--n-ink-soft)}
+.path{margin-top:48px}
+.path .n-lead{margin-bottom:18px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.fact.wide{grid-column:1/-1}
+.fact p{margin:0;max-width:60ch}
+.fact .n-h3{margin-bottom:10px}
+.steps{margin:0;padding-left:22px}
+.steps li{margin:4px 0}
+.roles{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px 24px}
+.roles dt{font-weight:600}
+.roles dd{margin:2px 0 0;color:var(--n-ink-soft);font-size:.95rem}
+.scens{display:grid;gap:14px}
+.situation{font-family:var(--n-font-display);font-size:1.3rem;line-height:1.3;margin:0 0 6px;max-width:44ch}
+.choices{display:grid;gap:10px}
+.choice{width:100%;font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--n-surface);border:1.5px solid var(--n-line);border-radius:var(--n-radius-sm);padding:12px 16px;transition:border-color .15s,background .15s}
+.choice:hover{border-color:var(--n-accent)}
+.choice.is-good{border-color:var(--n-accent);background:var(--n-tint)}
+.choice.is-think{border-color:var(--n-terracotta-soft)}
+.resp{margin:8px 0 4px 14px;padding:10px 16px;border-left:4px solid var(--n-accent);background:var(--n-bg);border-radius:0 var(--n-radius-sm) var(--n-radius-sm) 0;max-width:62ch}
+.resp.think{border-left-color:var(--n-terracotta-soft)}
+.reflect{margin:0;padding-left:22px}
+.reflect li{margin:6px 0}
+.help{border-left:4px solid var(--n-accent)}
+.help-list{margin:0;padding-left:20px}
+.help-list li{margin:6px 0}
+.plan-form select.answer{max-width:200px}
+.plan-form input.answer{max-width:360px}
+.plan{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px}
+.plan li{display:grid;grid-template-columns:72px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--n-line)}
+.plan li:first-child{border-top:0}
+.plan .day{font-weight:600;color:var(--n-accent)}
+@media print{
+  .n-header,.n-footer,.crumbs,.page-head,.facts,.scens,.help,.section-title,.plan-form,.actions{display:none!important}
+  .exercise{border:0!important;padding:0!important}
+}
+
+@media print{
+  :root,:root[data-theme="dark"]{--n-bg:#fff;--n-surface:#fff;--n-ink:#000;--n-ink-soft:#333;--n-line:#ccc;--n-tint:#eee;--n-accent:#000;--n-on-accent:#fff}
+  .n-theme,.actions,.crumbs{display:none!important}
+}
+</style>
+</head>
+<body class="n-body" data-kategori="skola">
+<div class="n-wrap">
+  <header class="n-header">
+    <a class="n-back" href="https://norvayapp.se">← Alla verktyg</a>
+    <div class="n-head-right">
+      <a class="n-brand" href="https://norvayapp.se"><span class="n-mark">N</span><span>NORVAY</span></a>
+      <button class="n-theme" id="themeBtn" type="button"></button>
+    </div>
+  </header>
+
+  <main class="main" id="app"></main>
+
+  <footer class="n-footer">
+    <span>Ett verktyg från <a href="https://norvayapp.se">Norvay</a></span>
+    <a href="https://norvayapp.se/integritet">Integritet</a>
+    <a href="mailto:kontakt@norvayapp.se">Kontakt</a>
+  </footer>
+</div>
+
+<script>
+/* ==========================================================
+   HJÄLPFUNKTIONER
+   ========================================================== */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rnd = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const shuffle = a => { const b=a.slice(); for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; };
+const fmt = n => String(Math.round(n*1000)/1000).replace('.', ',');
+const gcd = (a,b) => b ? gcd(b, a % b) : Math.abs(a);
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const near = (a,b) => Math.abs(a-b) < 1e-6;
+
+/* Tolkar tal: 12 / 0,25 / 150 kr / 25 % / 3/4 */
+function parseNum(raw){
+  const s = String(raw).toLowerCase().replace(/kr|%|procent|st/g,'').replace(/[\s\u00a0]/g,'').replace(/,/g,'.');
+  const f = s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);
+  if (f) { const d = parseFloat(f[2]); return d ? parseFloat(f[1]) / d : NaN; }
+  if (!/^-?\d+(\.\d+)?$/.test(s)) return NaN;
+  return parseFloat(s);
+}
+function parseFrac(raw){
+  const m = String(raw).replace(/\s/g,'').match(/^(\d+)\/(\d+)$/);
+  return m ? {n:+m[1], d:+m[2]} : null;
+}
+const norm = s => String(s).toLowerCase().trim().replace(/\s+/g,' ').replace(/[.!?]+$/,'');
+
+/* Frågebyggare
+   diagnose(raw) returnerar en förklaring av ett vanligt fel, eller null */
+function numQ(o){
+  const wrongs = (o.wrongs || []).filter(x => !near(x[0], o.answer));
+  return { kind:'number', instr:'Skriv svaret som ett tal.', ...o,
+    diagnose: raw => { const v = parseNum(raw); const w = wrongs.find(x => near(x[0], v)); return w ? w[1] : null; } };
+}
+function fracQ(o){ return { kind:'fraction', instr:'Skriv svaret som ett bråk, till exempel 2/3.', ...o }; }
+function textQ(o){ return { kind:'text', accept:[], ...o }; }
+function choiceQ(o){ return { kind:'choice', ...o, options: shuffle(o.options) }; }
+function mix(gens, n){ const out=[]; for(let i=0;i<n;i++) out.push(gens[i % gens.length]()); return shuffle(out); }
+
+/* ==========================================================
+   ÄMNEN OCH OMRÅDEN
+   Fördelningen kan ändras här om lärarna vill flytta ett område.
+   ========================================================== */
+const SUBJECTS = { svenska:{name:'Svenska'}, engelska:{name:'Engelska'}, matte:{name:'Matematik'} };
+const ORDER = ['svenska','engelska','matte'];
+const AREAS = {
+  7:{
+    svenska:[['lasforstaelse','Läsförståelse: berättande text'],['ordklasser','Ordklasser'],['berattande','Skriva berättande text']],
+    engelska:[['vardagsord','Vardagsord'],['verbtider','Presens och preteritum'],['korta-texter','Läsa och förstå korta texter']],
+    matte:[['brak','Bråk'],['procent','Procent'],['geometri','Geometri: area och omkrets']]
+  },
+  8:{
+    svenska:[['satsdelar','Satsdelar'],['utredande','Skriva utredande text'],['kallkritik','Källkritisk läsning']],
+    engelska:[['fler-verbtider','Fler verbtider'],['faktatext','Läsa faktatext'],['beskrivande','Skriva beskrivande text']],
+    matte:[['algebra','Algebra och uttryck'],['ekvationer','Ekvationer'],['statistik','Statistik']]
+  },
+  9:{
+    svenska:[['argumenterande','Skriva argumenterande text'],['analys','Analysera skönlitteratur'],['sprakriktighet','Språkriktighet']],
+    engelska:[['argumentera','Argumentera på engelska'],['grammatik','Avancerad grammatik'],['langre-texter','Läsa längre texter']],
+    matte:[['funktioner','Funktioner'],['sannolikhet','Sannolikhet'],['problemlosning','Problemlösning inför nationella provet']]
+  }
+};
+
+/* ==========================================================
+   MATEMATIK ÅK 7: PROCENT
+   ========================================================== */
+const P = {
+  g50(){ const N=2*rnd(10,200); return numQ({ prompt:`Vad är 50 % av ${N}?`, answer:N/2,
+    hints:['Hur stor del är 50 % – en liten del, hälften eller allt?','Hälften får du genom att dela med ett visst tal. Vilket?'],
+    solution:`50 % är hälften. ${N} / 2 = ${fmt(N/2)}`,
+    wrongs:[[N*2,'Du har gångrat med 2. 50 % är hälften, så svaret ska bli mindre än talet.'],[N,'Det där är hela talet, alltså 100 %. 50 % är bara hälften.']] }); },
+  g10(){ const N=10*rnd(3,90); return numQ({ prompt:`Vad är 10 % av ${N}?`, answer:N/10,
+    hints:['Om du delar något i tio lika stora delar, hur många procent är en del?','Vad blir talet om du delar det med 10?'],
+    solution:`10 % är en tiondel. ${N} / 10 = ${fmt(N/10)}`,
+    wrongs:[[N*10,'Du har gångrat med 10. 10 % är en tiondel, så svaret ska bli mindre än talet.'],[N,'Det där är hela talet. 10 % är bara en tiondel.']] }); },
+  g25(){ const N=4*rnd(5,100); return numQ({ prompt:`Vad är 25 % av ${N}?`, answer:N/4,
+    hints:['Hur många gånger får 25 % plats i 100 %?','Fyra lika stora delar. Vad blir talet delat med 4?'],
+    solution:`25 % är en fjärdedel. ${N} / 4 = ${fmt(N/4)}`,
+    wrongs:[[N/2,'Det där är 50 %. 25 % är hälften av hälften.'],[N*4,'Du har gångrat med 4. Svaret ska bli mindre än talet.']] }); },
+  gdec(){ const p=pick([5,8,20,35,50,60,75,90]); return numQ({ instr:'Skriv svaret i decimalform, till exempel 0,3.', prompt:`Skriv ${p} % i decimalform.`, answer:p/100,
+    hints:[`Procent betyder hundradelar. Hur skriver du ${p} hundradelar?`,`${p} hundradelar är ${p} / 100. Vad blir det?`],
+    solution:`${p} % = ${p} / 100 = ${fmt(p/100)}`,
+    wrongs:[[p,'Det där är fortfarande procenttalet. I decimalform delar du med 100.'],[p/10,'Nästan! Du har delat med 10. Procent är hundradelar, så dela med 100.'],[p*100,'Du har gångrat. För att få decimalform delar du med 100.']] }); },
+
+  f1(){ const p=pick([5,15,20,30,40,60,75]), N=20*rnd(3,40), a=p*N/100; return numQ({ prompt:`Vad är ${p} % av ${N}?`, answer:a,
+    hints:['Kan du räkna ut 1 % av talet först? Hur gör du det?',`1 % av ${N} är ${fmt(N/100)}. Hur många sådana procent behöver du?`],
+    solution:`1 % av ${N} = ${fmt(N/100)}. ${p} % = ${fmt(N/100)} · ${p} = ${fmt(a)}`,
+    wrongs:[[p*N,'Du glömde dela med 100. Procent betyder hundradelar.'],[p*N/10,'Du delade med 10. Procent betyder hundradelar, så dela med 100.'],[N/p,'Du delade talet med procenttalet. Räkna först ut 1 % genom att dela med 100.']] }); },
+  f2(){ const N=20*rnd(10,60), p=pick([10,20,25,30,50]), thing=pick(['En jacka','En cykel','En ryggsäck','En lampa','En skateboard']); const r=N*p/100;
+    return numQ({ instr:'Skriv svaret i kronor, bara talet.', prompt:`${thing} kostar ${N} kr. Den säljs med ${p} % rabatt. Vad kostar den nu?`, answer:N-r,
+    hints:['Vilka två steg behövs? Först rabatten i kronor, och sedan …?',`Rabatten är ${fmt(r)} kr. Hur mycket blir kvar av ${N} kr?`],
+    solution:`Rabatt: ${p} % av ${N} = ${fmt(r)} kr. Nytt pris: ${N} − ${fmt(r)} = ${fmt(N-r)} kr`,
+    wrongs:[[r,'Det där är rabatten, alltså hur mycket billigare den blir. Vad kostar den när rabatten är borträknad?'],[N+r,'Du lade till rabatten. Rabatt betyder att priset blir lägre.']] }); },
+  f3(){ const B=pick([20,40,200,400]), p=pick([10,20,25,50,75]), A=B*p/100;
+    return numQ({ instr:'Skriv svaret i procent, bara talet.', prompt:`Hur många procent är ${A} av ${B}?`, answer:p,
+    hints:[`Hur stor del av ${B} är ${A}? Kan du skriva det som en division?`,`${A} / ${B} = ${fmt(A/B)}. Hur gör du om ett decimaltal till procent?`],
+    solution:`${A} / ${B} = ${fmt(A/B)} = ${p} %`,
+    wrongs:[[A/B,'Rätt uträkning! Gör nu om decimaltalet till procent genom att gånga med 100.'],[B/A*100,'Du delade åt fel håll. Dela delen med det hela: '+A+' / '+B+'.']] }); },
+
+  u1(){ const A=pick([200,400,500,800]), p=pick([5,10,15,20,25,30]), B=A+A*p/100;
+    return numQ({ instr:'Skriv svaret i procent, bara talet.', prompt:`Priset på en konsertbiljett höjdes från ${A} kr till ${B} kr. Med hur många procent höjdes priset?`, answer:p,
+    hints:['Hur många kronor ökade priset?',`Ökningen är ${B-A} kr. Hur många procent är det av det gamla priset, ${A} kr?`],
+    solution:`Ökning: ${B} − ${A} = ${B-A} kr. ${B-A} / ${A} = ${fmt((B-A)/A)} = ${p} %`,
+    wrongs:[[B-A,'Det där är ökningen i kronor. Hur många procent av det gamla priset är den?'],[(B-A)/B*100,'Du jämförde med det nya priset. Förändringen räknas mot det gamla priset.'],[(B-A)/A,'Rätt uträkning! Gör nu om decimaltalet till procent.']] }); },
+  u2(){ const up=Math.random()<.5, p=pick([3,8,12,15,20,35]), f=up?1+p/100:1-p/100;
+    return numQ({ instr:'Skriv svaret i decimalform.', prompt:`Ett pris ${up?'ökar':'minskar'} med ${p} %. Vilken förändringsfaktor ska du gånga det gamla priset med?`, answer:f,
+    hints:['Om det gamla priset är 100 %, hur många procent är då det nya priset?', up?`100 % + ${p} % = ${100+p} %. Hur skriver du det i decimalform?`:`100 % − ${p} % = ${100-p} %. Hur skriver du det i decimalform?`],
+    solution:`${up?100+p:100-p} % = ${fmt(f)}. Förändringsfaktorn är ${fmt(f)}.`,
+    wrongs:[[p/100,'Det där är bara själva förändringen. Faktorn ska också innehålla hela det gamla priset, alltså 1.'],[up?1-p/100:1+p/100,'Kolla en gång till om priset ökar eller minskar.'],[up?100+p:100-p,'Rätt procent! Skriv det nu i decimalform genom att dela med 100.']] }); },
+  u3(){ const A=100*rnd(2,15), p=pick([10,20,25,50]), B=A*(100-p)/100;
+    return numQ({ instr:'Skriv svaret i kronor, bara talet.', prompt:`Efter ${p} % rabatt kostar en vara ${B} kr. Vad kostade den före rabatten?`, answer:A,
+    hints:[`Om rabatten är ${p} %, hur många procent av det gamla priset betalar du?`,`${B} kr motsvarar ${100-p} %. Hur mycket är då 1 %?`],
+    solution:`${B} kr = ${100-p} %. 1 % = ${fmt(B/(100-p))} kr. 100 % = ${fmt(A)} kr`,
+    wrongs:[[B+B*p/100,'Ett vanligt fel! Rabatten räknades på det gamla priset, så du kan inte lägga på '+p+' % på det nya priset.'],[B-B*p/100,'Priset före rabatten måste vara högre än '+B+' kr.']] }); }
+};
+
+/* ==========================================================
+   MATEMATIK ÅK 7: BRÅK
+   ========================================================== */
+const BR = {
+  g1(){ const d=pick([2,3,4,5,10]), N=d*rnd(2,20); return numQ({ prompt:`Vad är 1/${d} av ${N}?`, answer:N/d,
+    hints:[`Om du delar ${N} i ${d} lika stora delar, hur stor blir en del?`,`Vad blir ${N} delat med ${d}?`],
+    solution:`1/${d} är en av ${d} lika delar. ${N} / ${d} = ${N/d}`,
+    wrongs:[[N*d,`Du har gångrat. 1/${d} är en av ${d} lika delar, så svaret ska bli mindre än ${N}.`]] }); },
+  g2(){ const [a,b]=pick([[1,2],[1,4],[3,4],[1,5],[2,5],[3,10],[7,10],[1,10]]); return numQ({ instr:'Skriv svaret i decimalform, till exempel 0,5.', prompt:`Skriv ${a}/${b} i decimalform.`, answer:a/b,
+    hints:['Ett bråkstreck betyder division. Vad är täljaren delat med nämnaren?', b===10?'Tiondelar skrivs som första siffran efter decimalkommat.':`Tänk på pengar: ${a}/${b} av 100 kr är ${100*a/b} kr. Hur stor del av 100 är det?`],
+    solution:`${a}/${b} = ${a} / ${b} = ${fmt(a/b)}`,
+    wrongs:[[b/a,`Du har delat åt fel håll. Täljaren delas med nämnaren: ${a} / ${b}.`]] }); },
+  g3(){ let x, y, same;
+    if (Math.random()<.5){ const d=pick([5,6,8,10]); let a=rnd(1,d-1), b=rnd(1,d-1); while(b===a) b=rnd(1,d-1); x=[a,d]; y=[b,d]; same='nämnare'; }
+    else { const a=pick([1,2,3]); let d1=rnd(a+1,9), d2=rnd(a+1,9); while(d2===d1) d2=rnd(a+1,9); x=[a,d1]; y=[a,d2]; same='täljare'; }
+    const big = x[0]/x[1] > y[0]/y[1] ? x : y, small = big===x ? y : x;
+    const bs=`${big[0]}/${big[1]}`, ss=`${small[0]}/${small[1]}`;
+    return choiceQ({ instr:'Välj det bråk som är störst.', prompt:`Vilket bråk är störst: ${x[0]}/${x[1]} eller ${y[0]}/${y[1]}?`, options:[bs,ss], answer:bs,
+      hints: same==='nämnare' ? ['Delarna är lika stora i båda bråken. Vad skiljer dem åt?','Det bråk som har flest delar är störst.'] : ['Båda bråken har lika många delar. Vilka delar är störst: om helheten delas i få eller i många bitar?','Ju större nämnare, desto mindre är varje del.'],
+      solution: same==='nämnare' ? `Nämnarna är lika, så det bråk med störst täljare är störst: ${bs}.` : `Täljarna är lika. Mindre nämnare ger större delar, så ${bs} är störst.`,
+      diagnose: () => same==='nämnare' ? 'Delarna är lika stora. Titta på hur många delar varje bråk har.' : 'Större nämnare betyder att helheten delas i fler, alltså mindre, bitar.' }); },
+
+  f1(){ const b=pick([3,4,5,6,8,10]), a=rnd(2,b-1), N=b*rnd(2,15); return numQ({ prompt:`Vad är ${a}/${b} av ${N}?`, answer:N/b*a,
+    hints:[`Hur mycket är 1/${b} av ${N}?`,`1/${b} av ${N} är ${N/b}. Hur många sådana delar behöver du?`],
+    solution:`1/${b} av ${N} = ${N/b}. ${a}/${b} = ${a} · ${N/b} = ${N/b*a}`,
+    wrongs:[[N/b,`Det där är 1/${b}. Du behöver ${a} sådana delar.`],[N*a,'Du har bara gångrat med täljaren. Dela också med nämnaren.']] }); },
+  f2(){ const q=pick([3,4,5,7]); let p=rnd(1,q-1); while(gcd(p,q)!==1) p=rnd(1,q-1); const k=pick([2,3,4,5]); const P2=p*k, Q2=q*k;
+    return fracQ({ prompt:`Förkorta ${P2}/${Q2} så långt det går.`, answer:{n:p,d:q},
+      hints:[`Finns det ett tal som både ${P2} och ${Q2} går att dela med?`,`Både ${P2} och ${Q2} går att dela med ${k}.`],
+      solution:`Dela täljare och nämnare med ${k}: ${P2}/${Q2} = ${p}/${q}` }); },
+  f3(){ const d=pick([5,7,8,9,10,12]); const a=rnd(1,d-2), b=rnd(1,d-1-a);
+    return numQ({ instr:'Skriv svaret som ett bråk, till exempel 3/7.', prompt:`Räkna ut ${a}/${d} + ${b}/${d}.`, answer:(a+b)/d,
+      hints:['När nämnarna är lika, vad är det du lägger ihop: täljarna, nämnarna eller båda?','Lägg ihop täljarna och behåll nämnaren.'],
+      solution:`Lika nämnare: lägg ihop täljarna. ${a}/${d} + ${b}/${d} = ${a+b}/${d}`,
+      wrongs:[[(a+b)/(2*d),`Du har lagt ihop nämnarna också. Delarna är lika stora, så nämnaren ska vara kvar: ${d}.`]] }); },
+
+  u1(){ const [a,b,c,d]=pick([[1,2,1,4],[1,3,1,6],[1,2,1,3],[2,3,1,6],[1,4,1,3],[3,4,1,8],[1,2,2,5],[1,3,1,4]]); const L=b*d/gcd(b,d);
+    return numQ({ instr:'Skriv svaret som ett bråk, till exempel 5/6.', prompt:`Räkna ut ${a}/${b} + ${c}/${d}.`, answer:a/b+c/d,
+      hints:['Bråken har olika nämnare. Kan du skriva om dem så att de får samma nämnare?',`Gemensam nämnare kan vara ${L}: ${a}/${b} = ${a*L/b}/${L} och ${c}/${d} = ${c*L/d}/${L}.`],
+      solution:`${a*L/b}/${L} + ${c*L/d}/${L} = ${a*L/b+c*L/d}/${L}`,
+      wrongs:[[(a+c)/(b+d),'Du har lagt ihop både täljare och nämnare. Gör först bråken liknämniga, alltså samma nämnare.']] }); },
+  u2(){ const [a,b,c,d]=pick([[3,4,1,2],[5,6,1,3],[2,3,1,4],[7,8,1,4],[1,2,1,5],[3,5,1,10]]); const L=b*d/gcd(b,d);
+    return numQ({ instr:'Skriv svaret som ett bråk, till exempel 1/4.', prompt:`Räkna ut ${a}/${b} − ${c}/${d}.`, answer:a/b-c/d,
+      hints:['Kan du ge bråken samma nämnare innan du drar bort?',`Gemensam nämnare kan vara ${L}: ${a}/${b} = ${a*L/b}/${L} och ${c}/${d} = ${c*L/d}/${L}.`],
+      solution:`${a*L/b}/${L} − ${c*L/d}/${L} = ${a*L/b-c*L/d}/${L}`,
+      wrongs: b!==d ? [[(a-c)/(b-d),'Du har dragit bort både täljare och nämnare. Gör först bråken liknämniga.']] : [] }); },
+  u3(){ const b=pick([4,5,10]), a=rnd(1,b-1), N=b*10*rnd(2,12), thing=pick(['En tröja','Ett par byxor','Ett spel','En väska']);
+    return numQ({ instr:'Skriv svaret i kronor, bara talet.', prompt:`${thing} kostar ${N} kr. Den säljs nu för ${a}/${b} av priset. Vad kostar den nu?`, answer:N/b*a,
+      hints:[`Hur mycket är 1/${b} av ${N} kr?`,`1/${b} av ${N} kr är ${N/b} kr. Hur många sådana delar ska du betala?`],
+      solution:`1/${b} av ${N} = ${N/b}. ${a}/${b} = ${a} · ${N/b} = ${N/b*a} kr`,
+      wrongs:[[N/b,`Det där är 1/${b} av priset. Du ska betala ${a} sådana delar.`],[N-N/b*a,`Du räknade ut hur mycket billigare den blir. Frågan gäller vad den kostar, alltså ${a}/${b} av priset.`]] }); }
+};
+
+/* ==========================================================
+   ENGELSKA ÅK 7: PRESENS OCH PRETERITUM
+   ========================================================== */
+const EN_GRUND = [
+  ['Yesterday I ___ my grandmother.','visit','visits','visited','past','yesterday'],
+  ['She ___ to school every day.','walk','walks','walked','s','every day'],
+  ['We ___ a film last night.','watch','watches','watched','past','last night'],
+  ['My brother ___ pizza every Friday.','cook','cooks','cooked','s','every Friday'],
+  ['Last summer they ___ in Spain.','stay','stays','stayed','past','last summer'],
+  ['I usually ___ my homework after dinner.','do','does','did','base','usually'],
+  ['He ___ the bus this morning.','miss','misses','missed','past','this morning'],
+  ['The shop ___ at nine every morning.','open','opens','opened','s','every morning'],
+  ['Two years ago we ___ to a new house.','move','moves','moved','past','ago'],
+  ['My dog always ___ at the mailman.','bark','barks','barked','s','always'],
+  ['They often ___ basketball after school.','play','plays','played','base','often'],
+  ['Last week she ___ her room.','clean','cleans','cleaned','past','last week']
+];
+const EN_FORD = [
+  ['Yesterday I ___ (go) to the cinema.','go','went'],
+  ['Last week we ___ (see) a whale.','see','saw'],
+  ['She ___ (eat) breakfast at seven this morning.','eat','ate'],
+  ['My dad ___ (buy) a new car last month.','buy','bought'],
+  ['Last weekend they ___ (take) the train to Stockholm.','take','took'],
+  ['I ___ (write) a letter to my friend yesterday.','write','wrote'],
+  ['He ___ (come) home late last night.','come','came'],
+  ['We ___ (have) a test last Monday.','have','had'],
+  ['Last year she ___ (make) a cake for my birthday.','make','made'],
+  ['This morning I ___ (find) my keys under the sofa.','find','found'],
+  ['Yesterday I ___ (think) the test was easy.','think','thought'],
+  ['Last summer we ___ (swim) in the lake every day.','swim','swam']
+];
+const EN_UTM = [
+  {s:'Every morning she ___ (drink) tea.', base:'drink', a:'drinks', t:'pres', past:'drank', sform:'drinks', h:['Vilket ord i meningen visar när det händer? Är det en vana?','Det är en vana, och subjektet är she. Vad händer då med verbet?']},
+  {s:'Yesterday she ___ (drink) coffee instead.', base:'drink', a:'drank', t:'past', past:'drank', sform:'drinks', h:['Vilket ord visar när det hände?','Drink är oregelbundet. Svaret börjar på ”dr” och slutar på ”k”.']},
+  {s:'My friends often ___ (play) games online.', base:'play', a:'play', t:'pres', past:'played', sform:'plays', h:['Vilket ord visar hur ofta det händer?','Vem gör något? ”My friends” är flera. Får verbet -s då?']},
+  {s:'Last night my friend ___ (play) until midnight.', base:'play', a:'played', t:'past', past:'played', sform:'plays', h:['Vilket ord visar när det hände?','Play är ett regelbundet verb. Hur ser det ut i preteritum?']},
+  {s:'He ___ (get) up at six every day.', base:'get', a:'gets', t:'pres', past:'got', sform:'gets', h:['Vilket ord visar att det är en vana?','Det är en vana, och subjektet är he. Vad händer då med verbet?']},
+  {s:'This morning he ___ (get) up at eight.', base:'get', a:'got', t:'past', past:'got', sform:'gets', h:['Har ”this morning” redan hänt, eller händer det ofta?','Get är oregelbundet. Svaret har tre bokstäver och börjar på ”g”.']},
+  {s:'Our teacher always ___ (give) us homework on Fridays.', base:'give', a:'gives', t:'pres', past:'gave', sform:'gives', h:['Vilket ord visar hur ofta det händer?','”Our teacher” är en person, alltså hon eller han. Vad händer då med verbet?']},
+  {s:'Last Friday she ___ (give) us a quiz.', base:'give', a:'gave', t:'past', past:'gave', sform:'gives', h:['Vilket ord visar när det hände?','Give är oregelbundet. Svaret börjar på ”ga”.']},
+  {s:'The sun ___ (rise) in the east.', base:'rise', a:'rises', t:'pres', past:'rose', sform:'rises', h:['Är det här något som hände en gång, eller något som alltid gäller?','Det är ett faktum, och subjektet är ”the sun”, alltså den. Vad händer då med verbet?']},
+  {s:'We ___ (win) the match last weekend.', base:'win', a:'won', t:'past', past:'won', sform:'wins', h:['Vilket ord visar när det hände?','Win är oregelbundet. Svaret har tre bokstäver och börjar på ”w”.']}
+];
+const fill = (s, a) => s.replace(/___( \(\w+\))?/, a);
+
+/* ==========================================================
+   SVENSKA ÅK 7: LÄSFÖRSTÅELSE
+   ========================================================== */
+const STORY = {
+  title:'Sista bussen',
+  paras:[
+    'Noah hade bara tre minuter på sig. Han sprang över skolgården med ryggsäcken studsande mot ryggen, men när han kom fram till hållplatsen såg han bara bakljusen försvinna runt hörnet. Nästa buss gick om en timme.',
+    'Han satte sig på bänken och tog fram mobilen. Fyra procent batteri. Han skrev snabbt till mamma: ”Missade bussen. Kommer sent.” Sedan blev skärmen svart.',
+    'Det började regna. En äldre kvinna med en tung matkasse ställde sig under taket bredvid honom. Plötsligt gick kassen sönder, och apelsiner rullade ut över trottoaren. Noah suckade, reste sig och började plocka. Han hittade sju apelsiner, en av dem i en vattenpöl.',
+    '– Tack, sa kvinnan. Jag bor bara två kvarter bort, men jag kan inte bära allt det här i händerna.',
+    'Noah tittade på klockan i kyrktornet. Fyrtio minuter kvar. Han tog kassen med de trasiga handtagen i famnen och följde med.',
+    'När de kom fram bjöd hon på varm choklad medan de väntade på att regnet skulle ge sig. Hennes telefon låg på bordet, och hon frågade om han ville ringa hem.',
+    '– Mamma? sa Noah. Jag är hos … Han tittade på kvinnan.',
+    '– Margit, sa hon och log.',
+    '– Hos Margit. Jag förklarar sen.',
+    'Han hann till bussen med fem minuter till godo. Den kvällen berättade han allt för mamma. Hon skrattade när han sa att det var den bästa bussen han någonsin missat.'
+  ]
+};
+const SV = (prompt, options, hints, solution) => choiceQ({ instr:'Välj det svar som stämmer bäst.', prompt, options, answer:options[0], hints, solution,
+  diagnose: () => `Det svaret får inte stöd i texten. ${hints[0]}` });
+
+/* ==========================================================
+   SVENSKA ÅK 7: ORDKLASSER
+   ========================================================== */
+const OK_DEF = {
+  substantiv:'Ett substantiv är namnet på en sak, person, plats, ett djur eller en känsla. Du kan sätta en, ett eller flera framför: en bok, ett hus.',
+  verb:'Ett verb berättar vad någon gör eller vad som händer. Du kan sätta jag framför och ändra tiden: jag springer, jag sprang.',
+  adjektiv:'Ett adjektiv beskriver hur någon eller något är: en glad hund, ett stort hus. Det går ofta att jämföra: glad, gladare, gladast.',
+  adverb:'Ett adverb berättar hur, när eller var något händer: snabbt, igår, hemma.',
+  pronomen:'Ett pronomen står i stället för ett namn eller ett substantiv: jag, du, hon, de, min, vår.',
+  preposition:'En preposition visar läge eller riktning: på, i, under, efter.',
+  konjunktion:'En konjunktion binder ihop ord eller meningar: och, men, eller.',
+  räkneord:'Ett räkneord är ett tal eller en ordning: tre, tjugo, första.'
+};
+const OK_TEST = {
+  substantiv:'Testa: kan du sätta en, ett eller flera framför ordet?',
+  verb:'Testa: kan du sätta jag framför och ändra tiden, som jag springer och jag sprang?',
+  adjektiv:'Testa: beskriver ordet hur någon eller något är? Går det att jämföra, som glad, gladare, gladast?',
+  adverb:'Testa: svarar ordet på frågan hur, när eller var något händer?',
+  pronomen:'Testa: kan ordet bytas mot ett namn eller ett substantiv?',
+  preposition:'Testa: visar ordet var något är eller vart något rör sig, som på, i eller under?',
+  konjunktion:'Testa: binder ordet ihop två ord eller två meningar?',
+  räkneord:'Testa: är ordet ett tal eller en ordning?'
+};
+const OK_ART = c => ['preposition','konjunktion'].includes(c) ? 'en' : 'ett';
+const OK_GRUND = [
+  ['Hunden springer i parken.','springer','verb'],['Min syster köpte en ny cykel.','cykel','substantiv'],['Det var en kall morgon.','kall','adjektiv'],
+  ['Eleverna läser en bok.','läser','verb'],['Vi åt glass på stranden.','glass','substantiv'],['Han har en röd jacka.','röd','adjektiv'],
+  ['Läraren skrev på tavlan.','tavlan','substantiv'],['Katten sover hela dagen.','sover','verb'],['Filmen var väldigt spännande.','spännande','adjektiv'],
+  ['Mormor bakade bullar.','bullar','substantiv']
+];
+const OK_FORD = [
+  ['Hon ringde mig igår.','Hon','pronomen'],['Boken ligger på bordet.','på','preposition'],['Vi kommer hem snart.','snart','adverb'],
+  ['De spelade fotboll efter skolan.','efter','preposition'],['Jag tycker om musik.','Jag','pronomen'],['Han pratar alltid högt.','alltid','adverb'],
+  ['Katten gömde sig under sängen.','under','preposition'],['Ni får gärna komma.','gärna','adverb'],['Det här är vår lägenhet.','vår','pronomen'],
+  ['Pennan ligger i väskan.','i','preposition']
+];
+const OK_UTM = [
+  ['Hon sprang snabbt till bussen.','snabbt','adverb','adjektiv'],['Vi köpte tre äpplen.','tre','räkneord','adjektiv'],
+  ['Jag ville gå ut, men det regnade.','men','konjunktion','adverb'],['Löpningen tog en timme.','Löpningen','substantiv','verb'],
+  ['Den glada flickan vinkade.','glada','adjektiv','adverb'],['Att simma är roligt.','simma','verb','substantiv'],
+  ['Han är snäll och hjälpsam.','och','konjunktion','preposition'],['Det blåser mycket idag.','idag','adverb','substantiv'],
+  ['Vi ses på lördag.','lördag','substantiv','adverb'],['Det är den bästa boken jag har läst.','bästa','adjektiv','adverb']
+];
+function okQ([s, w, cls, trap], pool){
+  const others = shuffle(pool.filter(c => c !== cls && c !== trap));
+  const opts = [cls, ...(trap ? [trap] : []), ...others].slice(0, pool.length === 3 ? 3 : 4);
+  return choiceQ({ instr:'Läs meningen och välj ordklass.', prompt:`Vilken ordklass är ”${w}” i meningen ”${s}”`, options:opts.map(cap), answer:cap(cls),
+    hints:[`Vad gör ordet ”${w}” i meningen? Berättar det vad någon gör, vad något heter, hur något är, eller något annat?`, OK_TEST[cls]],
+    solution:`”${w}” är ${OK_ART(cls)} ${cls}. ${OK_DEF[cls]}`,
+    diagnose: raw => { const c = raw.toLowerCase(); return OK_DEF[c] ? `${cap(c)}? ${OK_DEF[c]} Passar det in på ”${w}” här?` : null; } });
+}
+const OK_ALL = Object.keys(OK_DEF);
+
+/* ==========================================================
+   ALLA FÄRDIGA OMRÅDEN
+   ========================================================== */
+const CONTENT = {
+  '7-matte-procent':{
+    intro:[
+      'Procent betyder hundradelar. 1 % är en hundradel, alltså 0,01. 25 % är 25 hundradelar, alltså 0,25.',
+      'Några procent är bra att kunna utantill: 50 % är hälften, 25 % är en fjärdedel och 10 % är en tiondel.',
+      'För att räkna ut en procent av ett tal kan du först räkna ut 1 % genom att dela med 100. Sedan gångar du med antalet procent.'
+    ],
+    example:{title:'Exempel: Vad är 15 % av 240?', steps:['1 % av 240 är 240 / 100 = 2,4.','15 % är 15 gånger så mycket: 2,4 · 15 = 36.','Svar: 15 % av 240 är 36.']},
+    levels:[
+      {name:'Grund', desc:'Hälften, tiondelar och decimalform', make:()=>mix([P.g50,P.g10,P.g25,P.gdec],8)},
+      {name:'Fördjupning', desc:'Procent av ett tal och rabatter', make:()=>mix([P.f1,P.f2,P.f3],8)},
+      {name:'Utmaning', desc:'Förändring, förändringsfaktor och ursprungligt pris', make:()=>mix([P.u1,P.u2,P.u3],8)}
+    ]
+  },
+  '7-matte-brak':{
+    intro:[
+      'Ett bråk visar en del av en helhet. I 3/4 är 4 nämnaren, som visar hur många lika stora delar helheten är delad i. 3 är täljaren, som visar hur många av delarna du har.',
+      'Ju större nämnare, desto mindre är varje del. 1/8 av en pizza är mindre än 1/4 av samma pizza.',
+      'Bråk med samma nämnare kan du lägga ihop direkt: 1/5 + 2/5 = 3/5. Har bråken olika nämnare måste du först göra dem liknämniga, alltså ge dem samma nämnare.'
+    ],
+    example:{title:'Exempel: Vad är 3/4 av 20?', steps:['1/4 av 20 är 20 / 4 = 5.','3/4 är tre sådana delar: 3 · 5 = 15.','Svar: 3/4 av 20 är 15.']},
+    levels:[
+      {name:'Grund', desc:'Delar av tal, decimalform och jämförelser', make:()=>mix([BR.g1,BR.g2,BR.g3],8)},
+      {name:'Fördjupning', desc:'Flera delar, förkortning och addition', make:()=>mix([BR.f1,BR.f2,BR.f3],8)},
+      {name:'Utmaning', desc:'Olika nämnare och bråk i vardagen', make:()=>mix([BR.u1,BR.u2,BR.u3],8)}
+    ]
+  },
+  '7-engelska-verbtider':{
+    intro:[
+      'På engelska använder du presens (present simple) för sådant som händer ofta, vanor och fakta. Med he, she, it eller ett namn får verbet ett -s: she plays, he walks.',
+      'Du använder preteritum (past simple) för sådant som redan har hänt och är avslutat. Regelbundna verb får -ed: played, walked. Oregelbundna verb har egna former: go – went, see – saw.',
+      'Leta efter tidsord. Every day, usually och often betyder oftast presens. Yesterday, last week och ago betyder oftast preteritum.'
+    ],
+    example:{title:'Exempel: Vilken form ska det vara?', steps:['Meningen är: Last Saturday I ___ (play) football.','Tidsordet är ”last Saturday”. Det har redan hänt.','Play är ett regelbundet verb, så det får -ed.','Svar: Last Saturday I played football.']},
+    levels:[
+      {name:'Grund', desc:'Välj rätt form med hjälp av tidsorden', make:()=>shuffle(EN_GRUND).slice(0,8).map(([s,base,sf,past,key,sig])=>{
+        const ans = key==='past' ? past : key==='s' ? sf : base;
+        const kind = o => o===past ? 'past' : o===sf ? 's' : 'base';
+        return choiceQ({ instr:'Välj rätt form av verbet.', prompt:s, lang:'en', options:[base,sf,past], answer:ans,
+          hints:[`Titta på ordet ”${sig}”. Handlar meningen om något som händer ofta, eller något som redan har hänt?`,
+                 key==='past' ? 'Det har redan hänt. Hur ser verbet ut i preteritum?' : 'Det händer ofta. Vem gör något? Med he, she, it eller ett namn får verbet -s, med I, you, we och they får det inget -s.'],
+          solution: fill(s, ans),
+          diagnose: raw => { const k = kind(raw);
+            if (key==='past') return `Ordet ”${sig}” visar att det redan har hänt. Då behövs preteritum.`;
+            if (k==='past') return `Ordet ”${sig}” visar att det händer ofta, inte att det redan har hänt.`;
+            if (key==='s' && k==='base') return 'Rätt tid! Men kolla vem som gör något. Med he, she, it eller ett namn får verbet -s.';
+            if (key==='base' && k==='s') return 'Rätt tid! Men med I, you, we och they får verbet inget -s.';
+            return null; } }); })},
+      {name:'Fördjupning', desc:'Oregelbundna verb i preteritum', make:()=>shuffle(EN_FORD).slice(0,8).map(([s,base,a])=>
+        textQ({ instr:'Skriv verbet i preteritum.', prompt:s, lang:'en', answer:a,
+          hints:['Är verbet regelbundet eller oregelbundet? Säg meningen tyst för dig själv. Vilken form låter rätt?',`Svaret börjar på ”${a[0]}” och har ${a.length} bokstäver.`],
+          solution:`${base} → ${a}: ${fill(s, a)}`,
+          diagnose: raw => { const r = norm(raw);
+            if (/ed$/.test(r)) return `${cap(base)} är oregelbundet, så det får inte -ed. Vilken form har du hört i meningar som ”Yesterday I …”?`;
+            if (r===base || r===base+'s') return 'Det där är presens. Meningen handlar om något som redan har hänt.';
+            return null; } }))},
+      {name:'Utmaning', desc:'Presens eller preteritum? Plus en skrivuppgift', make:()=>shuffle(EN_UTM).slice(0,8).map(it=>
+        textQ({ instr:'Skriv verbet i rätt form: presens eller preteritum.', prompt:it.s, lang:'en', answer:it.a, hints:it.h, solution:fill(it.s, it.a),
+          diagnose: raw => { const r = norm(raw);
+            if (it.t==='past') {
+              if (r===it.base || r===it.sform) return 'Tidsordet visar att det redan har hänt. Då behövs preteritum.';
+              if (/ed$/.test(r) && it.a!==it.base+'ed' && it.a!==it.base+'d') return `${cap(it.base)} är oregelbundet och får inte -ed.`;
+            } else {
+              if (r===it.past || /ed$/.test(r)) return 'Meningen handlar om något som händer ofta eller alltid gäller. Då behövs presens.';
+              if (it.a===it.sform && r===it.base) return 'Rätt tid! Men med he, she, it eller ett namn får verbet -s.';
+              if (it.a===it.base && r===it.sform) return 'Rätt tid! Men subjektet är flera, och då får verbet inget -s.';
+            }
+            return null; } })),
+        writing:{
+          task:'Skriv 5–8 meningar på engelska om vad du gjorde förra helgen. Använd preteritum (past simple).',
+          check:['Har du skrivit 5–8 meningar?','Står verben i preteritum, till exempel went, played och saw?','Har du använt tidsord som first, then och after that?','Börjar varje mening med stor bokstav och slutar med punkt?'],
+          focus:'Fokusera på om verben står i preteritum. Om något verb är fel, visa ett exempel ur elevens text och hur det blir rätt. Citera engelska ord på engelska.'
+        }}
+    ]
+  },
+  '7-svenska-lasforstaelse':{
+    text:STORY,
+    intro:[
+      'Du kan förstå en text på tre sätt. På raderna: det som står direkt i texten. Mellan raderna: det du kan räkna ut fast det inte står rakt ut. Bortom raderna: vad texten betyder och vad den vill säga.',
+      'Läs hela texten en gång först. Gå sedan tillbaka till texten när du svarar. Det är inte fusk, det är så duktiga läsare gör.'
+    ],
+    example:{title:'Exempel: Att läsa mellan raderna', steps:['I en text står det: Hon tittade ut genom fönstret och suckade.','Det står inte att hon är uttråkad eller ledsen.','Men sucken visar att hon inte mår så bra, eller att hon längtar efter något.','Det kallas att läsa mellan raderna.']},
+    levels:[
+      {name:'Grund', desc:'På raderna: hitta svaret i texten', make:()=>[
+        SV('Varför satt Noah på busshållplatsen?',['Han hade missat bussen.','Han väntade på en kompis.','Han skulle möta sin mamma.'],['Läs första stycket igen. Vad såg Noah försvinna runt hörnet?','Bakljusen tillhörde något som Noah ville hinna med.'],'Noah såg bussens bakljus försvinna. Han hade missat den.'),
+        SV('Hur mycket batteri hade Noahs mobil kvar?',['4 procent','14 procent','40 procent'],['Läs andra stycket. Leta efter ett tal före ordet procent.','Talet är skrivet med bokstäver i texten.'],'Det står att mobilen hade fyra procent batteri.'),
+        SV('Vad rullade ut över trottoaren?',['Apelsiner','Äpplen','Potatisar'],['Läs tredje stycket. Vad låg i kvinnans matkasse?','Noah hittade sju stycken, och en låg i en vattenpöl.'],'Apelsiner rullade ut när kassen gick sönder.'),
+        SV('Hur länge dröjde det till nästa buss när Noah kom fram?',['En timme','En kvart','Fyrtio minuter'],['Läs slutet av första stycket.','Fyrtio minuter står också i texten, men det är hur lång tid som var kvar senare.'],'Det står att nästa buss gick om en timme.'),
+        SV('Vad bjöd Margit på?',['Varm choklad','Te och bullar','Apelsinjuice'],['Läs stycket där de kommer fram till Margits hem.','Det var något varmt att dricka medan det regnade.'],'Margit bjöd på varm choklad.'),
+        SV('Hur kunde Noah ringa till sin mamma?',['Han lånade Margits telefon.','Han laddade sin mobil hos Margit.','Han ringde från en telefonkiosk.'],['Noahs mobil hade slutat fungera. Vems telefon låg på bordet?','Läs stycket om den varma chokladen.'],'Margits telefon låg på bordet, och hon lät Noah ringa hem.')
+      ]},
+      {name:'Fördjupning', desc:'Mellan raderna: dra slutsatser', make:()=>[
+        SV('Varför suckade Noah innan han började plocka upp apelsinerna?',['Han var trött och besviken, men hjälpte ändå till.','Han var arg på kvinnan för att hon tappade kassen.','Han ville inte hjälpa till och gick därifrån.'],['Hur har Noahs dag varit hittills?','Han reste sig och började plocka. Vad säger det om honom?'],'Noah hade missat bussen och mobilen var död. Sucken visar att han var trött på allt, men han hjälpte ändå till.'),
+        SV('Varför tittade Noah på klockan i kyrktornet?',['Hans mobil var död, så han kunde inte se tiden på den.','Han tyckte om gamla kyrkor.','Han ville veta när kyrkan stängde.'],['Vad hände med Noahs mobil tidigare i texten?','Vad behövde han veta innan han följde med Margit?'],'Mobilen var död, så Noah använde kyrkklockan för att se hur mycket tid han hade kvar.'),
+        SV('Varför gjorde Noah en paus och tittade på kvinnan när han pratade med mamma?',['Han visste inte vad hon hette.','Han ville att hon skulle prata i stället.','Han hade glömt vad han skulle säga om bussen.'],['Vad säger kvinnan direkt efter att Noah har tittat på henne?','Hon säger sitt namn. Varför behövde hon göra det?'],'Noah visste inte vad kvinnan hette. Därför säger hon ”Margit”.'),
+        SV('Vad menar Noah med att det var den bästa bussen han någonsin missat?',['Att det blev något bra av att han missade bussen.','Att bussen var ny och fin.','Att han inte tycker om att åka buss.'],['Noah missade ju bussen. Vad hände efter det?','Hur kändes eftermiddagen hos Margit, jämfört med att sitta ensam och vänta?'],'Att missa bussen ledde till något bra: han hjälpte Margit och fick en fin stund.'),
+        SV('Vilket ord beskriver Noah bäst i texten?',['Hjälpsam','Blyg','Slarvig'],['Vad gör Noah när kassen går sönder?','Han bär kassen hela vägen hem till Margit. Vad säger det om honom?'],'Hjälpsam. Han plockar upp apelsinerna och bär kassen trots att hans dag är jobbig.')
+      ]},
+      {name:'Utmaning', desc:'Bortom raderna och en skrivuppgift', make:()=>[
+        SV('Vilket budskap passar bäst till texten?',['Små handlingar kan göra skillnad, även en dag när allt går fel.','Man ska alltid ladda mobilen innan man går hemifrån.','Man ska aldrig prata med människor man inte känner.'],['Ett budskap handlar om något större än just det som händer i texten. Vad kan läsaren lära sig?','Hur förändrades Noahs dag av att han hjälpte någon?'],'Budskapet är att små handlingar kan göra skillnad. Noahs dåliga dag blev bra för att han hjälpte någon.'),
+        SV('Varför tror du att författaren låter det börja regna?',['Det gör läget jobbigare och visar att Noah hjälper till trots allt.','Det förklarar varför bussen var sen.','Det visar att berättelsen utspelar sig på hösten.'],['Hur påverkar regnet Noahs situation?','Om allt redan är jobbigt och Noah ändå hjälper, vad säger det om honom?'],'Regnet gör allt jobbigare. Att Noah hjälper till ändå visar vilken sorts person han är.'),
+        SV('Vem berättar historien?',['En berättare som står utanför och berättar om Noah.','Noah själv, i jag-form.','Margit, i jag-form.'],['Vilka ord används om Noah i texten: han eller jag?','Det står till exempel ”Noah hade” och ”han sprang”.'],'En berättare som står utanför händelserna. Texten säger han om Noah, inte jag.')
+      ],
+        writing:{
+          task:'Skriv 4–6 meningar: Vad tror du att Noah lärde sig den dagen? Använd minst ett exempel från texten för att visa vad du menar.',
+          check:['Svarar du på frågan om vad Noah lärde sig?','Har du med minst ett exempel från texten?','Använder du ord som eftersom, därför eller till exempel för att förklara?','Börjar meningarna med stor bokstav och slutar med punkt?'],
+          focus:'Fokusera på om eleven svarar på frågan och stödjer sitt svar med exempel från texten ”Sista bussen”, där Noah missar bussen, hjälper en äldre kvinna som heter Margit och till slut tycker att det var den bästa bussen han missat.'
+        }}
+    ]
+  },
+  '7-svenska-ordklasser':{
+    intro:[
+      'Ord delas in i ordklasser efter vad de gör i en mening. När du vet ordklassen blir det lättare att böja orden rätt och att förstå grammatik, även i andra språk.',
+      'Tre vanliga ordklasser är substantiv (en bok, ett hus), verb (springer, läste) och adjektiv (glad, stor). Andra är pronomen (jag, hon), adverb (snabbt, igår) och prepositioner (på, under).',
+      'Samma ord kan höra till olika ordklasser beroende på hur det används. Titta därför alltid på hela meningen.'
+    ],
+    example:{title:'Exempel: Vilken ordklass är ”glada”?', steps:['Meningen är: Den glada hunden skäller.','Ordet beskriver hur hunden är.','Det går att jämföra: glad, gladare, gladast.','Svar: ”glada” är ett adjektiv.']},
+    levels:[
+      {name:'Grund', desc:'Substantiv, verb och adjektiv', make:()=>shuffle(OK_GRUND).slice(0,8).map(x=>okQ(x,['substantiv','verb','adjektiv']))},
+      {name:'Fördjupning', desc:'Pronomen, adverb och prepositioner', make:()=>shuffle(OK_FORD).slice(0,8).map(x=>okQ(x,['substantiv','verb','adjektiv','pronomen','adverb','preposition']))},
+      {name:'Utmaning', desc:'Alla ordklasser och ord som lurar', make:()=>shuffle(OK_UTM).slice(0,8).map(x=>okQ(x,OK_ALL))}
+    ]
+  }
+};
+
+/* ==========================================================
+   FRAMSTEG (sparas bara i webbläsaren)
+   ========================================================== */
+const STORE = 'elevguiden-v2';
+const freshProgress = () => ({ areas:{}, last:null, daily:null });
+let progress = freshProgress();
+try { const p = JSON.parse(localStorage.getItem(STORE)); if (p && p.areas) progress = p; } catch(e) {}
+function saveProgress(){ try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e) {} }
+const PASS = 0.8;
+function areaKey(g=S.grade, s=S.subject, a=S.area){ return `${g}-${s}-${a}`; }
+function prog(k){ return progress.areas[k] || (progress.areas[k] = {best:[], forced:[]}); }
+function passed(k, i){ const b = progress.areas[k] && progress.areas[k].best[i]; return !!b && b.score / b.total >= PASS; }
+function unlocked(k, i){ return i === 0 || passed(k, i-1) || !!(progress.areas[k] && progress.areas[k].forced[i]); }
+const today = () => new Date().toISOString().slice(0,10);
+function labelFor(k){ const [g,s,a] = k.split('-'); const t = AREAS[g][s].find(x => x[0] === a); return `Åk ${g}, ${SUBJECTS[s].name}: ${t ? t[1] : ''}`; }
+
+/* ==========================================================
+   AI-FEEDBACK (bara på skrivuppgifter)
+   ========================================================== */
+/* Skickar elevens text till appens egen serverfunktion (api/feedback.js),
+   som anropar Claude. Svaret strömmas, så att texten syns direkt. */
+async function aiFeedback(payload, onText){
+  const res = await fetch('/api/feedback', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+  if (!res.ok || !res.body) { const err = new Error('http ' + res.status); err.code = res.status === 429 ? 'rate_limited' : 'error'; throw err; }
+  const reader = res.body.getReader(), dec = new TextDecoder();
+  let text = '';
+  for (;;) { const { done, value } = await reader.read(); if (done) break; text += dec.decode(value, { stream:true }); onText(text); }
+  return text;
+}
+
+/* ==========================================================
+   UPPLÄSNING
+   ========================================================== */
+const canSpeak = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+function speak(text, lang){
+  if (!canSpeak) return;
+  const ss = window.speechSynthesis;
+  if (ss.speaking) { ss.cancel(); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang === 'en' ? 'en-GB' : 'sv-SE';
+  const v = ss.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith(lang === 'en' ? 'en' : 'sv'));
+  if (v) u.voice = v;
+  u.rate = 0.92;
+  ss.speak(u);
+}
+function stopSpeech(){ if (canSpeak) window.speechSynthesis.cancel(); }
+
+/* ==========================================================
+   LIVET I SKOLAN
+   Situationerna har inga poäng. Elevens val och texter sparas aldrig.
+   good: true  -> ”Det här brukar fungera bra”
+   good: false -> ”Tänk ett varv till”
+   ========================================================== */
+const THEMES = [
+  {
+    id:'hjalp', title:'Att be om hjälp', badge:'Hj',
+    lead:'Alla behöver hjälp ibland. Att be om det är ett tecken på att du tar ansvar, inte på att du är svag.',
+    facts:[
+      {h:'Vem gör vad på skolan?', list:[
+        ['Mentorn','Din första kontakt. Mentorn har koll på hur det går för dig i alla ämnen och kan hjälpa dig att prata med andra lärare.'],
+        ['Ämnesläraren','Fråga när du inte förstår en uppgift, behöver mer tid eller vill veta vad som krävs i ämnet.'],
+        ['Kuratorn','Dit kan du gå om du är ledsen eller orolig, har det jobbigt med kompisar eller hemma, eller bara behöver prata. Kuratorn har tystnadsplikt, men om någon far illa måste kuratorn se till att det kommer fram hjälp.'],
+        ['Skolsköterskan','För frågor om hälsa, sömn, ont i magen eller huvudet, eller när kroppen inte känns bra.'],
+        ['Specialpedagogen','Hjälper till om skolarbetet är svårt på ett sätt som inte går över, till exempel med läsning, skrivning eller koncentration.']
+      ]},
+      {h:'Så ber du om hjälp', steps:['Välj ett bra tillfälle, till exempel efter lektionen, eller skriv ett meddelande.','Säg kort vad det gäller.','Säg vad du behöver: en förklaring, mer tid eller ett samtal.','Tacka. Det gör det lättare nästa gång.']}
+    ],
+    scenarios:[
+      {s:'Läraren har gått igenom en uppgift, men du förstod ingenting. Alla andra verkar sätta igång direkt.', c:[
+        ['Jag sitter tyst och hoppas att jag fattar senare.', false, 'Det är vanligt att göra så, men det brukar bli svårare ju längre man väntar. Och du är nästan aldrig den enda som inte förstod.'],
+        ['Jag räcker upp handen eller går fram och säger: ”Jag förstod inte riktigt. Kan du förklara en gång till?”', true, 'Det är precis vad lärare vill att du ska göra. Att fråga är en del av att lära sig.'],
+        ['Jag frågar bänkkompisen först, och om det inte hjälper frågar jag läraren.', true, 'Bra! En kompis kan ofta hjälpa snabbt. Gå vidare till läraren om ni båda är osäkra.']]},
+      {s:'Du har sovit dåligt i flera veckor och är trött i skolan. Du vet inte vem du ska prata med.', c:[
+        ['Jag pratar med skolsköterskan.', true, 'Skolsköterskan kan hjälpa dig att förstå varför du sover dåligt och vad du kan göra åt det.'],
+        ['Jag väntar, det går säkert över.', false, 'Ibland gör det det, men flera veckor är länge. Sömnen påverkar både humöret och skolarbetet, så det är värt att ta upp med någon.'],
+        ['Jag berättar för min mentor att jag är trött.', true, 'En bra start. Mentorn kan ta hänsyn till det och hjälpa dig vidare till skolsköterskan eller kuratorn.']]},
+      {s:'Du ligger efter i flera ämnen och känner dig stressad. Det känns pinsamt att säga det.', c:[
+        ['Jag skriver ett kort meddelande till min mentor och ber om ett samtal.', true, 'Ett meddelande kan vara lättare än att säga det öga mot öga. Mentorn kan hjälpa dig att göra en plan, ett ämne i taget.'],
+        ['Jag försöker ta ikapp allt själv på en helg.', false, 'Det är modigt, men det brukar bli för mycket på en gång. Med hjälp av en vuxen kan du välja vad som är viktigast först.'],
+        ['Jag slutar bry mig om ämnena där jag ligger efter.', false, 'Det kan kännas skönt en stund, men då växer högen. Det är aldrig för sent att be om hjälp, även om det känns så.']]}
+    ],
+    exercise:{type:'message', title:'Skriv ett meddelande', task:'Skriv ett kort meddelande till din mentor eller en lärare där du ber om hjälp. Det kan gälla en uppgift du inte förstår, att du behöver mer tid eller att du vill prata.',
+      template:'Hej [namn]!\nJag behöver hjälp med … \nSkulle vi kunna prata en stund på … ?\nTack!\n[ditt namn]',
+      check:['Hälsar du och skriver vem det är till?','Står det tydligt vad det gäller?','Står det vad du vill ha hjälp med, eller när ni kan ses?','Avslutar du vänligt?']}
+  },
+  {
+    id:'vanskap', title:'Vänskap och konflikter', badge:'Vä',
+    lead:'Vänner är viktiga, men alla vänskaper har sina gupp. Det går att lära sig att reda ut dem.',
+    facts:[
+      {h:'Ny i klassen?', p:'Många känner sig osäkra i början av högstadiet, även de som ser självsäkra ut. Små saker hjälper: säg hej, fråga något om den andra, eller sätt dig bredvid någon ny.'},
+      {h:'Fyra steg för att reda ut ett bråk', steps:['Vänta tills ni båda är lugna.','Berätta hur du upplevde det. Säg ”jag blev ledsen när …” istället för ”du är så dum”.','Lyssna på hur den andra upplevde det.','Kom överens om hur ni gör nästa gång.']},
+      {h:'Ett bra förlåt', p:'Säg vad du gjorde, att du förstår att det sårade och vad du ska göra annorlunda. Ett förlåt med ”men” efteråt låter ofta som en bortförklaring.'},
+      {h:'Konflikt eller mobbning?', p:'En konflikt är ett bråk mellan två som är ungefär lika starka. Mobbning är när någon gång på gång blir illa behandlad och har svårt att försvara sig. Mobbning ska alltid berättas för en vuxen, och skolan måste enligt lag ta tag i det.'}
+    ],
+    scenarios:[
+      {s:'Din bästa kompis har börjat hänga mer med några andra och svarar inte lika snabbt på dina meddelanden.', c:[
+        ['Jag frågar lugnt: ”Jag har saknat dig lite. Är allt okej mellan oss?”', true, 'Ärligt och vänligt. Ofta finns det en enkel förklaring, och din kompis får chansen att berätta.'],
+        ['Jag slutar också svara, så får hen se hur det känns.', false, 'Förståeligt, men tystnad gör det oftast värre. Din kompis kanske inte ens vet att du är ledsen.'],
+        ['Jag försöker lära känna de nya kompisarna också.', true, 'En bra tanke. En vänskap kan rymma fler personer, och du kanske får nya vänner på köpet.']]},
+      {s:'Du och en klasskompis bråkade på rasten. Ni sa saker som ni inte menade.', c:[
+        ['Jag går fram nästa dag och säger: ”Jag sa dumma saker igår. Förlåt. Kan vi prata?”', true, 'Starkt gjort. Den som tar första steget gör det ofta lättare för båda.'],
+        ['Jag berättar för alla andra vad hen sa.', false, 'Då sprids bråket och blir större, och det blir svårare att bli sams.'],
+        ['Jag låtsas som om ingenting har hänt.', false, 'Ibland lägger sig ett bråk av sig självt, men ofta ligger det kvar och skaver. Ett kort samtal kan lösa mycket.']]},
+      {s:'Du ser att en elev i klassen ofta sitter ensam och blir retad av några andra.', c:[
+        ['Jag säger till en vuxen på skolan vad jag har sett.', true, 'Det är inte att skvallra. Det är att hjälpa någon som kanske inte orkar säga det själv.'],
+        ['Jag frågar eleven om hen vill sitta med mig.', true, 'En liten handling kan betyda enormt mycket för den som är utanför.'],
+        ['Jag håller mig utanför. Det är inte mitt problem.', false, 'Det är lätt att tänka så, men den som blir retad märker vilka som tittar bort. Du behöver inte lösa allt själv, men att säga till en vuxen gör skillnad.']]}
+    ],
+    exercise:{type:'reflect', title:'Fundera på', questions:['Vad gör en bra vän, tycker du?','Tänk på ett bråk som löste sig bra. Vad var det som hjälpte?','Finns det någon i din klass som du skulle kunna vara lite extra snäll mot?']}
+  },
+  {
+    id:'grupptryck', title:'Grupptryck och att säga nej', badge:'Ne',
+    lead:'Att vilja höra till är mänskligt. Men du har rätt att säga nej, även till dina vänner.',
+    facts:[
+      {h:'Vad är grupptryck?', p:'Det är när du känner att du måste göra som de andra för att inte hamna utanför, fast du egentligen inte vill. Det kan gälla allt från kläder till att skolka, snusa eller vara elak mot någon.'},
+      {h:'Sätt att säga nej', steps:['Säg det kort och tydligt: ”Nej, jag är inte sugen.” Du behöver inte förklara dig.','Föreslå något annat: ”Ska vi inte göra så här istället?”','Gå därifrån om det behövs.','Skyll gärna på en vuxen: ”Mina föräldrar skulle bli galna.” Det fungerar ofta.']},
+      {h:'Riktiga vänner', p:'En riktig vän respekterar ditt nej. Om någon bara vill vara med dig när du gör som hen säger, är det värt att fundera på om det är en bra vänskap.'}
+    ],
+    scenarios:[
+      {s:'Några kompisar ska skolka från sista lektionen och tycker att du ska följa med.', c:[
+        ['Jag säger: ”Nej, jag stannar. Vi ses efter skolan!”', true, 'Kort och vänligt. Du säger nej till skolket, inte till vänskapen.'],
+        ['Jag följer med för att inte verka tråkig.', false, 'Det är lätt hänt, men frånvaro gör att du missar saker, och skolan hör av sig hem. Nästa gång blir det också svårare att säga nej.'],
+        ['Jag hittar på en ursäkt, som att jag har ett prov.', true, 'Det fungerar ofta i stunden. Öva gärna också på att säga ett rakt nej, för det blir lättare för varje gång.']]},
+      {s:'I en gruppchatt börjar alla skriva elaka saker om en elev som inte är med i chatten. Någon frågar vad du tycker.', c:[
+        ['Jag skriver: ”Kom igen, det där är inte okej.”', true, 'Modigt. Ofta är det fler som håller med dig, men som inte vågar säga något först.'],
+        ['Jag skickar en skrattande emoji för att inte sticka ut.', false, 'Då blir du en del av det, även om du inte menar något illa. Den som blir utpekad kan få se chatten senare.'],
+        ['Jag lämnar chatten och berättar för en vuxen.', true, 'Bra. Du behöver inte stå emot ensam. En vuxen kan hjälpa till att stoppa det.']]},
+      {s:'En äldre elev bjuder dig på snus och säger att alla gör det.', c:[
+        ['Jag säger: ”Nej tack, det är inget för mig.”', true, 'Tydligt och enkelt. Du behöver inte förklara mer än så.'],
+        ['Jag tar det för att inte verka barnslig.', false, 'Många börjar just så. Nikotin skapar snabbt ett beroende, och det är mycket svårare att sluta än att låta bli att börja.'],
+        ['Jag säger att jag har lovat min tränare att inte snusa.', true, 'Smart. När du hänvisar till något du bryr dig om blir nejet lättare att säga.']]}
+    ],
+    exercise:{type:'reflect', title:'Hitta ditt eget nej', questions:['I vilken situation är det svårast för dig att säga nej?','Vilken mening skulle du kunna säga då? Säg den tyst för dig själv några gånger.','Vem i din närhet respekterar alltid ditt nej?']}
+  },
+  {
+    id:'natet', title:'Livet på nätet', badge:'Nä',
+    lead:'Mobilen är en stor del av livet. Det mesta är roligt, men en del saker är bra att ha koll på.',
+    facts:[
+      {h:'Tänk innan du delar', p:'Det du lägger upp kan sparas, skärmdumpas och spridas, även om det försvinner efter en stund. Fråga dig: skulle jag vara okej med att hela skolan såg det här?'},
+      {h:'Bilder på andra', p:'Fråga alltid innan du lägger upp en bild eller film på någon annan. Att sprida nakenbilder på någon är ett allvarligt brott, även om personen själv skickade bilden till dig.'},
+      {h:'Om någon är elak mot dig', steps:['Svara inte.','Ta skärmdumpar, så att du har bevis.','Blockera och anmäl kontot i appen.','Berätta för en vuxen du litar på.']},
+      {h:'Någon du bara känner från nätet', p:'Var försiktig med personliga uppgifter, bilder och att träffas. Om någon ber dig hålla er kontakt hemlig, ber om bilder eller får dig att känna dig obekväm: säg till en vuxen du litar på. Det är aldrig ditt fel.'}
+    ],
+    scenarios:[
+      {s:'Någon lägger upp en bild på dig som du tycker är pinsam, och folk börjar kommentera.', c:[
+        ['Jag ber personen ta bort bilden, och säger till en vuxen om den inte tas bort.', true, 'Bra. Du har rätt att bestämma över bilder på dig själv.'],
+        ['Jag lägger upp en pinsam bild på den personen tillbaka.', false, 'Det är förståeligt att vilja ge igen, men då blir det två som blir sårade, och bråket växer.'],
+        ['Jag anmäler bilden i appen.', true, 'Bra. De flesta appar tar bort bilder som delas utan lov. Berätta också gärna för en vuxen.']]},
+      {s:'Någon du har chattat med i ett spel i några veckor ber om en bild på dig och säger att ni ska hålla det hemligt.', c:[
+        ['Jag säger nej, slutar svara och berättar för en vuxen jag litar på.', true, 'Precis rätt. När någon ber dig hålla något hemligt för vuxna är det en varningssignal. Du gör ingenting fel genom att berätta.'],
+        ['Jag skickar en bild. Hen verkar ju schysst.', false, 'Det är lätt att lita på någon man har pratat länge med, men man kan aldrig veta vem som finns bakom skärmen. En bild man har skickat går inte att ta tillbaka.'],
+        ['Jag frågar varför hen vill ha den.', false, 'Det är bra att vara misstänksam, men du behöver inte förhandla. Ett nej räcker, och det är klokt att prata med en vuxen.']]},
+      {s:'Du får ett hotfullt meddelande från ett konto du inte känner igen.', c:[
+        ['Jag tar en skärmdump, blockerar kontot och visar en vuxen.', true, 'Precis så. Då har du bevis, och en vuxen kan hjälpa dig att avgöra om det ska polisanmälas.'],
+        ['Jag svarar och säger åt dem att sluta.', false, 'Det är lätt att vilja svara, men det ger ofta mer av samma sak. Spara bevis och prata med en vuxen.'],
+        ['Jag raderar meddelandet och försöker glömma det.', false, 'Det kan kännas skönt, men då försvinner bevisen. Ta en skärmdump först, och berätta för någon.']]}
+    ],
+    exercise:{type:'reflect', title:'Fundera på', questions:['Hur mycket tid lägger du på mobilen en vanlig dag? Känns det lagom?','Vilka appar får dig att må bra, och vilka får dig att må sämre?','Vem skulle du prata med om något hände på nätet?']},
+    extraHelp:'Polisen: ring 114 14 om du vill anmäla något som inte är akut, till exempel hot eller näthat.'
+  },
+  {
+    id:'studieteknik', title:'Studieteknik', badge:'St',
+    lead:'Att plugga är också något man kan lära sig. Med rätt knep går det snabbare och känns lättare.',
+    facts:[
+      {h:'Testa dig själv istället för att läsa om', p:'Att läsa samma text många gånger känns som att plugga, men det fastnar dåligt. Stäng boken och försök förklara eller skriva ner det du minns. Det är jobbigare, men du lär dig mycket mer.'},
+      {h:'Lite, men ofta', p:'Tre gånger 20 minuter på olika dagar ger mer än en hel kväll före provet. Hjärnan behöver tid, och sömn, för att spara det du lär dig.'},
+      {h:'Korta pass med fokus', p:'Lägg mobilen i ett annat rum. Plugga i 20–25 minuter och ta sedan en kort paus. Det kallas ibland för pomodoro-tekniken.'},
+      {h:'Sömn är också plugg', p:'Det du lär dig under dagen sparas medan du sover. En natts sömn före provet är värd mer än en sen kväll med boken.'}
+    ],
+    scenarios:[
+      {s:'Du har ett prov om en vecka och vet inte var du ska börja.', c:[
+        ['Jag delar upp området i små delar och pluggar en del varje dag.', true, 'Ett bra upplägg. Prova pluggplanen längre ner, så får du hjälp att dela upp det.'],
+        ['Jag pluggar allt kvällen före.', false, 'Det är vanligt, men stress och trötthet gör att du minns mindre. Lite varje dag fungerar bättre.'],
+        ['Jag frågar läraren vad som är viktigast att kunna.', true, 'Smart! Då vet du vad du ska lägga mest tid på.']]},
+      {s:'Du sätter dig med läxan, men mobilen plingar hela tiden.', c:[
+        ['Jag lägger mobilen i ett annat rum i 25 minuter.', true, 'Det fungerar bäst. Efteråt kan du kolla allt i lugn och ro under pausen.'],
+        ['Jag svarar snabbt på allt och fortsätter sedan.', false, 'Varje avbrott gör att hjärnan måste starta om. Det tar längre tid än man tror att komma tillbaka in i uppgiften.'],
+        ['Jag stänger av ljudet men har mobilen bredvid mig.', false, 'Bättre än ingenting, men bara att se mobilen kan locka. Avstånd hjälper mest.']]},
+      {s:'Du har läst igenom texten tre gånger, men känner ändå att du inte kan något.', c:[
+        ['Jag stänger boken och försöker skriva ner allt jag minns.', true, 'Ett av de bästa sätten att lära sig. Kolla sedan vad du missade, och gör om det.'],
+        ['Jag läser den en fjärde gång.', false, 'Att läsa om känns tryggt, men det är inte så effektivt. Prova att testa dig själv istället.'],
+        ['Jag förklarar för någon hemma vad texten handlar om.', true, 'Bra! Kan du förklara något för någon annan, har du förstått det.']]}
+    ],
+    exercise:{type:'plan', title:'Gör en pluggplan'}
+  }
+];
+const HELP = [
+  ['På skolan','Kontakta skolkuratorn på din skola. Kuratorn finns där för att lyssna och hjälpa dig, både med det som händer i skolan och med annat. Du kan också prata med din mentor eller skolsköterskan.'],
+  ['BRIS','Ring 116 111 eller chatta på bris.se. För dig under 18 år. Det är gratis, och du behöver inte säga vem du är.'],
+  ['Vid fara','Ring 112.']
+];
+function makePlan(n){
+  const days = [];
+  const m = Math.max(0, n - 2), parts = Math.max(1, Math.ceil(m / 2));
+  for (let j = 0; j < m; j++) {
+    days.push(j % 2 === 0
+      ? (parts === 1 ? 'Läs igenom området och skriv en kort sammanfattning med egna ord.' : `Läs del ${j/2 + 1} av ${parts} och skriv en kort sammanfattning med egna ord.`)
+      : (parts === 1 ? 'Testa dig själv: stäng boken, skriv ner det du minns och kolla sedan vad du missade.' : `Testa dig själv på del ${(j+1)/2}: stäng boken, skriv ner det du minns och kolla sedan vad du missade.`));
+  }
+  if (n >= 2) days.push(n === 2 ? 'Gå igenom hela området och testa dig själv: förklara, skriv ner eller gör uppgifter.' : 'Testa dig själv på allt: förklara högt, skriv ner det du minns eller gör gamla uppgifter.');
+  days.push('Kort repetition, cirka 20 minuter, av det som fortfarande känns svårt. Lägg dig i tid.');
+  return days;
+}
+
+/* ==========================================================
+   TILLSTÅND OCH NAVIGERING
+   ========================================================== */
+const S = { view:'home', grade:null, subject:null, area:null, level:0, R:null, showText:true, drafts:{}, theme:null, picks:{}, planDays:7, planSubject:'' };
+const $app = document.getElementById('app');
+const BADGE = { svenska:'Sv', engelska:'En', matte:'Ma' };
+const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+
+function go(view, patch={}){ stopSpeech(); Object.assign(S, patch, {view}); render(); window.scrollTo(0,0); }
+function areaTitle(){ const a = AREAS[S.grade] && AREAS[S.grade][S.subject] && AREAS[S.grade][S.subject].find(x => x[0] === S.area); return a ? a[1] : ''; }
+function content(){ return CONTENT[areaKey()]; }
+function dailyPool(){
+  const pool = [];
+  for (const k in progress.areas) { const c = CONTENT[k]; if (c) c.levels.forEach((_, i) => { if (passed(k, i)) pool.push([k, i]); }); }
+  return pool;
+}
+
+/* ==========================================================
+   VYER
+   ========================================================== */
+function crumbs(){
+  if (S.view === 'home') return '';
+  const parts = [`<button data-act="home">Elevguiden</button>`];
+  if (S.view === 'progress') parts.push('<span class="here">Mina framsteg</span>');
+  else if (S.view === 'theme') parts.push(`<span class="here">${esc(themeObj().title)}</span>`);
+  else if (S.R && S.R.mode === 'daily' && ['quiz','result'].includes(S.view)) parts.push('<span class="here">Dagens fem</span>');
+  else {
+    if (S.grade) parts.push(S.view === 'subjects' ? `<span class="here">Åk ${S.grade}</span>` : `<button data-act="toSubjects">Åk ${S.grade}</button>`);
+    if (S.subject && S.view !== 'subjects') parts.push(S.view === 'areas' ? `<span class="here">${SUBJECTS[S.subject].name}</span>` : `<button data-act="toAreas">${SUBJECTS[S.subject].name}</button>`);
+    if (S.area && !['subjects','areas'].includes(S.view)) parts.push(S.view === 'area' ? `<span class="here">${esc(areaTitle())}</span>` : `<button data-act="toArea">${esc(areaTitle())}</button>`);
+  }
+  return `<nav class="crumbs" aria-label="Var du är">${parts.join('<span aria-hidden="true">›</span>')}</nav>`;
+}
+
+function speakBtn(src, label='Lyssna'){
+  return canSpeak ? `<button class="speak" data-act="speak" data-src="${src}">${SPEAKER}<span>${label}</span></button>` : '';
+}
+
+function viewHome(){
+  const cards = [];
+  const L = progress.last;
+  if (L && CONTENT[`${L.g}-${L.s}-${L.a}`]) {
+    const t = AREAS[L.g][L.s].find(x => x[0] === L.a)[1];
+    cards.push(`<button class="home-card" data-act="resume"><span class="k">Fortsätt där du var</span><span class="h">${esc(t)}</span><span class="s">Åk ${L.g}, ${SUBJECTS[L.s].name}</span></button>`);
+  }
+  if (dailyPool().length) {
+    const done = progress.daily && progress.daily.date === today();
+    cards.push(`<button class="home-card tint" data-act="daily"><span class="k">Repetition</span><span class="h">Dagens fem</span>
+      <span class="s">${done ? 'Klart för idag. Du kan köra en runda till om du vill.' : 'Fem blandade frågor från det du redan har klarat. Repetition gör att du minns längre.'}</span></button>`);
+  }
+  const any = Object.keys(progress.areas).some(k => progress.areas[k].best.some(Boolean));
+  return `<section class="n-hero n-hero--split">
+    <div>
+      <span class="n-chip">För elever i åk 7–9</span>
+      <h1 class="n-h n-h1" style="margin-top:16px">Öva i din <em>egen takt.</em></h1>
+      <p class="n-lead">Välj årskurs, ämne och område. Du börjar på en lätt nivå och går vidare när du är redo. Fastnar du får du ledtrådar som hjälper dig att tänka vidare.</p>
+    </div>
+    <div class="n-motif n-motif--circle" aria-hidden="true"></div>
+  </section>
+  ${cards.length ? `<div class="home-cards">${cards.join('')}</div>` : ''}
+  <section class="path">
+    <h2 class="n-h n-h2">Skolämnen</h2>
+    <p class="n-lead">Öva svenska, engelska och matte. Vilken årskurs går du i?</p>
+    <div class="grades">${[7,8,9].map(g => `<button class="grade" data-act="grade" data-v="${g}"><span class="num">${g}</span><span class="lbl">årskurs</span></button>`).join('')}</div>
+  </section>
+  <section class="path">
+    <h2 class="n-h n-h2">Livet i skolan</h2>
+    <p class="n-lead">Om vänner, att be om hjälp, att säga nej, livet på nätet och hur man pluggar smart.</p>
+    <div class="list">${THEMES.map(t => `<button class="row" data-act="theme" data-v="${t.id}">
+      <span class="badge" aria-hidden="true">${t.badge}</span>
+      <span class="txt"><span class="t">${esc(t.title)}</span><span class="s">${esc(t.lead)}</span></span>
+      <span class="go" aria-hidden="true">›</span></button>`).join('')}</div>
+  </section>
+  <p class="n-small" style="margin-top:28px;max-width:62ch">Du behöver inte logga in. Hur långt du har kommit sparas bara i den här webbläsaren, och ingen annan kan se det.${any ? ' <button class="textlink" data-act="progress" style="padding:0">Se mina framsteg</button>' : ''}</p>`;
+}
+
+function viewSubjects(){
+  return `<div class="page-head"><h1 class="n-h n-h2">Årskurs ${S.grade}</h1>
+    <p class="n-lead">Vilket ämne vill du öva på?</p></div>
+  <div class="list">${ORDER.map(s => {
+    const areas = AREAS[S.grade][s];
+    const ready = areas.filter(a => CONTENT[`${S.grade}-${s}-${a[0]}`]).length;
+    return `<button class="row" data-act="subject" data-v="${s}">
+      <span class="badge" aria-hidden="true">${BADGE[s]}</span>
+      <span class="txt"><span class="t">${SUBJECTS[s].name}</span><span class="s">${ready ? `${ready} av ${areas.length} områden går att öva på` : 'Områdena kommer snart'}</span></span>
+      <span class="go" aria-hidden="true">›</span></button>`;
+  }).join('')}</div>`;
+}
+
+function viewAreas(){
+  const areas = AREAS[S.grade][S.subject];
+  return `<div class="page-head"><h1 class="n-h n-h2">${SUBJECTS[S.subject].name}</h1>
+    <p class="n-lead">Välj ett område att öva på.</p></div>
+  <div class="list">${areas.map(([id, title]) => {
+    const k = areaKey(S.grade, S.subject, id), c = CONTENT[k];
+    if (!c) return `<button class="row" disabled><span class="txt"><span class="t">${esc(title)}</span><span class="s">Kommer snart</span></span></button>`;
+    const done = c.levels.filter((_, i) => passed(k, i)).length;
+    return `<button class="row" data-act="area" data-v="${id}"><span class="txt"><span class="t">${esc(title)}</span>
+      <span class="s">${done ? `Du har klarat ${done} av ${c.levels.length} nivåer` : `${c.levels.length} nivåer, från lätt till svår`}</span></span><span class="go" aria-hidden="true">›</span></button>`;
+  }).join('')}</div>`;
+}
+
+function storyBlock(t){
+  return `<details class="n-card text" ${S.showText ? 'open' : ''}><summary>Texten: ${esc(t.title)}</summary>
+    <div class="story"><div class="story-head"><h3 class="n-h n-h3">${esc(t.title)}</h3>${speakBtn('story','Lyssna på texten')}</div>${t.paras.map(p => `<p>${esc(p)}</p>`).join('')}</div></details>`;
+}
+
+function viewArea(){
+  const c = content(), k = areaKey();
+  const tried = (progress.areas[k] && progress.areas[k].best.some(Boolean));
+  const firstOpen = c.levels.findIndex((_, i) => unlocked(k, i) && !passed(k, i));
+  const steps = c.levels.map((lv, i) => {
+    const b = progress.areas[k] && progress.areas[k].best[i];
+    if (!unlocked(k, i)) {
+      return `<div class="step locked" style="--i:${i}"><span class="name">${lv.name}</span><span class="d">${esc(lv.desc)}</span>
+        <span class="lockinfo">Klara ${c.levels[i-1].name.toLowerCase()} först</span>
+        <button class="try" data-act="force" data-v="${i}">Jag vill prova ändå</button></div>`;
+    }
+    const status = passed(k, i) ? `Klarad, ${b.score} av ${b.total}` : (b ? `Bästa: ${b.score} av ${b.total}` : (i === firstOpen ? 'Börja här' : 'Öppen'));
+    return `<button class="step ${passed(k, i) ? 'done' : ''}" style="--i:${i}" data-act="start" data-v="${i}">
+      <span class="name">${lv.name}</span><span class="d">${esc(lv.desc)}</span><span class="n-chip st">${status}</span></button>`;
+  }).join('');
+  return `<div class="page-head"><h1 class="n-h n-h2">${esc(areaTitle())}</h1></div>
+  <section class="n-card intro"><div class="story-head"><h2 class="n-h n-h3">Så fungerar det</h2>${speakBtn('intro')}</div>${c.intro.map(p => `<p>${esc(p)}</p>`).join('')}
+    <div class="example"><strong>${esc(c.example.title)}</strong><ol>${c.example.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol></div>
+  </section>
+  ${c.text ? `<div style="margin-top:16px">${storyBlock(c.text)}</div>` : ''}
+  ${!tried ? `<div class="n-card n-card--tint diag-card"><p><strong>Osäker på var du ska börja?</strong> Gör ett kort test med ${c.levels.length * 2} frågor, så föreslår vi en nivå.</p>
+    <button class="n-btn n-btn--ghost" data-act="diag">Gör testet</button></div>` : ''}
+  <h2 class="n-h n-h3 section-title">Välj nivå</h2>
+  <p class="n-small" style="margin:0">Du klarar en nivå när du har minst 80 % rätt på första försöket.</p>
+  <div class="stairs">${steps}</div>`;
+}
+
+function viewQuiz(){
+  const R = S.R, q = R.qs[R.i], n = R.qs.length, diag = R.mode === 'diag';
+  const head = R.mode === 'daily' ? 'Dagens fem' : diag ? 'Var ska du börja?' : content().levels[S.level].name;
+  let answer;
+  if (q.kind === 'choice') {
+    answer = `<div class="opts" role="group" aria-label="Svarsalternativ">${q.options.map((o, idx) => {
+      let cls = '', dis = '';
+      if (R.done && o === q.answer) cls = 'right';
+      else if (R.wrong.includes(idx)) { cls = 'wrong'; dis = 'disabled'; }
+      if (R.done) dis = 'disabled';
+      return `<button class="opt ${cls}" data-act="pick" data-v="${idx}" aria-pressed="${R.picked === idx}" ${dis}>${esc(o)}</button>`;
+    }).join('')}</div>`;
+  } else {
+    answer = `<label class="lbl-field" for="ans">Ditt svar</label>
+      <input id="ans" class="answer" autocomplete="off" autocapitalize="off" spellcheck="false" ${q.kind !== 'text' ? 'inputmode="text"' : ''} value="${esc(R.input)}" ${R.done ? 'disabled' : ''}>`;
+  }
+  const actions = [];
+  if (!R.done) {
+    actions.push(`<button class="n-btn" data-act="check" ${q.kind === 'choice' && R.picked == null ? 'disabled' : ''}>Kontrollera</button>`);
+    if (!diag && R.hints < q.hints.length) actions.push(`<button class="n-btn n-btn--ghost" data-act="hint">Visa ledtråd ${R.hints + 1} av ${q.hints.length}</button>`);
+    if (!diag && (R.hints >= q.hints.length || R.tries >= 2)) actions.push(`<button class="textlink" data-act="reveal">Visa lösningen</button>`);
+  } else {
+    actions.push(`<button class="n-btn" data-act="next" id="nextBtn">${R.i < n - 1 ? 'Nästa fråga' : 'Se resultatet'}</button>`);
+  }
+  return `<div class="qhead"><span>${head}</span><span>Fråga ${R.i + 1} av ${n}</span></div>
+    <div class="bar" aria-hidden="true"><span style="width:${(R.i / n) * 100}%"></span></div>
+    ${q.text ? storyBlock(q.text) : ''}
+    ${q.meta ? `<p class="meta">${esc(q.meta)}</p>` : ''}
+    <p class="instr">${esc(q.instr)}</p>
+    <div class="prompt-row"><p class="prompt" ${q.lang === 'en' ? 'lang="en"' : ''}>${esc(q.prompt)}</p>${speakBtn('prompt')}</div>
+    ${answer}
+    <div class="actions">${actions.join('')}</div>
+    ${q.hints.slice(0, R.hints).map((h, i) => `<div class="hint"><strong>Ledtråd ${i + 1}:</strong> ${esc(h)}</div>`).join('')}
+    ${R.feedback ? `<div class="msg ${R.feedback.type}" role="status">${esc(R.feedback.text)}</div>` : ''}
+    ${R.revealed ? `<div class="n-card n-card--tint solution"><strong>Lösning:</strong> ${esc(q.solution)}</div>` : ''}`;
+}
+
+function reviewBlock(){
+  const missed = S.R.log.filter(x => !x.ok);
+  if (!missed.length) return '';
+  return `<details class="n-card review"><summary>Frågor att titta på igen (${missed.length})</summary>
+    ${missed.map(x => `<div class="review-item"><p class="p" ${x.q.lang === 'en' ? 'lang="en"' : ''}>${esc(x.q.prompt)}</p><p class="n-small" style="margin:4px 0 0">Lösning: ${esc(x.q.solution)}</p></div>`).join('')}
+  </details>`;
+}
+
+function viewResult(){
+  const R = S.R, n = R.qs.length;
+  if (R.mode === 'daily') {
+    return `<div class="page-head"><span class="n-chip">Dagens fem</span>
+      <p class="score"><span class="big">${R.score}</span><span class="n-lead" style="margin:0">av ${n} rätt på första försöket</span></p>
+      <p style="max-width:56ch;margin:0">Bra jobbat! Att repetera lite varje dag gör att kunskaperna sitter kvar längre.</p>
+      <div class="actions"><button class="n-btn" data-act="daily">Fem frågor till</button><button class="textlink" data-act="home">Till startsidan</button></div>
+      ${reviewBlock()}</div>`;
+  }
+  const c = content();
+  if (R.mode === 'diag') {
+    let s = 0;
+    if (R.lvl[0] === 2) { s = 1; if (R.lvl[1] === 2) s = 2; }
+    const lv = c.levels[s];
+    const why = s === 0 ? 'Grund är en bra start. Där bygger du upp det som de andra nivåerna behöver.'
+      : s === 1 ? 'Du klarade grunderna i testet, så du kan hoppa direkt till fördjupning.'
+      : 'Du klarade både grund och fördjupning i testet. Prova utmaningen!';
+    return `<div class="page-head"><span class="n-chip">Förslag</span>
+      <h1 class="n-h n-h2" style="margin-top:14px">Börja på ${lv.name.toLowerCase()}</h1>
+      <p style="max-width:56ch;margin:0">${why} Du fick ${R.score} av ${n} rätt i testet.</p>
+      <div class="actions"><button class="n-btn" data-act="start" data-v="${s}">Börja på ${lv.name.toLowerCase()}</button><button class="textlink" data-act="toArea">Välj själv</button></div></div>`;
+  }
+  const lv = c.levels[S.level];
+  const ok = R.score / n >= PASS, need = Math.ceil(n * PASS), next = c.levels[S.level + 1];
+  const actions = [];
+  if (ok && next) actions.push(`<button class="n-btn" data-act="start" data-v="${S.level + 1}">Gå vidare till ${next.name.toLowerCase()}</button>`);
+  if (lv.writing) actions.push(`<button class="n-btn ${ok && next ? 'n-btn--ghost' : ''}" data-act="write">Gör skrivuppgiften</button>`);
+  actions.push(`<button class="n-btn n-btn--ghost" data-act="start" data-v="${S.level}">Öva igen</button>`);
+  actions.push(`<button class="textlink" data-act="toArea">Tillbaka till nivåerna</button>`);
+  return `<div class="page-head"><span class="n-chip">${lv.name}</span>
+    <p class="score"><span class="big">${R.score}</span><span class="n-lead" style="margin:0">av ${n} rätt på första försöket</span></p>
+    <p style="max-width:56ch;margin:0">${ok
+      ? (next ? 'Bra jobbat! Du har klarat nivån och kan gå vidare.' : 'Bra jobbat! Du har klarat den svåraste nivån i det här området.')
+      : `För att klara nivån behöver du ${need} rätt. Titta på frågorna nedanför och öva igen. Varje försök gör dig säkrare.`}</p>
+    <div class="actions">${actions.join('')}</div>
+    ${reviewBlock()}</div>`;
+}
+
+function viewWrite(){
+  const c = content(), w = c.levels[S.level].writing, dk = `${areaKey()}-${S.level}`;
+  const draft = S.drafts[dk] || '';
+  return `<div class="page-head"><h1 class="n-h n-h2">Skrivuppgift</h1></div>
+    <section class="n-card"><div class="story-head"><p class="task">${esc(w.task)}</p>${speakBtn('task')}</div>
+      <strong>Checklista</strong><ul class="check">${w.check.map(x => `<li>${esc(x)}</li>`).join('')}</ul></section>
+    ${c.text ? `<div style="margin-top:16px">${storyBlock(c.text)}</div>` : ''}
+    <div style="margin-top:24px">
+      <label class="lbl-field" for="draft">Din text</label>
+      <textarea id="draft">${esc(draft)}</textarea>
+      <p class="n-small" id="wc" style="margin:6px 0 0">${countWords(draft)} ord</p>
+      <p class="n-small" style="margin:2px 0 0">Skriv inte ditt namn eller andra personliga uppgifter i texten.</p>
+    </div>
+    <div class="actions"><button class="n-btn" data-act="feedback" id="fbBtn">Få feedback på texten</button>
+      <button class="textlink" data-act="toArea">Tillbaka till nivåerna</button></div>
+    <div class="n-card n-card--tint feedback" id="fb" role="status" hidden></div>`;
+}
+const countWords = t => (t.trim().match(/\S+/g) || []).length;
+
+function viewProgress(){
+  const rows = [];
+  for (const g of [7,8,9]) for (const s of ORDER) for (const [id, title] of AREAS[g][s]) {
+    const k = `${g}-${s}-${id}`, c = CONTENT[k];
+    if (!c) continue;
+    const chips = c.levels.map((lv, i) => {
+      const b = progress.areas[k] && progress.areas[k].best[i];
+      return passed(k, i) ? `<span class="n-chip">${lv.name}: klarad</span>` : b ? `<span class="chip-off">${lv.name}: ${b.score} av ${b.total}</span>` : `<span class="chip-off">${lv.name}</span>`;
+    }).join('');
+    rows.push(`<div class="prog-row"><div><strong>${esc(title)}</strong><div class="n-small">Åk ${g}, ${SUBJECTS[s].name}</div></div><div class="chips">${chips}</div></div>`);
+  }
+  return `<div class="page-head"><h1 class="n-h n-h2">Mina framsteg</h1>
+    <p class="n-lead">Det här syns bara i den här webbläsaren.</p></div>
+    <section class="n-card">${rows.join('')}</section>
+    <div class="actions"><button class="n-btn n-btn--ghost" data-act="reset">Börja om från noll</button></div>`;
+}
+
+function themeObj(){ return THEMES.find(t => t.id === S.theme); }
+function helpBox(t){
+  const rows = HELP.map(([h, p]) => `<li><strong>${h}:</strong> ${esc(p)}</li>`);
+  if (t && t.extraHelp) rows.push(`<li>${esc(t.extraHelp)}</li>`);
+  return `<section class="n-card help" id="hjalp"><h2 class="n-h n-h3">Behöver du prata med någon?</h2>
+    <p style="margin:0 0 8px">Om något känns tungt eller är allvarligt ska du inte vara ensam med det. Vuxna finns till för att hjälpa dig.</p>
+    <ul class="help-list">${rows.join('')}</ul></section>`;
+}
+function factBlock(f){
+  let body = '';
+  if (f.p) body = `<p>${esc(f.p)}</p>`;
+  if (f.steps) body = `<ol class="steps">${f.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>`;
+  if (f.list) body = `<dl class="roles">${f.list.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>`;
+  return `<article class="n-card fact ${f.list ? 'wide' : ''}"><h3 class="n-h n-h3">${esc(f.h)}</h3>${body}</article>`;
+}
+function scenBlock(t, si){
+  const sc = t.scenarios[si], key = `${t.id}-${si}`, chosen = S.picks[key] || [];
+  return `<article class="n-card scen">
+    <div class="story-head"><p class="situation">${esc(sc.s)}</p>${speakBtn('scen-' + si)}</div>
+    <p class="n-small" style="margin:0 0 10px">Vad gör du? Välj det som ligger närmast. Du kan sedan titta på de andra valen också.</p>
+    <div class="choices">${sc.c.map(([txt, good, resp], ci) => {
+      const open = chosen.includes(ci);
+      return `<div class="choice-wrap"><button class="choice ${open ? (good ? 'is-good' : 'is-think') : ''}" data-act="choose" data-v="${si}-${ci}" aria-expanded="${open}">${esc(txt)}</button>
+        ${open ? `<div class="resp ${good ? 'good' : 'think'}" role="status"><strong>${good ? 'Det här brukar fungera bra.' : 'Tänk ett varv till.'}</strong> ${esc(resp)}</div>` : ''}</div>`;
+    }).join('')}</div></article>`;
+}
+function exerciseBlock(t){
+  const ex = t.exercise;
+  if (ex.type === 'reflect') {
+    return `<section class="n-card n-card--tint exercise"><h2 class="n-h n-h3">${esc(ex.title)}</h2>
+      <ul class="reflect">${ex.questions.map(q => `<li>${esc(q)}</li>`).join('')}</ul>
+      <p class="n-small" style="margin:10px 0 0">Dina tankar stannar hos dig. Prata gärna om dem med en vän eller en vuxen du litar på.</p></section>`;
+  }
+  if (ex.type === 'message') {
+    const dk = 'msg-' + t.id, draft = S.drafts[dk] ?? ex.template;
+    return `<section class="n-card exercise"><h2 class="n-h n-h3">${esc(ex.title)}</h2>
+      <p style="margin:0 0 12px;max-width:60ch">${esc(ex.task)}</p>
+      <strong>Checklista</strong><ul class="check">${ex.check.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      <label class="lbl-field" for="draft" style="margin-top:16px">Ditt meddelande</label>
+      <textarea id="draft" data-key="${dk}" style="min-height:10rem">${esc(draft)}</textarea>
+      <p class="n-small" style="margin:6px 0 0">Meddelandet sparas inte och skickas inte härifrån. Kopiera det och skicka det själv när du är nöjd.</p>
+      <div class="actions"><button class="n-btn" data-act="msgfeedback" id="fbBtn">Få tips på meddelandet</button><button class="n-btn n-btn--ghost" data-act="copy">Kopiera texten</button></div>
+      <div class="n-card n-card--tint feedback" id="fb" role="status" hidden></div></section>`;
+  }
+  if (ex.type === 'plan') {
+    const days = makePlan(S.planDays), n = days.length;
+    return `<section class="n-card exercise"><h2 class="n-h n-h3">${esc(ex.title)}</h2>
+      <p style="margin:0 0 14px;max-width:60ch">Välj hur många dagar det är kvar till provet, så får du en plan med ett kort pass per dag, 20–30 minuter.</p>
+      <div class="plan-form">
+        <label class="lbl-field" for="planSubject">Ämne eller prov <span class="n-small">(valfritt)</span></label>
+        <input id="planSubject" class="answer" value="${esc(S.planSubject)}" placeholder="Till exempel: NO-prov om cellen">
+        <label class="lbl-field" for="planDays" style="margin-top:12px">Dagar kvar till provet</label>
+        <select id="planDays" class="answer">${[2,3,4,5,6,7,8,9,10,12,14].map(d => `<option value="${d}" ${d === S.planDays ? 'selected' : ''}>${d} dagar</option>`).join('')}</select>
+      </div>
+      <h3 class="n-h n-h3" style="margin-top:22px">${S.planSubject ? 'Plan: ' + esc(S.planSubject) : 'Din plan'}</h3>
+      <ol class="plan">${days.map((d, i) => `<li><span class="day">Dag ${i + 1}</span><span>${esc(d)}</span></li>`).join('')}</ol>
+      <p class="n-small" style="margin:10px 0 0">Tips: fråga läraren vad som är viktigast att kunna, och lägg mest tid där. Planen sparas inte, men du kan skriva ut den.</p>
+      <div class="actions"><button class="n-btn n-btn--ghost" data-act="print">Skriv ut planen</button></div></section>`;
+  }
+  return '';
+}
+function viewTheme(){
+  const t = themeObj();
+  return `<div class="page-head"><h1 class="n-h n-h2">${esc(t.title)}</h1>
+    <div class="story-head"><p class="n-lead">${esc(t.lead)}</p>${speakBtn('lead')}</div>
+    <a class="textlink" href="#hjalp" data-act="tohelp" style="padding:0">Behöver du prata med någon?</a></div>
+  <h2 class="n-h n-h3 section-title">Bra att veta</h2>
+  <div class="facts">${t.facts.map(factBlock).join('')}</div>
+  <h2 class="n-h n-h3 section-title">Vad gör du?</h2>
+  <div class="scens">${t.scenarios.map((_, i) => scenBlock(t, i)).join('')}</div>
+  <div style="margin-top:40px">${exerciseBlock(t)}</div>
+  <div style="margin-top:24px">${helpBox(t)}</div>`;
+}
+
+function render(){
+  const v = { home:viewHome, subjects:viewSubjects, areas:viewAreas, area:viewArea, quiz:viewQuiz, result:viewResult, write:viewWrite, progress:viewProgress, theme:viewTheme }[S.view];
+  $app.innerHTML = crumbs() + v();
+  const d = $app.querySelector('details.text');
+  if (d) d.addEventListener('toggle', () => { S.showText = d.open; });
+  if (S.view === 'quiz') {
+    const inp = document.getElementById('ans'), nb = document.getElementById('nextBtn');
+    if (inp && !S.R.done) inp.focus({preventScroll:true});
+    else if (nb) nb.focus({preventScroll:true});
+  }
+}
+function setFeedback(text){
+  const fb = document.getElementById('fb');
+  if (!fb) return;
+  fb.hidden = false;
+  fb.innerHTML = '<strong>Feedback</strong><span></span>';
+  fb.lastChild.textContent = text;
+}
+
+/* ==========================================================
+   ÖVNINGSLOGIK
+   ========================================================== */
+function newRound(qs, mode){
+  return { qs, mode, i:0, score:0, tries:0, hints:0, revealed:false, done:false, picked:null, wrong:[], input:'', feedback:null, firstOk:false, log:[], lvl:[0,0,0] };
+}
+function startLevel(i){
+  const c = content();
+  S.level = i;
+  const qs = c.levels[i].make(); qs.forEach(q => { q.text = q.text || c.text; });
+  S.R = newRound(qs, 'level');
+  go('quiz');
+}
+function startDiag(){
+  const c = content(), qs = [];
+  c.levels.forEach((lv, i) => shuffle(lv.make()).slice(0, 2).forEach(q => { q.lvl = i; q.text = c.text; qs.push(q); }));
+  S.R = newRound(qs, 'diag');
+  go('quiz');
+}
+function startDaily(){
+  const pool = dailyPool(); if (!pool.length) return;
+  const qs = [], seen = new Set();
+  for (let t = 0; qs.length < 5 && t < 40; t++) {
+    const [k, i] = pick(pool); const c = CONTENT[k];
+    const q = pick(c.levels[i].make());
+    if (seen.has(q.prompt)) continue;
+    seen.add(q.prompt); q.meta = labelFor(k); q.text = c.text; qs.push(q);
+  }
+  S.R = newRound(qs, 'daily');
+  go('quiz');
+}
+function resetQ(){ Object.assign(S.R, { tries:0, hints:0, revealed:false, done:false, picked:null, wrong:[], input:'', feedback:null, firstOk:false }); }
+
+function isCorrect(q, raw){
+  if (q.kind === 'choice') return raw === q.answer;
+  if (q.kind === 'number') {
+    const v = parseNum(raw);
+    if (near(v, q.answer)) return true;
+    /* Avrundat decimalsvar på bråk som inte går jämnt ut, till exempel 0,83 för 5/6 */
+    const dec = String(raw).match(/[.,](\d+)/);
+    return !!dec && dec[1].length >= 2 && Math.round(q.answer * 1000) % 10 !== 0 && Math.abs(v - q.answer) < 0.006;
+  }
+  if (q.kind === 'fraction') { const f = parseFrac(raw); return !!f && f.n === q.answer.n && f.d === q.answer.d; }
+  return [q.answer, ...q.accept].map(norm).includes(norm(raw));
+}
+function explain(q, raw){
+  if (q.kind === 'fraction') {
+    const f = parseFrac(raw);
+    if (f && f.d && near(f.n / f.d, q.answer.n / q.answer.d)) return 'Rätt värde, men det går att förkorta mer. Finns det ett tal som både täljaren och nämnaren går att dela med?';
+    if (f) return 'Täljaren och nämnaren måste delas med samma tal, så att bråket behåller sitt värde.';
+    return null;
+  }
+  return q.diagnose ? q.diagnose(raw) : null;
+}
+
+function check(){
+  const R = S.R, q = R.qs[R.i];
+  let raw;
+  if (q.kind === 'choice') {
+    if (R.picked == null) return;
+    raw = q.options[R.picked];
+  } else {
+    raw = document.getElementById('ans').value;
+    R.input = raw;
+    if (!raw.trim()) { R.feedback = {type:'bad', text:'Skriv ett svar först.'}; return render(); }
+    if (q.kind === 'number' && isNaN(parseNum(raw))) { R.feedback = {type:'bad', text:'Skriv svaret som ett tal, till exempel 12, 0,25 eller 3/4.'}; return render(); }
+    if (q.kind === 'fraction' && !parseFrac(raw)) { R.feedback = {type:'bad', text:'Skriv svaret som ett bråk, till exempel 2/3.'}; return render(); }
+  }
+  const ok = isCorrect(q, raw);
+
+  if (R.mode === 'diag') {
+    if (ok) { R.score++; R.lvl[q.lvl]++; }
+    R.feedback = ok ? {type:'ok', text:'Rätt!'} : {type:'bad', text:'Inte rätt den här gången. Det gör inget, testet visar bara var du ska börja.'};
+    if (!ok && q.kind === 'choice') R.wrong.push(R.picked);
+    R.done = true;
+    return render();
+  }
+
+  if (ok) {
+    if (R.tries === 0) { R.score++; R.firstOk = true; }
+    R.feedback = {type:'ok', text: R.tries === 0 ? pick(['Rätt på första försöket!','Rätt! Snyggt tänkt.','Precis rätt!']) : 'Rätt! Bra att du inte gav upp.'};
+    R.done = true;
+  } else {
+    R.tries++;
+    if (q.kind === 'choice') { R.wrong.push(R.picked); R.picked = null; }
+    const why = explain(q, raw);
+    const tail = R.hints < q.hints.length ? 'Försök igen, eller ta en ledtråd.' : 'Försök igen, eller titta på lösningen.';
+    R.feedback = {type:'bad', text: why ? `${why} ${tail}` : `Inte riktigt. ${tail}`};
+  }
+  render();
+}
+
+function next(){
+  const R = S.R;
+  if (R.mode !== 'diag') R.log.push({ q: R.qs[R.i], ok: R.firstOk });
+  if (R.i < R.qs.length - 1) { R.i++; resetQ(); stopSpeech(); render(); window.scrollTo(0,0); return; }
+  if (R.mode === 'level') {
+    const k = areaKey(), p = prog(k), n = R.qs.length, b = p.best[S.level];
+    if (!b || R.score / n > b.score / b.total) p.best[S.level] = {score:R.score, total:n};
+  } else if (R.mode === 'diag') {
+    let s = 0; if (R.lvl[0] === 2) { s = 1; if (R.lvl[1] === 2) s = 2; }
+    const p = prog(areaKey()); for (let i = 1; i <= s; i++) p.forced[i] = true;
+  } else if (R.mode === 'daily') {
+    progress.daily = { date: today(), done: true };
+  }
+  saveProgress();
+  go('result');
+}
+
+async function askFeedback(){
+  const c = content(), w = c.levels[S.level].writing, dk = `${areaKey()}-${S.level}`;
+  const text = (S.drafts[dk] || '').trim();
+  const btn = document.getElementById('fbBtn');
+  if (countWords(text) < 15) { setFeedback('Skriv lite mer först, minst 15 ord, så kan du få bättre feedback.'); return; }
+  btn.disabled = true; btn.textContent = 'Läser din text …';
+  setFeedback('');
+  const out = document.getElementById('fb').lastChild;
+  out.textContent = 'Läser …';
+  try {
+    await aiFeedback({ type:'writing', subject:S.subject, grade:S.grade, task:w.task, focus:w.focus, text }, t => { out.textContent = t; });
+  } catch (e) {
+    out.textContent = e.code === 'rate_limited' ? 'Många ber om feedback just nu. Vänta en minut och försök igen.' : 'Feedbacken kunde inte hämtas. Använd checklistan ovanför så länge, och försök igen om en stund.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Få ny feedback';
+  }
+}
+
+async function askMsgFeedback(){
+  const t = themeObj(), dk = 'msg-' + t.id;
+  const text = (S.drafts[dk] ?? t.exercise.template).trim();
+  const btn = document.getElementById('fbBtn');
+  if (countWords(text) < 6 || text.includes('…') || /\[(namn|ditt namn)\]/.test(text)) { setFeedback('Skriv klart ditt meddelande först. Byt ut punkterna mot dina egna ord.'); return; }
+  btn.disabled = true; btn.textContent = 'Läser ditt meddelande …';
+  setFeedback('');
+  const out = document.getElementById('fb').lastChild;
+  out.textContent = 'Läser …';
+  try {
+    await aiFeedback({ type:'message', text }, s => { out.textContent = s; });
+  } catch (e) {
+    out.textContent = e.code === 'rate_limited' ? 'Många ber om tips just nu. Vänta en minut och försök igen.' : 'Tipsen kunde inte hämtas. Läs igenom meddelandet med checklistan, och försök igen om en stund.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Få nya tips';
+  }
+}
+
+function speakSrc(src){
+  if (S.view === 'theme') {
+    const t = themeObj();
+    if (src === 'lead') return [`${t.title}. ${t.lead}`, 'sv'];
+    if (src.startsWith('scen-')) { const sc = t.scenarios[+src.slice(5)]; return [`${sc.s} Vad gör du? ${sc.c.map((c, i) => `Val ${i + 1}: ${c[0]}`).join(' ')}`, 'sv']; }
+  }
+  if (src === 'prompt') { const q = S.R.qs[S.R.i]; return q.lang === 'en' ? [q.prompt.replace(/___/g, ' … '), 'en'] : [`${q.instr} ${q.prompt}`, 'sv']; }
+  const c = content() || {};
+  if (src === 'story') { const t = (S.R && S.view === 'quiz' && S.R.qs[S.R.i].text) || c.text; return [`${t.title}. ${t.paras.join(' ')}`, 'sv']; }
+  if (src === 'intro') return [c.intro.join(' '), 'sv'];
+  if (src === 'task') return [c.levels[S.level].writing.task, 'sv'];
+  return ['', 'sv'];
+}
+
+/* ==========================================================
+   HÄNDELSER
+   ========================================================== */
+$app.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if (!b || b.disabled) return;
+  const v = b.dataset.v;
+  switch (b.dataset.act) {
+    case 'home': go('home', {grade:null, subject:null, area:null}); break;
+    case 'grade': go('subjects', {grade:+v, subject:null, area:null}); break;
+    case 'toSubjects': go('subjects', {subject:null, area:null}); break;
+    case 'subject': go('areas', {subject:v, area:null}); break;
+    case 'toAreas': go('areas', {area:null}); break;
+    case 'area': progress.last = {g:S.grade, s:S.subject, a:v}; saveProgress(); go('area', {area:v, showText:true}); break;
+    case 'resume': { const L = progress.last; go('area', {grade:+L.g, subject:L.s, area:L.a, showText:true}); break; }
+    case 'toArea': go('area'); break;
+    case 'force': prog(areaKey()).forced[+v] = true; saveProgress(); render(); break;
+    case 'start': startLevel(+v); break;
+    case 'diag': startDiag(); break;
+    case 'daily': startDaily(); break;
+    case 'progress': go('progress'); break;
+    case 'reset':
+      if (confirm('Vill du ta bort alla dina framsteg? Det går inte att ångra.')) { progress = freshProgress(); saveProgress(); go('home', {grade:null, subject:null, area:null}); }
+      break;
+    case 'pick': S.R.picked = +v; S.R.feedback = null; render(); break;
+    case 'check': check(); break;
+    case 'hint': { const inp = document.getElementById('ans'); if (inp) S.R.input = inp.value; S.R.hints++; render(); break; }
+    case 'reveal': S.R.revealed = true; S.R.done = true; S.R.feedback = null; render(); break;
+    case 'next': next(); break;
+    case 'write': go('write'); break;
+    case 'feedback': askFeedback(); break;
+    case 'theme': go('theme', {theme:v, picks:{}}); break;
+    case 'choose': { const [si, ci] = v.split('-').map(Number); const key = `${S.theme}-${si}`; const arr = S.picks[key] || (S.picks[key] = []); if (!arr.includes(ci)) arr.push(ci); render(); const el = $app.querySelector(`[data-v="${v}"]`); if (el) el.focus({preventScroll:true}); break; }
+    case 'tohelp': e.preventDefault(); document.getElementById('hjalp').scrollIntoView({behavior:'smooth'}); break;
+    case 'msgfeedback': askMsgFeedback(); break;
+    case 'copy': { const ta = document.getElementById('draft'); const done = () => { b.textContent = 'Kopierat!'; setTimeout(() => { b.textContent = 'Kopiera texten'; }, 2000); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); try { document.execCommand('copy'); done(); } catch(_) {} });
+      else { ta.select(); try { document.execCommand('copy'); done(); } catch(_) {} } break; }
+    case 'print': window.print(); break;
+    case 'speak': { const [t, l] = speakSrc(b.dataset.src); speak(t, l); break; }
+  }
+});
+$app.addEventListener('change', e => {
+  if (e.target.id === 'planDays') { S.planDays = +e.target.value; render(); const s = document.getElementById('planDays'); if (s) s.focus({preventScroll:true}); }
+});
+$app.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.id === 'ans') { e.preventDefault(); check(); }
+});
+$app.addEventListener('input', e => {
+  if (e.target.id === 'planSubject') { S.planSubject = e.target.value; const h = $app.querySelector('.exercise h3'); if (h) h.textContent = S.planSubject ? 'Plan: ' + S.planSubject : 'Din plan'; return; }
+  if (e.target.id === 'draft') {
+    S.drafts[e.target.dataset.key || `${areaKey()}-${S.level}`] = e.target.value;
+    const wc = document.getElementById('wc');
+    if (wc) wc.textContent = `${countWords(e.target.value)} ord`;
+  }
+});
+
+/* ==========================================================
+   NATTLÄGE (samma lösning som i alla Norvay-appar)
+   ========================================================== */
+const MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+const themeBtn = document.getElementById('themeBtn');
+const mq = window.matchMedia('(prefers-color-scheme: dark)');
+function isDark(){ const t = document.documentElement.getAttribute('data-theme'); return t ? t === 'dark' : mq.matches; }
+function paintThemeBtn(){
+  const dark = isDark();
+  themeBtn.innerHTML = dark ? SUN : MOON;
+  themeBtn.setAttribute('aria-label', dark ? 'Byt till ljust läge' : 'Byt till mörkt läge');
+  themeBtn.setAttribute('aria-pressed', String(dark));
+}
+themeBtn.addEventListener('click', () => {
+  const nextTheme = isDark() ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', nextTheme);
+  try { localStorage.setItem('norvay-tema', nextTheme); } catch(e) {}
+  paintThemeBtn();
+});
+if (mq.addEventListener) mq.addEventListener('change', paintThemeBtn);
+paintThemeBtn();
+
+render();
+</script>
+</body>
+</html>
