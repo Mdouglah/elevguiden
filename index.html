@@ -232,6 +232,56 @@ textarea:focus{border-color:var(--n-accent);outline:none}
 .plan li{display:grid;grid-template-columns:72px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--n-line)}
 .plan li:first-child{border-top:0}
 .plan .day{font-weight:600;color:var(--n-accent)}
+
+/* ---------- Liv och rörelse (stängs av vid ”minska rörelse”) ---------- */
+.rot{display:inline-block}
+.rot em{display:inline-block;color:var(--n-terracotta);transition:opacity .6s ease,transform .6s ease}
+.rot em.out{opacity:0;transform:translateY(-.25em)}
+.rot em.in{animation:rotIn .8s ease}
+@keyframes rotIn{from{opacity:0;transform:translateY(.3em)}to{opacity:1;transform:none}}
+.rot-h{max-width:none}
+@media (max-width:900px){ .rot-h{min-height:2.3em} }
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.enter .modes>*,.enter .home-cards>*,.enter .grades>*,.enter .list>*,.enter .stairs>*,.enter .facts>*,.enter .scens>*,.enter .page-head{animation:rise .5s cubic-bezier(.2,.7,.3,1) both}
+.enter .modes>*:nth-child(2),.enter .home-cards>*:nth-child(2),.enter .grades>*:nth-child(2),.enter .list>*:nth-child(2),.enter .stairs>*:nth-child(2),.enter .facts>*:nth-child(2),.enter .scens>*:nth-child(2){animation-delay:.07s}
+.enter .modes>*:nth-child(3),.enter .home-cards>*:nth-child(3),.enter .grades>*:nth-child(3),.enter .list>*:nth-child(3),.enter .stairs>*:nth-child(3),.enter .facts>*:nth-child(3),.enter .scens>*:nth-child(3){animation-delay:.14s}
+.enter .list>*:nth-child(4),.enter .facts>*:nth-child(4){animation-delay:.21s}
+.enter .list>*:nth-child(5){animation-delay:.28s}
+.mode,.grade,.row,.step,.home-card{transition:transform .18s ease,background .15s,border-color .15s,box-shadow .18s}
+.mode:hover,.grade:hover,.row:hover:not([disabled]),.step:not(.locked):hover,.home-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px -14px rgba(18,63,55,.45)}
+.mode-icon{transition:transform .3s ease}
+.mode:hover .mode-icon{transform:rotate(-8deg) scale(1.06)}
+.mode-go span{display:inline-block;transition:transform .2s ease}
+.mode:hover .mode-go span{transform:translateX(4px)}
+.grade:hover .num{color:var(--n-accent)}
+.q-anim{animation:slideIn .35s cubic-bezier(.2,.7,.3,1)}
+@keyframes slideIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.opt.right{animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.035)}100%{transform:scale(1)}}
+.shake{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.msg.ok{animation:rise .35s ease}
+.confetti{position:fixed;z-index:50;pointer-events:none}
+.ring{position:relative;flex:none;width:46px;height:46px}
+.ring svg{width:46px;height:46px}
+.ring-bg{fill:none;stroke:var(--n-tint);stroke-width:4}
+.ring-fg{fill:none;stroke:var(--n-accent);stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .8s ease}
+.ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600}
+.week{cursor:default}
+.week:hover{transform:none;box-shadow:none;border-color:var(--n-line)}
+.dots{display:flex;gap:8px;margin:6px 0 2px}
+.dot{display:flex;flex-direction:column;align-items:center;gap:4px}
+.dot i{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--n-line);background:var(--n-surface)}
+.dot.on i{background:var(--n-accent);border-color:var(--n-accent)}
+.dot.today i{box-shadow:0 0 0 3px var(--n-tint)}
+.dot b{font-size:.72rem;font-weight:500;color:var(--n-ink-soft)}
+.enter .dot.on i{animation:pop .5s ease both}
+.score .big{display:inline-block;min-width:1.2ch}
+@media (prefers-reduced-motion: reduce){
+  .enter .modes>*,.enter .home-cards>*,.enter .grades>*,.enter .list>*,.enter .stairs>*,.enter .facts>*,.enter .scens>*,.enter .page-head,.q-anim,.opt.right,.shake,.msg.ok{animation:none!important}
+  .mode:hover,.grade:hover,.row:hover,.step:hover,.home-card:hover{transform:none}
+}
+
 @media print{
   .n-footer,.crumbs,.page-head,.facts,.scens,.help,.section-title,.plan-form,.actions{display:none!important}
   .exercise{border:0!important;padding:0!important}
@@ -676,9 +726,19 @@ const CONTENT = {
    FRAMSTEG (sparas bara i webbläsaren)
    ========================================================== */
 const STORE = 'elevguiden-v2';
-const freshProgress = () => ({ areas:{}, last:null, daily:null });
+const freshProgress = () => ({ areas:{}, last:null, daily:null, days:[] });
 let progress = freshProgress();
 try { const p = JSON.parse(localStorage.getItem(STORE)); if (p && p.areas) progress = p; } catch(e) {}
+function markPracticed(){
+  if (!Array.isArray(progress.days)) progress.days = [];
+  const t = today(); if (!progress.days.includes(t)) progress.days.push(t);
+  progress.days = progress.days.slice(-60);
+}
+function weekDays(){
+  const now = new Date(), dow = (now.getDay() + 6) % 7, out = [];
+  for (let i = 0; i < 7; i++) { const d = new Date(now); d.setDate(now.getDate() - dow + i); out.push(d.toISOString().slice(0,10)); }
+  return out;
+}
 function saveProgress(){ try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e) {} }
 const PASS = 0.8;
 function areaKey(g=S.grade, s=S.subject, a=S.area){ return `${g}-${s}-${a}`; }
@@ -884,7 +944,8 @@ const $app = document.getElementById('app');
 const BADGE = { svenska:'Sv', engelska:'En', matte:'Ma' };
 const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
-function go(view, patch={}){ stopSpeech(); Object.assign(S, patch, {view}); render(); window.scrollTo(0,0); }
+let enterTimer = null;
+function go(view, patch={}){ stopSpeech(); Object.assign(S, patch, {view}); $app.classList.add('enter'); render(); window.scrollTo(0,0); clearTimeout(enterTimer); enterTimer = setTimeout(() => $app.classList.remove('enter'), 900); }
 function areaTitle(){ const a = AREAS[S.grade] && AREAS[S.grade][S.subject] && AREAS[S.grade][S.subject].find(x => x[0] === S.area); return a ? a[1] : ''; }
 function content(){ return CONTENT[areaKey()]; }
 function dailyPool(){
@@ -930,13 +991,21 @@ function viewHome(){
       <span class="s">${done ? 'Klart för idag. Du kan köra en runda till om du vill.' : 'Fem blandade frågor från det du redan har klarat. Repetition gör att du minns längre.'}</span></button>`);
   }
   const any = Object.keys(progress.areas).some(k => progress.areas[k].best.some(Boolean));
+  const days = Array.isArray(progress.days) ? progress.days : [];
+  if (days.length) {
+    const wk = weekDays(), t = today(), count = wk.filter(d => days.includes(d)).length;
+    const names = ['M','T','O','T','F','L','S'];
+    cards.push(`<div class="home-card week" role="group" aria-label="Din vecka: du har övat ${count} av 7 dagar"><span class="k">Din vecka</span>
+      <span class="dots">${wk.map((d, i) => `<span class="dot ${days.includes(d) ? 'on' : ''} ${d === t ? 'today' : ''}"><i></i><b>${names[i]}</b></span>`).join('')}</span>
+      <span class="s">${count === 1 ? 'Du har övat 1 dag den här veckan.' : `Du har övat ${count} dagar den här veckan.`} Lite ofta är bättre än mycket sällan.</span></div>`);
+  }
   return `<header class="n-hero">
     <svg class="hero-circle" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
       <circle class="circle-line" pathLength="1" cx="60" cy="60" r="52" fill="none" stroke="#2f6b5a" stroke-width="1.6" stroke-linecap="round" transform="rotate(-90 60 60)"/>
       <circle class="circle-dot" cx="97" cy="23" r="8" fill="#c9785f"/>
     </svg>
     <p class="hero-for">Elevguiden, för elever i årskurs 7–9</p>
-    <h1 class="n-h n-h1">Öva och väx i din <em>egen</em> takt</h1>
+    <h1 class="n-h n-h1 rot-h" aria-label="Bli lite bättre varje dag">Bli lite bättre på <span class="rot" aria-hidden="true"><em id="rotWord">matte</em></span></h1>
     <p class="hero-lede">Här kan du öva i skolämnena och lära dig mer om livet runt omkring skolan. Välj vad du vill göra i dag.</p>
   </header>
   <div class="modes">
@@ -985,6 +1054,10 @@ function viewSubjects(){
   }).join('')}</div>`;
 }
 
+function ring(done, total){
+  const C = 2 * Math.PI * 18, f = total ? done / total : 0;
+  return `<span class="ring" aria-hidden="true"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" class="ring-bg"/><circle cx="22" cy="22" r="18" class="ring-fg" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - f)}" transform="rotate(-90 22 22)"/></svg><b>${done}/${total}</b></span>`;
+}
 function viewAreas(){
   const areas = AREAS[S.grade][S.subject];
   return `<div class="page-head"><h1 class="n-h n-h2">${SUBJECTS[S.subject].name}</h1>
@@ -993,7 +1066,7 @@ function viewAreas(){
     const k = areaKey(S.grade, S.subject, id), c = CONTENT[k];
     if (!c) return `<button class="row" disabled><span class="txt"><span class="t">${esc(title)}</span><span class="s">Kommer snart</span></span></button>`;
     const done = c.levels.filter((_, i) => passed(k, i)).length;
-    return `<button class="row" data-act="area" data-v="${id}"><span class="txt"><span class="t">${esc(title)}</span>
+    return `<button class="row" data-act="area" data-v="${id}">${ring(done, c.levels.length)}<span class="txt"><span class="t">${esc(title)}</span>
       <span class="s">${done ? `Du har klarat ${done} av ${c.levels.length} nivåer` : `${c.levels.length} nivåer, från lätt till svår`}</span></span><span class="go" aria-hidden="true">›</span></button>`;
   }).join('')}</div>`;
 }
@@ -1038,13 +1111,13 @@ function viewQuiz(){
     answer = `<div class="opts" role="group" aria-label="Svarsalternativ">${q.options.map((o, idx) => {
       let cls = '', dis = '';
       if (R.done && o === q.answer) cls = 'right';
-      else if (R.wrong.includes(idx)) { cls = 'wrong'; dis = 'disabled'; }
+      else if (R.wrong.includes(idx)) { cls = 'wrong' + (R.fx === 'shake' && R.shakeIdx === idx ? ' shake' : ''); dis = 'disabled'; }
       if (R.done) dis = 'disabled';
       return `<button class="opt ${cls}" data-act="pick" data-v="${idx}" aria-pressed="${R.picked === idx}" ${dis}>${esc(o)}</button>`;
     }).join('')}</div>`;
   } else {
     answer = `<label class="lbl-field" for="ans">Ditt svar</label>
-      <input id="ans" class="answer" autocomplete="off" autocapitalize="off" spellcheck="false" ${q.kind !== 'text' ? 'inputmode="text"' : ''} value="${esc(R.input)}" ${R.done ? 'disabled' : ''}>`;
+      <input id="ans" class="answer${R.fx === 'shake' ? ' shake' : ''}" autocomplete="off" autocapitalize="off" spellcheck="false" ${q.kind !== 'text' ? 'inputmode="text"' : ''} value="${esc(R.input)}" ${R.done ? 'disabled' : ''}>`;
   }
   const actions = [];
   if (!R.done) {
@@ -1058,13 +1131,15 @@ function viewQuiz(){
     <div class="bar" aria-hidden="true"><span style="width:${(R.i / n) * 100}%"></span></div>
     ${q.text ? storyBlock(q.text) : ''}
     ${q.meta ? `<p class="meta">${esc(q.meta)}</p>` : ''}
+    <div class="q-anim" data-q="${R.i}">
     <p class="instr">${esc(q.instr)}</p>
     <div class="prompt-row"><p class="prompt" ${q.lang === 'en' ? 'lang="en"' : ''}>${esc(q.prompt)}</p>${speakBtn('prompt')}</div>
     ${answer}
     <div class="actions">${actions.join('')}</div>
     ${q.hints.slice(0, R.hints).map((h, i) => `<div class="hint"><strong>Ledtråd ${i + 1}:</strong> ${esc(h)}</div>`).join('')}
     ${R.feedback ? `<div class="msg ${R.feedback.type}" role="status">${esc(R.feedback.text)}</div>` : ''}
-    ${R.revealed ? `<div class="n-card n-card--tint solution"><strong>Lösning:</strong> ${esc(q.solution)}</div>` : ''}`;
+    ${R.revealed ? `<div class="n-card n-card--tint solution"><strong>Lösning:</strong> ${esc(q.solution)}</div>` : ''}
+    </div>`;
 }
 
 function reviewBlock(){
@@ -1232,7 +1307,57 @@ function render(){
     const inp = document.getElementById('ans'), nb = document.getElementById('nextBtn');
     if (inp && !S.R.done) inp.focus({preventScroll:true});
     else if (nb) nb.focus({preventScroll:true});
+    const fx = S.R.fx; S.R.fx = null;
+    if (fx === 'small' || fx === 'big') { const m = $app.querySelector('.msg.ok'); if (m) confetti(m, fx === 'big' ? 40 : 16); }
   }
+  if (S.view === 'home') startRotator();
+  if (S.view === 'result' && S.R && S.R.mode === 'level' && S.R.score / S.R.qs.length >= PASS) {
+    const b = $app.querySelector('.score .big'); if (b) setTimeout(() => confetti(b, 70), 250);
+  }
+  if (S.view === 'result') countUp($app.querySelector('.score .big'));
+}
+
+/* ---------- Liv i appen: konfetti, uppräkning och ord som byts ---------- */
+const reduceMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
+function confetti(el, n){
+  if (reduceMotion || !el || !el.animate) return;
+  const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  const colors = ['#2f6b5a','#c9785f','#d7e2d7','#123f37','#dd9479'];
+  for (let i = 0; i < n; i++) {
+    const p = document.createElement('span');
+    p.className = 'confetti';
+    const s = 6 + Math.random() * 6;
+    p.style.cssText = `left:${x}px;top:${y}px;width:${s}px;height:${s * (Math.random() < .5 ? 1 : .45)}px;background:${colors[i % colors.length]};border-radius:${Math.random() < .5 ? '50%' : '2px'}`;
+    document.body.appendChild(p);
+    const a = Math.random() * Math.PI * 2, d = 60 + Math.random() * (n > 30 ? 220 : 120);
+    const dx = Math.cos(a) * d, dy = Math.sin(a) * d * .7 - 40;
+    p.animate([
+      { transform:'translate(-50%,-50%) rotate(0deg)', opacity:1 },
+      { transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy + 120}px)) rotate(${Math.random() * 540 - 270}deg)`, opacity:0 }
+    ], { duration: 900 + Math.random() * 600, easing:'cubic-bezier(.2,.7,.3,1)', fill:'forwards' }).onfinish = () => p.remove();
+  }
+}
+function countUp(el){
+  if (!el || reduceMotion) return;
+  const to = +el.textContent; if (!to) return;
+  const t0 = performance.now(), dur = 600;
+  const step = t => { const k = Math.min(1, (t - t0) / dur); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
+  el.textContent = '0'; requestAnimationFrame(step);
+}
+const ROT_WORDS = ['matte','engelska','svenska','att be om hjälp','att säga nej','att plugga smart','att vara en bra vän'];
+let rotTimer = null, rotIdx = 0;
+function startRotator(){
+  clearInterval(rotTimer); clearTimeout(rotTimer);
+  const el = document.getElementById('rotWord');
+  if (!el || reduceMotion) return;
+  /* Lugnt tempo: första ordet står kvar längre, sedan byts ordet var fjärde sekund */
+  const swap = () => {
+    const w = document.getElementById('rotWord');
+    if (!w) { clearInterval(rotTimer); return; }
+    w.classList.add('out');
+    setTimeout(() => { rotIdx = (rotIdx + 1) % ROT_WORDS.length; w.textContent = ROT_WORDS[rotIdx]; w.classList.remove('out'); w.classList.add('in'); setTimeout(() => w.classList.remove('in'), 800); }, 600);
+  };
+  rotTimer = setTimeout(() => { swap(); rotTimer = setInterval(swap, 4000); }, 5000);
 }
 function setFeedback(text){
   const fb = document.getElementById('fb');
@@ -1246,7 +1371,7 @@ function setFeedback(text){
    ÖVNINGSLOGIK
    ========================================================== */
 function newRound(qs, mode){
-  return { qs, mode, i:0, score:0, tries:0, hints:0, revealed:false, done:false, picked:null, wrong:[], input:'', feedback:null, firstOk:false, log:[], lvl:[0,0,0] };
+  return { qs, mode, i:0, score:0, tries:0, hints:0, revealed:false, done:false, picked:null, wrong:[], input:'', feedback:null, firstOk:false, log:[], lvl:[0,0,0], streak:0, fx:null };
 }
 function startLevel(i){
   const c = content();
@@ -1321,12 +1446,14 @@ function check(){
   }
 
   if (ok) {
-    if (R.tries === 0) { R.score++; R.firstOk = true; }
-    R.feedback = {type:'ok', text: R.tries === 0 ? pick(['Rätt på första försöket!','Rätt! Snyggt tänkt.','Precis rätt!']) : 'Rätt! Bra att du inte gav upp.'};
+    if (R.tries === 0) { R.score++; R.firstOk = true; R.streak++; } else R.streak = 0;
+    const streakMsg = R.streak >= 3 ? ` ${R.streak} rätt i rad!` : '';
+    R.feedback = {type:'ok', text: R.tries === 0 ? pick(['Rätt på första försöket!','Rätt! Snyggt tänkt.','Precis rätt!','Snyggt!','Där satt den!']) + streakMsg : 'Rätt! Bra att du inte gav upp.'};
     R.done = true;
+    R.fx = R.tries === 0 ? (R.streak >= 3 ? 'big' : 'small') : null;
   } else {
-    R.tries++;
-    if (q.kind === 'choice') { R.wrong.push(R.picked); R.picked = null; }
+    R.tries++; R.streak = 0; R.fx = 'shake';
+    if (q.kind === 'choice') { R.shakeIdx = R.picked; R.wrong.push(R.picked); R.picked = null; }
     const why = explain(q, raw);
     const tail = R.hints < q.hints.length ? 'Försök igen, eller ta en ledtråd.' : 'Försök igen, eller titta på lösningen.';
     R.feedback = {type:'bad', text: why ? `${why} ${tail}` : `Inte riktigt. ${tail}`};
@@ -1347,6 +1474,7 @@ function next(){
   } else if (R.mode === 'daily') {
     progress.daily = { date: today(), done: true };
   }
+  markPracticed();
   saveProgress();
   go('result');
 }
