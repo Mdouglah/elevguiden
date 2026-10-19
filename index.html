@@ -188,6 +188,19 @@ textarea:focus{border-color:var(--n-accent);outline:none}
 .prog-row:last-child{padding-bottom:0}
 .prog-row .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip-off{display:inline-block;font-size:.82rem;font-weight:600;padding:4px 11px;border-radius:999px;border:1px dashed var(--n-line);color:var(--n-ink-soft)}
+.modes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:8px 0 28px}
+.mode{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;font:inherit;cursor:pointer;border-radius:var(--n-radius);padding:26px 26px 22px;border:1px solid var(--n-line);background:var(--n-surface);color:var(--n-ink);transition:background .15s,border-color .15s}
+.mode:hover{border-color:var(--n-accent)}
+.mode--filled{background:var(--n-accent);border-color:var(--n-accent);color:#fff}
+.mode--filled:hover{background:var(--n-ink);border-color:var(--n-ink)}
+.mode-icon{width:52px;height:52px;border-radius:50%;border:1.5px solid currentColor;display:inline-flex;align-items:center;justify-content:center;margin-bottom:6px}
+.mode-icon svg{width:24px;height:24px}
+.mode-title{font-family:var(--n-font-display);font-size:clamp(1.6rem,3.4vw,2.1rem);line-height:1.1}
+.mode-desc{font-size:.98rem;line-height:1.5;max-width:36ch;opacity:.92}
+.mode:not(.mode--filled) .mode-desc{color:var(--n-ink-soft);opacity:1}
+.mode-go{margin-top:10px;font-weight:500}
+.mode:not(.mode--filled) .mode-go{color:var(--n-accent)}
+@media (max-width:620px){ .modes{grid-template-columns:1fr} .mode{padding:22px} }
 .path{margin-top:48px}
 .path .n-lead{margin-bottom:18px}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
@@ -887,9 +900,12 @@ function crumbs(){
   if (S.view === 'home') return '';
   const parts = [`<button data-act="home">Elevguiden</button>`];
   if (S.view === 'progress') parts.push('<span class="here">Mina framsteg</span>');
-  else if (S.view === 'theme') parts.push(`<span class="here">${esc(themeObj().title)}</span>`);
+  else if (S.view === 'school') parts.push('<span class="here">Skolämnen</span>');
+  else if (S.view === 'life') parts.push('<span class="here">Livet i skolan</span>');
+  else if (S.view === 'theme') { parts.push('<button data-act="life">Livet i skolan</button>'); parts.push(`<span class="here">${esc(themeObj().title)}</span>`); }
   else if (S.R && S.R.mode === 'daily' && ['quiz','result'].includes(S.view)) parts.push('<span class="here">Dagens fem</span>');
   else {
+    parts.push('<button data-act="school">Skolämnen</button>');
     if (S.grade) parts.push(S.view === 'subjects' ? `<span class="here">Åk ${S.grade}</span>` : `<button data-act="toSubjects">Åk ${S.grade}</button>`);
     if (S.subject && S.view !== 'subjects') parts.push(S.view === 'areas' ? `<span class="here">${SUBJECTS[S.subject].name}</span>` : `<button data-act="toAreas">${SUBJECTS[S.subject].name}</button>`);
     if (S.area && !['subjects','areas'].includes(S.view)) parts.push(S.view === 'area' ? `<span class="here">${esc(areaTitle())}</span>` : `<button data-act="toArea">${esc(areaTitle())}</button>`);
@@ -921,23 +937,39 @@ function viewHome(){
     </svg>
     <p class="hero-for">Elevguiden, för elever i årskurs 7–9</p>
     <h1 class="n-h n-h1">Öva och väx i din <em>egen</em> takt</h1>
-    <p class="hero-lede">Öva svenska, engelska och matte på din nivå, med ledtrådar när du fastnar. Lär dig också mer om vänskap, att be om hjälp och livet på nätet.</p>
+    <p class="hero-lede">Här kan du öva i skolämnena och lära dig mer om livet runt omkring skolan. Välj vad du vill göra i dag.</p>
   </header>
+  <div class="modes">
+    <button class="mode mode--filled" data-act="school">
+      <span class="mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5C5.5 4 8.5 4 12 6c3.5-2 6.5-2 9-.5V19c-2.5-1.5-5.5-1.5-9 .5-3.5-2-6.5-2-9-.5Z"/><path d="M12 6v13.5"/></svg></span>
+      <span class="mode-title">Skolämnen</span>
+      <span class="mode-desc">Öva svenska, engelska och matte på din nivå. Du får ledtrådar när du fastnar.</span>
+      <span class="mode-go">Välj årskurs <span aria-hidden="true">→</span></span>
+    </button>
+    <button class="mode" data-act="life">
+      <span class="mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.5" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><path d="M14.5 14.4c.6-.3 1.3-.4 2-.4 2.3 0 4 1.5 4.5 4"/></svg></span>
+      <span class="mode-title">Livet i skolan</span>
+      <span class="mode-desc">Om vänskap, att be om hjälp, att säga nej, livet på nätet och hur man pluggar smart.</span>
+      <span class="mode-go">Välj tema <span aria-hidden="true">→</span></span>
+    </button>
+  </div>
   ${cards.length ? `<div class="home-cards">${cards.join('')}</div>` : ''}
-  <section class="path">
-    <h2 class="n-h n-h2">Skolämnen</h2>
-    <p class="n-lead">Öva svenska, engelska och matte. Vilken årskurs går du i?</p>
-    <div class="grades">${[7,8,9].map(g => `<button class="grade" data-act="grade" data-v="${g}"><span class="num">${g}</span><span class="lbl">årskurs</span></button>`).join('')}</div>
-  </section>
-  <section class="path">
-    <h2 class="n-h n-h2">Livet i skolan</h2>
-    <p class="n-lead">Om vänner, att be om hjälp, att säga nej, livet på nätet och hur man pluggar smart.</p>
-    <div class="list">${THEMES.map(t => `<button class="row" data-act="theme" data-v="${t.id}">
+  <p class="n-small" style="margin-top:28px;max-width:62ch">Du behöver inte logga in. Hur långt du har kommit i skolämnena sparas bara i den här webbläsaren, och ingen annan kan se det.${any ? ' <button class="textlink" data-act="progress" style="padding:0">Se mina framsteg</button>' : ''}</p>`;
+}
+
+function viewSchool(){
+  return `<div class="page-head"><h1 class="n-h n-h2">Skolämnen</h1>
+    <p class="n-lead">Öva svenska, engelska och matte. Vilken årskurs går du i?</p></div>
+  <div class="grades">${[7,8,9].map(g => `<button class="grade" data-act="grade" data-v="${g}"><span class="num">${g}</span><span class="lbl">årskurs</span></button>`).join('')}</div>`;
+}
+function viewLife(){
+  return `<div class="page-head"><h1 class="n-h n-h2">Livet i skolan</h1>
+    <p class="n-lead">Skolan handlar inte bara om ämnen. Här kan du läsa, fundera och öva på sådant som gör vardagen lättare, med vänner, vuxna och dig själv.</p></div>
+  <div class="list">${THEMES.map(t => `<button class="row" data-act="theme" data-v="${t.id}">
       <span class="badge" aria-hidden="true">${t.badge}</span>
       <span class="txt"><span class="t">${esc(t.title)}</span><span class="s">${esc(t.lead)}</span></span>
       <span class="go" aria-hidden="true">›</span></button>`).join('')}</div>
-  </section>
-  <p class="n-small" style="margin-top:28px;max-width:62ch">Du behöver inte logga in. Hur långt du har kommit sparas bara i den här webbläsaren, och ingen annan kan se det.${any ? ' <button class="textlink" data-act="progress" style="padding:0">Se mina framsteg</button>' : ''}</p>`;
+  <p class="n-small" style="margin-top:24px;max-width:62ch">Inget av det du väljer eller skriver här sparas.</p>`;
 }
 
 function viewSubjects(){
@@ -1192,7 +1224,7 @@ function viewTheme(){
 }
 
 function render(){
-  const v = { home:viewHome, subjects:viewSubjects, areas:viewAreas, area:viewArea, quiz:viewQuiz, result:viewResult, write:viewWrite, progress:viewProgress, theme:viewTheme }[S.view];
+  const v = { home:viewHome, subjects:viewSubjects, areas:viewAreas, area:viewArea, quiz:viewQuiz, result:viewResult, write:viewWrite, progress:viewProgress, theme:viewTheme, school:viewSchool, life:viewLife }[S.view];
   $app.innerHTML = crumbs() + v();
   const d = $app.querySelector('details.text');
   if (d) d.addEventListener('toggle', () => { S.showText = d.open; });
@@ -1401,6 +1433,8 @@ $app.addEventListener('click', e => {
     case 'write': go('write'); break;
     case 'feedback': askFeedback(); break;
     case 'theme': go('theme', {theme:v, picks:{}}); break;
+    case 'school': go('school', {grade:null, subject:null, area:null}); break;
+    case 'life': go('life'); break;
     case 'choose': { const [si, ci] = v.split('-').map(Number); const key = `${S.theme}-${si}`; const arr = S.picks[key] || (S.picks[key] = []); if (!arr.includes(ci)) arr.push(ci); render(); const el = $app.querySelector(`[data-v="${v}"]`); if (el) el.focus({preventScroll:true}); break; }
     case 'tohelp': e.preventDefault(); document.getElementById('hjalp').scrollIntoView({behavior:'smooth'}); break;
     case 'msgfeedback': askMsgFeedback(); break;
