@@ -219,6 +219,9 @@ a{color:inherit}
 .bar span{display:block;height:100%;background:var(--n-accent);border-radius:999px;transition:width .3s}
 .instr{color:var(--n-ink-soft);margin:0}
 .prompt{font-family:var(--n-font-display);font-size:clamp(1.5rem,4vw,1.9rem);line-height:1.25;margin:6px 0 20px;max-width:34ch}
+.figure{max-width:280px;margin:-6px 0 18px;color:var(--n-accent)}
+.figure svg{display:block;width:100%;height:auto}
+.figure text{fill:var(--n-ink);font-family:var(--n-font-body);font-size:14px}
 .opts{display:grid;gap:10px;max-width:520px}
 .opt{font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--n-surface);border:1.5px solid var(--n-line);border-radius:var(--n-radius-sm);padding:12px 16px;transition:border-color .15s,background .15s}
 .opt:hover:not([disabled]){border-color:var(--n-accent)}
@@ -400,6 +403,8 @@ textarea:focus{border-color:var(--n-accent);outline:none}
 <script>
 /* ==========================================================
    HJÄLPFUNKTIONER
+   Används av innehållsfilerna ak7.js, ak8.js och ak9.js,
+   som laddas direkt efter det här skriptet.
    ========================================================== */
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rnd = (a,b) => a + Math.floor(Math.random()*(b-a+1));
@@ -414,6 +419,8 @@ const fracStr = (n,d) => { const g = gcd(n,d); return d/g === 1 ? `${n/g}` : `${
 const simp = (n,d) => { const s = fracStr(n,d); return s === `${n}/${d}` ? '' : ` = ${s}`; };
 /* 1x skrivs som x */
 const cx = n => n === 1 ? 'x' : `${n}x`;
+/* Byter ut luckan ___ (och ett eventuellt (verb)) mot svaret */
+const fill = (s, a) => s.replace(/___( \(\w+\))?/, a);
 
 /* Tolkar tal: 12 / 0,25 / 150 kr / 25 % / 3/4 / x = 5 */
 function parseNum(raw){
@@ -441,6 +448,13 @@ function textQ(o){ return { kind:'text', accept:[], ...o }; }
 function choiceQ(o){ return { kind:'choice', ...o, options: shuffle(o.options) }; }
 function mix(gens, n){ const out=[]; for(let i=0;i<n;i++) out.push(gens[i % gens.length]()); return shuffle(out); }
 
+/* Enkla figurer till geometrin. Färgen följer temat, även i nattläge. */
+const FIG = {
+  rect(a, b, u='cm'){ return `<svg viewBox="0 0 270 150" role="img" aria-label="En rektangel som är ${a} ${u} lång och ${b} ${u} bred"><rect x="30" y="20" width="170" height="90" fill="none" stroke="currentColor" stroke-width="2.5"/><text x="115" y="136" text-anchor="middle">${a} ${u}</text><text x="210" y="70">${b} ${u}</text></svg>`; },
+  square(s, u='cm'){ return `<svg viewBox="0 0 270 150" role="img" aria-label="En kvadrat där varje sida är ${s} ${u}"><rect x="60" y="15" width="100" height="100" fill="none" stroke="currentColor" stroke-width="2.5"/><text x="110" y="138" text-anchor="middle">${s} ${u}</text><text x="170" y="70">${s} ${u}</text></svg>`; },
+  tri(b, h, u='cm'){ return `<svg viewBox="0 0 270 150" role="img" aria-label="En triangel med basen ${b} ${u} och höjden ${h} ${u}"><polygon points="30,110 210,110 90,20" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="90" y1="20" x2="90" y2="110" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5 4"/><text x="120" y="136" text-anchor="middle">${b} ${u}</text><text x="97" y="74">${h} ${u}</text></svg>`; }
+};
+
 /* ==========================================================
    ÄMNEN OCH OMRÅDEN
    Fördelningen kan ändras här om lärarna vill flytta ett område.
@@ -466,265 +480,7 @@ const AREAS = {
 };
 
 /* ==========================================================
-   MATEMATIK ÅK 7: PROCENT
-   ========================================================== */
-const P = {
-  g50(){ const N=2*rnd(10,200); return numQ({ prompt:`Vad är 50 % av ${N}?`, answer:N/2,
-    hints:['Hur stor del är 50 % – en liten del, hälften eller allt?','Hälften får du genom att dela med ett visst tal. Vilket?'],
-    solution:`50 % är hälften. ${N} / 2 = ${fmt(N/2)}`,
-    wrongs:[[N*2,'Du har gångrat med 2. 50 % är hälften, så svaret ska bli mindre än talet.'],[N,'Det där är hela talet, alltså 100 %. 50 % är bara hälften.']] }); },
-  g10(){ const N=10*rnd(3,90); return numQ({ prompt:`Vad är 10 % av ${N}?`, answer:N/10,
-    hints:['Om du delar något i tio lika stora delar, hur många procent är en del?','Vad blir talet om du delar det med 10?'],
-    solution:`10 % är en tiondel. ${N} / 10 = ${fmt(N/10)}`,
-    wrongs:[[N*10,'Du har gångrat med 10. 10 % är en tiondel, så svaret ska bli mindre än talet.'],[N,'Det där är hela talet. 10 % är bara en tiondel.']] }); },
-  g25(){ const N=4*rnd(5,100); return numQ({ prompt:`Vad är 25 % av ${N}?`, answer:N/4,
-    hints:['Hur många gånger får 25 % plats i 100 %?','Fyra lika stora delar. Vad blir talet delat med 4?'],
-    solution:`25 % är en fjärdedel. ${N} / 4 = ${fmt(N/4)}`,
-    wrongs:[[N/2,'Det där är 50 %. 25 % är hälften av hälften.'],[N*4,'Du har gångrat med 4. Svaret ska bli mindre än talet.']] }); },
-  gdec(){ const p=pick([5,8,20,35,50,60,75,90]); return numQ({ instr:'Skriv svaret i decimalform, till exempel 0,3.', prompt:`Skriv ${p} % i decimalform.`, answer:p/100,
-    hints:[`Procent betyder hundradelar. Hur skriver du ${p} hundradelar?`,`${p} hundradelar är ${p} / 100. Vad blir det?`],
-    solution:`${p} % = ${p} / 100 = ${fmt(p/100)}`,
-    wrongs:[[p,'Det där är fortfarande procenttalet. I decimalform delar du med 100.'],[p/10,'Nästan! Du har delat med 10. Procent är hundradelar, så dela med 100.'],[p*100,'Du har gångrat. För att få decimalform delar du med 100.']] }); },
-
-  f1(){ const p=pick([5,15,20,30,40,60,75]), N=20*rnd(3,40), a=p*N/100; return numQ({ prompt:`Vad är ${p} % av ${N}?`, answer:a,
-    hints:['Kan du räkna ut 1 % av talet först? Hur gör du det?',`1 % av ${N} är ${fmt(N/100)}. Hur många sådana procent behöver du?`],
-    solution:`1 % av ${N} = ${fmt(N/100)}. ${p} % = ${fmt(N/100)} · ${p} = ${fmt(a)}`,
-    wrongs:[[p*N,'Du glömde dela med 100. Procent betyder hundradelar.'],[p*N/10,'Du delade med 10. Procent betyder hundradelar, så dela med 100.'],[N/p,'Du delade talet med procenttalet. Räkna först ut 1 % genom att dela med 100.']] }); },
-  f2(){ const N=20*rnd(10,60), p=pick([10,20,25,30,50]), thing=pick(['En jacka','En cykel','En ryggsäck','En lampa','En skateboard']); const r=N*p/100;
-    return numQ({ instr:'Skriv svaret i kronor, bara talet.', prompt:`${thing} kostar ${N} kr. Den säljs med ${p} % rabatt. Vad kostar den nu?`, answer:N-r,
-    hints:['Vilka två steg behövs? Först rabatten i kronor, och sedan …?',`Rabatten är ${fmt(r)} kr. Hur mycket blir kvar av ${N} kr?`],
-    solution:`Rabatt: ${p} % av ${N} = ${fmt(r)} kr. Nytt pris: ${N} − ${fmt(r)} = ${fmt(N-r)} kr`,
-    wrongs:[[r,'Det där är rabatten, alltså hur mycket billigare den blir. Vad kostar den när rabatten är borträknad?'],[N+r,'Du lade till rabatten. Rabatt betyder att priset blir lägre.']] }); },
-  f3(){ const B=pick([20,40,200,400]), p=pick([10,20,25,50,75]), A=B*p/100;
-    return numQ({ instr:'Skriv svaret i procent, bara talet.', prompt:`Hur många procent är ${A} av ${B}?`, answer:p,
-    hints:[`Hur stor del av ${B} är ${A}? Kan du skriva det som en division?`,`${A} / ${B} = ${fmt(A/B)}. Hur gör du om ett decimaltal till procent?`],
-    solution:`${A} / ${B} = ${fmt(A/B)} = ${p} %`,
-    wrongs:[[A/B,'Rätt uträkning! Gör nu om decimaltalet till procent genom att gånga med 100.'],[B/A*100,'Du delade åt fel håll. Dela delen med det hela: '+A+' / '+B+'.']] }); },
-
-  u1(){ const A=pick([200,400,500,800]), p=pick([5,10,15,20,25,30]), B=A+A*p/100;
-    return numQ({ instr:'Skriv svaret i procent, bara talet.', prompt:`Priset på en konsertbiljett höjdes från ${A} kr till ${B} kr. Med hur många procent höjdes priset?`, answer:p,
-    hints:['Hur många kronor ökade priset?',`Ökningen är ${B-A} kr. Hur många procent är det av det gamla priset, ${A} kr?`],
-    solution:`Ökning: ${B} − ${A} = ${B-A} kr. ${B-A} / ${A} = ${fmt((B-A)/A)} = ${p} %`,
-    wrongs:[[B-A,'Det där är ökningen i kronor. Hur många procent av det gamla priset är den?'],[(B-A)/B*100,'Du jämförde med det nya priset. Förändringen räknas mot det gamla priset.'],[(B-A)/A,'Rätt uträkning! Gör nu om decimaltalet till procent.']] }); },
-  u2(){ const up=Math.random()<.5, p=pick([3,8,12,15,20,35]), f=up?1+p/100:1-p/100;
-    return numQ({ instr:'Skriv svaret i decimalform.', prompt:`Ett pris ${up?'ökar':'minskar'} med ${p} %. Vilken förändringsfaktor ska du gånga det gamla priset med?`, answer:f,
-    hints:['Om det gamla priset är 100 %, hur många procent är då det nya priset?', up?`100 % + ${p} % = ${100+p} %. Hur skriver du det i decimalform?`:`100 % − ${p} % = ${100-p} %. Hur skriver du det i decimalform?`],
-    solution:`${up?100+p:100-p} % = ${fmt(f)}. Förändringsfaktorn är ${fmt(f)}.`,
-    wrongs:[[p/100,'Det där är bara själva förändringen. Faktorn ska också innehålla hela det gamla priset, alltså 1.'],[up?1-p/100:1+p/100,'Kolla en gång till om priset ökar eller minskar.'],[up?100+p:100-p,'Rätt procent! Skriv det nu i decimalform genom att dela med 100.']] }); },
-  u3(){ const A=100*rnd(2,15), p=pick([10,20,25,50]), B=A*(100-p)/100;
-    return numQ({ instr:'Skriv svaret i kronor, bara talet.', prompt:`Efter ${p} % rabatt kostar en vara ${B} kr. Vad kostade den före rabatten?`, answer:A,
-    hints:[`Om rabatten är ${p} %, hur många procent av det gamla priset betalar du?`,`${B} kr motsvarar ${100-p} %. Hur mycket är då 1 %?`],
-    solution:`${B} kr = ${100-p} %. 1 % = ${fmt(B/(100-p))} kr. 100 % = ${fmt(A)} kr`,
-    wrongs:[[B+B*p/100,'Ett vanligt fel! Rabatten räknades på det gamla priset, så du kan inte lägga på '+p+' % på det nya priset.'],[B-B*p/100,'Priset före rabatten måste vara högre än '+B+' kr.']] }); }
-};
-
-/* ==========================================================
-   MATEMATIK ÅK 7: BRÅK
-   ========================================================== */
-const BR = {
-  g1(){ const d=pick([2,3,4,5,10]), N=d*rnd(2,20); return numQ({ prompt:`Vad är 1/${d} av ${N}?`, answer:N/d,
-    hints:[`Om du delar ${N} i ${d} lika stora delar, hur stor blir en del?`,`Vad blir ${N} delat med ${d}?`],
-    solution:`1/${d} är en av ${d} lika delar. ${N} / ${d} = ${N/d}`,
-    wrongs:[[N*d,`Du har gångrat. 1/${d} är en av ${d} lika delar, så svaret ska bli mindre än ${N}.`]] }); },
-  g2(){ const [a,b]=pick([[1,2],[1,4],[3,4],[1,5],[2,5],[3,10],[7,10],[1,10]]); return numQ({ instr:'Skriv svaret i decimalform, till exempel 0,5.', prompt:`Skriv ${a}/${b} i decimalform.`, answer:a/b,
-    hints:['Ett bråkstreck betyder division. Vad är täljaren delat med nämnaren?', b===10?'Tiondelar skrivs som första siffran efter decimalkommat.':`Tänk på pengar: ${a}/${b} av 100 kr är ${100*a/b} kr. Hur stor del av 100 är det?`],
-    solution:`${a}/${b} = ${a} / ${b} = ${fmt(a/b)}`,
-    wrongs:[[b/a,`Du har delat åt fel håll. Täljaren delas med nämnaren: ${a} / ${b}.`]] }); },
-  g3(){ let x, y, same;
-    if (Math.random()<.5){ const d=pick([5,6,8,10]); let a=rnd(1,d-1), b=rnd(1,d-1); while(b===a) b=rnd(1,d-1); x=[a,d]; y=[b,d]; same='nämnare'; }
-    else { const a=pick([1,2,3]); let d1=rnd(a+1,9), d2=rnd(a+1,9); while(d2===d1) d2=rnd(a+1,9); x=[a,d1]; y=[a,d2]; same='täljare'; }
-    const big = x[0]/x[1] > y[0]/y[1] ? x : y, small = big===x ? y : x;
-    const bs=`${big[0]}/${big[1]}`, ss=`${small[0]}/${small[1]}`;
-    return choiceQ({ instr:'Välj det bråk som är störst.', prompt:`Vilket bråk är störst: ${x[0]}/${x[1]} eller ${y[0]}/${y[1]}?`, options:[bs,ss], answer:bs,
-      hints: same==='nämnare' ? ['Delarna är lika stora i båda bråken. Vad skiljer dem åt?','Det bråk som har flest delar är störst.'] : ['Båda bråken har lika många delar. Vilka delar är störst: om helheten delas i få eller i många bitar?','Ju större nämnare, desto mindre är varje del.'],
-      solution: same==='nämnare' ? `Nämnarna är lika, så det bråk med störst täljare är störst: ${bs}.` : `Täljarna är lika. Mindre nämnare ger större delar, så ${bs} är störst.`,
-      diagnose: () => same==='nämnare' ? 'Delarna är lika stora. Titta på hur många delar varje bråk har.' : 'Större nämnare betyder att helheten delas i fler, alltså mindre, bitar.' }); },
-
-  f1(){ const b=pick([3,4,5,6,8,10]), a=rnd(2,b-1), N=b*rnd(2,15); return numQ({ prompt:`Vad är ${a}/${b} av ${N}?`, answer:N/b*a,
-    hints:[`Hur mycket är 1/${b} av ${N}?`,`1/${b} av ${N} är ${N/b}. Hur många sådana delar behöver du?`],
-    solution:`1/${b} av ${N} = ${N/b}. ${a}/${b} = ${a} · ${N/b} = ${N/b*a}`,
-    wrongs:[[N/b,`Det där är 1/${b}. Du behöver ${a} sådana delar.`],[N*a,'Du har bara gångrat med täljaren. Dela också med nämnaren.']] }); },
-  f2(){ const q=pick([3,4,5,7]); let p=rnd(1,q-1); while(gcd(p,q)!==1) p=rnd(1,q-1); const k=pick([2,3,4,5]); const P2=p*k, Q2=q*k;
-    return fracQ({ prompt:`Förkorta ${P2}/${Q2} så långt det går.`, answer:{n:p,d:q},
-      hints:[`Finns det ett tal som både ${P2} och ${Q2} går att dela med?`,`Både ${P2} och ${Q2} går att dela med ${k}.`],
-      solution:`Dela täljare och nämnare med ${k}: ${P2}/${Q2} = ${p}/${q}` }); },
-  f3(){ const d=pick([5,7,8,9,10,12]); const a=rnd(1,d-2), b=rnd(1,d-1-a);
-    return numQ({ instr:'Skriv svaret som ett bråk, till exempel 3/7.', prompt:`Räkna ut ${a}/${d} + ${b}/${d}.`, answer:(a+b)/d,
-      hints:['När nämnarna är lika, vad är det du lägger ihop: täljarna, nämnarna eller båda?','Lägg ihop täljarna och behåll nämnaren.'],
-      solution:`Lika nämnare: lägg ihop täljarna. ${a}/${d} + ${b}/${d} = ${a+b}/${d}`,
-      wrongs:[[(a+b)/(2*d),`Du har lagt ihop nämnarna också. Delarna är lika stora, så nämnaren ska vara kvar: ${d}.`]] }); },
-
-  u1(){ const [a,b,c,d]=pick([[1,2,1,4],[1,3,1,6],[1,2,1,3],[2,3,1,6],[1,4,1,3],[3,4,1,8],[1,2,2,5],[1,3,1,4]]); const L=b*d/gcd(b,d);
-    return numQ({ instr:'Skriv svaret som ett bråk, till exempel 5/6.', prompt:`Räkna ut ${a}/${b} + ${c}/${d}.`, answer:a/b+c/d,
-      hints:['Bråken har olika nämnare. Kan du skriva om dem så att de får samma nämnare?',`Gemensam nämnare kan vara ${L}: ${a}/${b} = ${a*L/b}/${L} och ${c}/${d} = ${c*L/d}/${L}.`],
-      solution:`${a*L/b}/${L} + ${c*L/d}/${L} = ${a*L/b+c*L/d}/${L}`,
-      wrongs:[[(a+c)/(b+d),'Du har lagt ihop både täljare och nämnare. Gör först bråken liknämniga, alltså samma nämnare.']] }); },
-  u2(){ const [a,b,c,d]=pick([[3,4,1,2],[5,6,1,3],[2,3,1,4],[7,8,1,4],[1,2,1,5],[3,5,1,10]]); const L=b*d/gcd(b,d);
-    return numQ({ instr:'Skriv svaret som ett bråk, till exempel 1/4.', prompt:`Räkna ut ${a}/${b} − ${c}/${d}.`, answer:a/b-c/d,
-      hints:['Kan du ge bråken samma nämnare innan du drar bort?',`Gemensam nämnare kan vara ${L}: ${a}/${b} = ${a*L/b}/${L} och ${c}/${d} = ${c*L/d}/${L}.`],
-      solution:`${a*L/b}/${L} − ${c*L/d}/${L} = ${a*L/b-c*L/d}/${L}`,
-      wrongs: b!==d ? [[(a-c)/(b-d),'Du har dragit bort både täljare och nämnare. Gör först bråken liknämniga.']] : [] }); },
-  u3(){ const b=pick([4,5,10]), a=rnd(1,b-1), N=b*10*rnd(2,12), thing=pick(['En tröja','Ett par byxor','Ett spel','En väska']);
-    return numQ({ instr:'Skriv svaret i kronor, bara talet.', prompt:`${thing} kostar ${N} kr. Den säljs nu för ${a}/${b} av priset. Vad kostar den nu?`, answer:N/b*a,
-      hints:[`Hur mycket är 1/${b} av ${N} kr?`,`1/${b} av ${N} kr är ${N/b} kr. Hur många sådana delar ska du betala?`],
-      solution:`1/${b} av ${N} = ${N/b}. ${a}/${b} = ${a} · ${N/b} = ${N/b*a} kr`,
-      wrongs:[[N/b,`Det där är 1/${b} av priset. Du ska betala ${a} sådana delar.`],[N-N/b*a,`Du räknade ut hur mycket billigare den blir. Frågan gäller vad den kostar, alltså ${a}/${b} av priset.`]] }); }
-};
-
-/* ==========================================================
-   MATEMATIK ÅK 8: EKVATIONER
-   ========================================================== */
-const EQ = {
-  g1(){ const a=rnd(2,20), x=rnd(1,30), b=x+a; return numQ({ prompt:`Lös ekvationen: x + ${a} = ${b}`, answer:x,
-    hints:[`Vilket tal plus ${a} blir ${b}?`,`Dra bort ${a} från båda sidor: x = ${b} − ${a}.`],
-    solution:`x + ${a} = ${b}. Dra bort ${a} från båda sidor: x = ${b} − ${a} = ${x}`,
-    wrongs:[[b+a,`Du har lagt till ${a}. För att få x ensamt drar du i stället bort ${a} från båda sidor.`]] }); },
-  g2(){ const a=rnd(2,20), x=rnd(a+1,40), b=x-a; return numQ({ prompt:`Lös ekvationen: x − ${a} = ${b}`, answer:x,
-    hints:[`Vilket tal minus ${a} blir ${b}?`,`Lägg till ${a} på båda sidor: x = ${b} + ${a}.`],
-    solution:`x − ${a} = ${b}. Lägg till ${a} på båda sidor: x = ${b} + ${a} = ${x}`,
-    wrongs:[[b-a,`Du har dragit bort ${a}. Gör det motsatta: lägg till ${a} på båda sidor.`]] }); },
-  g3(){ const a=rnd(2,9), x=rnd(2,12), b=a*x; return numQ({ prompt:`Lös ekvationen: ${a}x = ${b}`, answer:x,
-    hints:[`${a}x betyder ${a} gånger x. Vilket tal gånger ${a} blir ${b}?`,`Dela båda sidor med ${a}.`],
-    solution:`${a}x = ${b}. Dela båda sidor med ${a}: x = ${b} / ${a} = ${x}`,
-    wrongs:[[b-a,`Du har dragit bort ${a}. Men ${a}x betyder ${a} gånger x, så du ska dela med ${a}.`],[b*a,`Du har gångrat. Gör det motsatta: dela med ${a}.`]] }); },
-
-  f1(){ const a=rnd(2,6), x=rnd(1,10), b=rnd(1,15), c=a*x+b; return numQ({ prompt:`Lös ekvationen: ${a}x + ${b} = ${c}`, answer:x,
-    hints:[`Börja med att få bort + ${b}. Vad gör du då på båda sidor?`,`${a}x = ${c} − ${b} = ${c-b}. Vad blir x?`],
-    solution:`Dra bort ${b} från båda sidor: ${a}x = ${c-b}. Dela med ${a}: x = ${x}`,
-    wrongs:[[(c+b)/a,`Du lade till ${b}. Dra i stället bort ${b} från båda sidor.`],[c-b,`Bra start! ${a}x = ${c-b}. Dela nu också med ${a}.`]] }); },
-  f2(){ const a=rnd(2,6), b=rnd(2,12), x=a*b; return numQ({ prompt:`Lös ekvationen: x / ${a} = ${b}`, answer:x,
-    hints:[`x delat med ${a} blir ${b}. Är x större eller mindre än ${b}?`,`Gånga båda sidor med ${a}.`],
-    solution:`x / ${a} = ${b}. Gånga båda sidor med ${a}: x = ${b} · ${a} = ${x}`,
-    wrongs:[[b/a,`Du har delat. Gör det motsatta: gånga båda sidor med ${a}.`]] }); },
-  f3(){ const a=rnd(2,6), x=rnd(2,10), b=rnd(1,Math.min(12, a*x-1)), c=a*x-b; return numQ({ prompt:`Lös ekvationen: ${a}x − ${b} = ${c}`, answer:x,
-    hints:[`Börja med att få bort − ${b}. Vad gör du då på båda sidor?`,`${a}x = ${c} + ${b} = ${c+b}. Vad blir x?`],
-    solution:`Lägg till ${b} på båda sidor: ${a}x = ${c+b}. Dela med ${a}: x = ${x}`,
-    wrongs:[[(c-b)/a,`Du drog bort ${b}. Lägg i stället till ${b} på båda sidor.`],[c+b,`Bra start! ${a}x = ${c+b}. Dela nu också med ${a}.`]] }); },
-
-  u1(){ const c=rnd(1,4), a=c+rnd(1,4), x=rnd(1,10), b=rnd(1,10), d=(a-c)*x+b;
-    return numQ({ prompt:`Lös ekvationen: ${cx(a)} + ${b} = ${cx(c)} + ${d}`, answer:x,
-    hints:[`Samla alla x på ena sidan. Vad händer om du drar bort ${cx(c)} från båda sidor?`,`${cx(a-c)} + ${b} = ${d}. Fortsätt som vanligt.`],
-    solution:`Dra bort ${cx(c)}: ${cx(a-c)} + ${b} = ${d}. Dra bort ${b}: ${cx(a-c)} = ${d-b}. x = ${x}`,
-    wrongs:[[(d-b)/(a+c),`Du lade ihop x-termerna. Dra i stället bort ${cx(c)} från båda sidor.`]] }); },
-  u2(){ const a=rnd(2,5), b=rnd(1,8), x=rnd(1,10), c=a*(x+b);
-    return numQ({ prompt:`Lös ekvationen: ${a}(x + ${b}) = ${c}`, answer:x,
-    hints:[`Börja med att multiplicera in ${a} i parentesen. Vad blir ${a} · x och ${a} · ${b}?`,`${a}x + ${a*b} = ${c}. Fortsätt som vanligt.`],
-    solution:`Multiplicera in: ${a}x + ${a*b} = ${c}. Dra bort ${a*b}: ${a}x = ${c-a*b}. Dela med ${a}: x = ${x}`,
-    wrongs:[[(c-b)/a,`Du gångrade bara ${a} med x. ${a} ska gångas med båda talen i parentesen.`],[c/a,`Det där är värdet av hela parentesen, x + ${b}. Vad är då x?`]] }); },
-  u3(){ const a=pick([150,200,250,300]), b=pick([100,200,300]), x=rnd(2,12), c=a*x+b;
-    return numQ({ prompt:`Ett gym kostar ${b} kr i startavgift och sedan ${a} kr per månad. Ali har betalat ${c} kr totalt. Hur många månader har han tränat?`, answer:x,
-    hints:['Skriv en ekvation. Låt x vara antalet månader. Hur mycket kostar x månader?',`${a}x + ${b} = ${c}. Lös ekvationen.`],
-    solution:`${a}x + ${b} = ${c}. ${a}x = ${c-b}. x = ${x} månader`,
-    wrongs:[[c/a,`Du glömde startavgiften. Dra först bort ${b} kr.`]] }); }
-};
-
-/* ==========================================================
-   MATEMATIK ÅK 9: SANNOLIKHET
-   ========================================================== */
-const SA_INSTR = 'Skriv svaret som ett bråk, till exempel 1/4, eller som ett decimaltal.';
-const pctWrong = p => [p*100, 'Rätt tänkt! Skriv svaret som bråk eller decimaltal, inte i procent.'];
-function bag(){ const r=rnd(1,6), b=rnd(1,6), g=rnd(1,6); return {r, b, g, t:r+b+g}; }
-const SA = {
-  g1(){ const [ev,k]=pick([['en sexa',1],['en etta',1],['ett jämnt tal',3],['ett udda tal',3],['mer än 4',2],['högst 2',2],['minst 3',4]]);
-    return numQ({ instr:SA_INSTR, prompt:`Du kastar en vanlig tärning. Hur stor är sannolikheten att du får ${ev}?`, answer:k/6,
-    hints:['Hur många olika utfall finns det på en tärning?',`Hur många av de sex utfallen räknas som ${ev}?`],
-    solution:`Det finns 6 möjliga utfall och ${k} av dem är gynnsamma. Sannolikheten är ${k}/6${simp(k,6)}.`,
-    wrongs:[[k,'Det där är antalet gynnsamma utfall. Dela med antalet möjliga utfall, 6.'], pctWrong(k/6)] }); },
-  g2(){ const B=bag(), [pl,sg,n]=pick([['röda','röd',B.r],['blå','blå',B.b],['gröna','grön',B.g]]);
-    return numQ({ instr:SA_INSTR, prompt:`I en påse ligger ${B.r} röda, ${B.b} blå och ${B.g} gröna kulor. Du tar en kula utan att titta. Hur stor är sannolikheten att den är ${sg}?`, answer:n/B.t,
-    hints:['Hur många kulor finns det sammanlagt i påsen?',`Det finns ${n} ${pl} kulor av ${B.t}. Hur skriver du det som ett bråk?`],
-    solution:`${n} av ${B.t} kulor är ${pl}. Sannolikheten är ${n}/${B.t}${simp(n,B.t)}.`,
-    wrongs:[[n,`Det där är antalet ${pl} kulor. Dela med alla kulor, ${B.t}.`],[n/(B.t-n),`Du jämförde med de andra kulorna. Dela med alla kulor, ${B.t}.`], pctWrong(n/B.t)] }); },
-  g3(){ const f=pick([4,5,8,10]), k=rnd(1,f-1);
-    return numQ({ instr:SA_INSTR, prompt:`Ett lyckohjul är delat i ${f} lika stora fält. ${k} av fälten är vinstfält. Hur stor är sannolikheten att hjulet stannar på ett vinstfält?`, answer:k/f,
-    hints:['Hur många fält finns det sammanlagt?',`${k} av ${f} fält ger vinst. Hur skriver du det som ett bråk?`],
-    solution:`${k} av ${f} fält är vinstfält. Sannolikheten är ${k}/${f}${simp(k,f)}.`,
-    wrongs:[[k,'Det där är antalet vinstfält. Dela med antalet fält.'],[k/(f-k),`Du jämförde vinstfälten med de andra fälten. Dela med alla fält, ${f}.`], pctWrong(k/f)] }); },
-
-  f1(){ const B=bag(), n=B.t-B.r;
-    return numQ({ instr:SA_INSTR, prompt:`I en påse ligger ${B.r} röda, ${B.b} blå och ${B.g} gröna kulor. Du tar en kula utan att titta. Hur stor är sannolikheten att den inte är röd?`, answer:n/B.t,
-    hints:['Hur många kulor är inte röda?',`${n} av ${B.t} kulor är inte röda. Du kan också räkna 1 minus sannolikheten för röd.`],
-    solution:`${n} av ${B.t} kulor är inte röda. Sannolikheten är ${n}/${B.t}${simp(n,B.t)}.`,
-    wrongs:[[B.r/B.t,'Det där är sannolikheten att kulan är röd. Hur stor är chansen att den inte är det?'],[n,`Det där är antalet kulor som inte är röda. Dela med alla kulor, ${B.t}.`], pctWrong(n/B.t)] }); },
-  f2(){ const p=pick([10,20,30,40,60,70,80]);
-    return numQ({ instr:'Skriv svaret i decimalform, till exempel 0,4.', prompt:`Sannolikheten att det regnar i morgon är ${p} %. Hur stor är sannolikheten att det inte regnar?`, answer:(100-p)/100,
-    hints:['Det regnar eller det regnar inte. Tillsammans blir det 100 %.',`100 % − ${p} % = ${100-p} %. Hur skriver du det i decimalform?`],
-    solution:`100 % − ${p} % = ${100-p} % = ${fmt((100-p)/100)}`,
-    wrongs:[[100-p,'Rätt tänkt! Skriv svaret i decimalform genom att dela med 100.'],[p/100,'Det där är sannolikheten att det regnar.']] }); },
-  f3(){ const [txt,ans,calc,sum]=pick([
-      ['Du singlar slant två gånger. Hur stor är sannolikheten att du får krona båda gångerna?',1/4,'1/2 · 1/2 = 1/4',1],
-      ['Du kastar två tärningar. Hur stor är sannolikheten att båda visar en sexa?',1/36,'1/6 · 1/6 = 1/36',1/3],
-      ['Du singlar slant och kastar en tärning. Hur stor är sannolikheten att du får krona och en sexa?',1/12,'1/2 · 1/6 = 1/12',2/3],
-      ['Du singlar slant tre gånger. Hur stor är sannolikheten att du får krona alla tre gångerna?',1/8,'1/2 · 1/2 · 1/2 = 1/8',3/2]]);
-    return numQ({ instr:SA_INSTR, prompt:txt, answer:ans,
-    hints:['Räkna ut sannolikheten för varje händelse för sig.','När flera saker ska hända gångrar du sannolikheterna med varandra.'],
-    solution:calc,
-    wrongs:[[sum,'Du lade ihop sannolikheterna. När alla ska hända gångrar du dem.']] }); },
-
-  u1(){ const r=rnd(2,5), b=rnd(2,5), t=r+b;
-    return numQ({ instr:'Skriv svaret som ett bråk, till exempel 3/10.', prompt:`I en påse ligger ${r} röda och ${b} blå kulor. Du tar två kulor, en i taget, och lägger inte tillbaka den första. Hur stor är sannolikheten att båda är röda?`, answer:r/t*(r-1)/(t-1),
-    hints:['Hur stor är chansen att den första kulan är röd?',`Om den första var röd finns det ${r-1} röda kvar av ${t-1} kulor. Gångra sannolikheterna.`],
-    solution:`${r}/${t} · ${r-1}/${t-1} = ${r*(r-1)}/${t*(t-1)}${simp(r*(r-1),t*(t-1))}`,
-    wrongs:[[(r/t)*(r/t),'Du räknade som om kulan läggs tillbaka. Efter första dragningen finns det en röd kula färre och en kula färre totalt.']] }); },
-  u2(){ const N=6*pick([10,20,50,100]), [ev,p]=pick([['en sexa',1/6],['ett jämnt tal',1/2],['en etta eller en tvåa',1/3]]);
-    return numQ({ prompt:`Du kastar en tärning ${N} gånger. Ungefär hur många gånger kan du räkna med att få ${ev}?`, answer:N*p,
-    hints:[`Hur stor är sannolikheten att få ${ev} i ett kast?`,`Gånga sannolikheten med antalet kast, ${N}.`],
-    solution:`Sannolikheten är ${fracStr(Math.round(p*6),6)}. ${N} · ${fracStr(Math.round(p*6),6)} = ${N*p}`,
-    wrongs:[[p,'Det där är sannolikheten för ett kast. Gånga den med antalet kast.']] }); },
-  u3(){ const r=rnd(2,5), b=rnd(2,5), t=r+b;
-    return numQ({ instr:'Skriv svaret som ett bråk, till exempel 4/25.', prompt:`I en påse ligger ${r} röda och ${b} blå kulor. Du tar en kula, tittar på färgen och lägger tillbaka den. Sedan tar du en kula till. Hur stor är sannolikheten att båda är röda?`, answer:(r/t)*(r/t),
-    hints:['Kulan läggs tillbaka. Är chansen lika stor andra gången som första?',`Båda gångerna är chansen ${r}/${t}. Gångra sannolikheterna.`],
-    solution:`${r}/${t} · ${r}/${t} = ${r*r}/${t*t}${simp(r*r,t*t)}`,
-    wrongs:[[r/t*(r-1)/(t-1),'Kulan läggs tillbaka, så andra gången är det lika många kulor som första gången.'],[2*r/t,'Du lade ihop. När båda ska hända gångrar du sannolikheterna.']] }); }
-};
-
-/* ==========================================================
-   ENGELSKA ÅK 7: PRESENS OCH PRETERITUM
-   ========================================================== */
-const EN_GRUND = [
-  ['Yesterday I ___ my grandmother.','visit','visits','visited','past','yesterday'],
-  ['She ___ to school every day.','walk','walks','walked','s','every day'],
-  ['We ___ a film last night.','watch','watches','watched','past','last night'],
-  ['My brother ___ pizza every Friday.','cook','cooks','cooked','s','every Friday'],
-  ['Last summer they ___ in Spain.','stay','stays','stayed','past','last summer'],
-  ['I usually ___ my homework after dinner.','do','does','did','base','usually'],
-  ['He ___ the bus this morning.','miss','misses','missed','past','this morning'],
-  ['The shop ___ at nine every morning.','open','opens','opened','s','every morning'],
-  ['Two years ago we ___ to a new house.','move','moves','moved','past','ago'],
-  ['My dog always ___ at the mailman.','bark','barks','barked','s','always'],
-  ['They often ___ basketball after school.','play','plays','played','base','often'],
-  ['Last week she ___ her room.','clean','cleans','cleaned','past','last week']
-];
-const EN_FORD = [
-  ['Yesterday I ___ (go) to the cinema.','go','went'],
-  ['Last week we ___ (see) a whale.','see','saw'],
-  ['She ___ (eat) breakfast at seven this morning.','eat','ate'],
-  ['My dad ___ (buy) a new car last month.','buy','bought'],
-  ['Last weekend they ___ (take) the train to Stockholm.','take','took'],
-  ['I ___ (write) a letter to my friend yesterday.','write','wrote'],
-  ['He ___ (come) home late last night.','come','came'],
-  ['We ___ (have) a test last Monday.','have','had'],
-  ['Last year she ___ (make) a cake for my birthday.','make','made'],
-  ['This morning I ___ (find) my keys under the sofa.','find','found'],
-  ['Yesterday I ___ (think) the test was easy.','think','thought'],
-  ['Last summer we ___ (swim) in the lake every day.','swim','swam']
-];
-const EN_UTM = [
-  {s:'Every morning she ___ (drink) tea.', base:'drink', a:'drinks', t:'pres', past:'drank', sform:'drinks', h:['Vilket ord i meningen visar när det händer? Är det en vana?','Det är en vana, och subjektet är she. Vad händer då med verbet?']},
-  {s:'Yesterday she ___ (drink) coffee instead.', base:'drink', a:'drank', t:'past', past:'drank', sform:'drinks', h:['Vilket ord visar när det hände?','Drink är oregelbundet. Svaret börjar på ”dr” och slutar på ”k”.']},
-  {s:'My friends often ___ (play) games online.', base:'play', a:'play', t:'pres', past:'played', sform:'plays', h:['Vilket ord visar hur ofta det händer?','Vem gör något? ”My friends” är flera. Får verbet -s då?']},
-  {s:'Last night my friend ___ (play) until midnight.', base:'play', a:'played', t:'past', past:'played', sform:'plays', h:['Vilket ord visar när det hände?','Play är ett regelbundet verb. Hur ser det ut i preteritum?']},
-  {s:'He ___ (get) up at six every day.', base:'get', a:'gets', t:'pres', past:'got', sform:'gets', h:['Vilket ord visar att det är en vana?','Det är en vana, och subjektet är he. Vad händer då med verbet?']},
-  {s:'This morning he ___ (get) up at eight.', base:'get', a:'got', t:'past', past:'got', sform:'gets', h:['Har ”this morning” redan hänt, eller händer det ofta?','Get är oregelbundet. Svaret har tre bokstäver och börjar på ”g”.']},
-  {s:'Our teacher always ___ (give) us homework on Fridays.', base:'give', a:'gives', t:'pres', past:'gave', sform:'gives', h:['Vilket ord visar hur ofta det händer?','”Our teacher” är en person, alltså hon eller han. Vad händer då med verbet?']},
-  {s:'Last Friday she ___ (give) us a quiz.', base:'give', a:'gave', t:'past', past:'gave', sform:'gives', h:['Vilket ord visar när det hände?','Give är oregelbundet. Svaret börjar på ”ga”.']},
-  {s:'The sun ___ (rise) in the east.', base:'rise', a:'rises', t:'pres', past:'rose', sform:'rises', h:['Är det här något som hände en gång, eller något som alltid gäller?','Det är ett faktum, och subjektet är ”the sun”, alltså den. Vad händer då med verbet?']},
-  {s:'We ___ (win) the match last weekend.', base:'win', a:'won', t:'past', past:'won', sform:'wins', h:['Vilket ord visar när det hände?','Win är oregelbundet. Svaret har tre bokstäver och börjar på ”w”.']}
-];
-const fill = (s, a) => s.replace(/___( \(\w+\))?/, a);
-
-/* ==========================================================
-   ENGELSKA ÅK 8 OCH 9: GEMENSAMMA REGLER
+   ENGELSKA: GEMENSAMMA REGLER (används i åk 8 och 9)
    ========================================================== */
 const EN_RULE = {
   cont:'Det händer just nu. Då använder du am, is eller are + verbet med -ing.',
@@ -748,490 +504,13 @@ const enSig = (sig, type) => type === 'part'
   ? `Titta på ordet ”${sig}” före luckan. Vilken form av verbet kommer efter det?`
   : `Titta på ”${sig}”. Säger det att något händer just nu, brukar hända, har hänt fram till nu eller hände vid en viss tidpunkt?`;
 
-/* ==========================================================
-   ENGELSKA ÅK 8: FLER VERBTIDER
-   ========================================================== */
-const EN8_GRUND = [
-  ['Look! It ___ outside.','is snowing','snows','snowed','Look!','cont'],
-  ['Be quiet! The baby ___ in the next room.','is sleeping','sleeps','slept','Be quiet!','cont'],
-  ['She ___ to school every day.','walks','is walking','walked','every day','simple'],
-  ['Right now I ___ my homework.','am doing','do','did','right now','cont'],
-  ['We usually ___ dinner at six.','eat','are eating','ate','usually','simple'],
-  ['Listen! Someone ___ the piano.','is playing','plays','played','Listen!','cont'],
-  ['My dad ___ coffee every morning.','drinks','is drinking','drank','every morning','simple'],
-  ['At the moment they ___ a film.','are watching','watch','watched','at the moment','cont'],
-  ['He often ___ his bike to school.','rides','is riding','rode','often','simple'],
-  ['Hurry up! The bus ___ now.','is coming','comes','came','now','cont']
-];
-const EN8_FORD = [
-  ['We ___ the film yesterday.','saw','have seen','see','yesterday','past'],
-  ['She ___ here since 2020.','has lived','lived','lives','since','perf'],
-  ["I ___ my homework yet.","haven't finished","didn't finish","don't finish",'yet','perf'],
-  ['They ___ to Spain last summer.','went','have gone','go','last summer','past'],
-  ['He has already ___ lunch.','eaten','ate','eat','has','part'],
-  ['I ___ him two days ago.','met','have met','meet','ago','past'],
-  ['We ___ each other for five years.','have known','knew','know','for five years','perf'],
-  ['Have you ever ___ a horse?','ridden','rode','ride','Have','part'],
-  ['My sister ___ her phone last week.','broke','has broken','breaks','last week','past'],
-  ['I have just ___ an email to my teacher.','written','wrote','write','have','part']
-];
-const EN8_UTM = [
-  {s:'Right now my brother ___ (sleep).', a:'is sleeping', acc:["'s sleeping"], h:['Vilka ord visar när det händer?','Det händer just nu. Använd is + verbet med -ing.']},
-  {s:'I ___ (live) here since I was five.', a:'have lived', acc:["'ve lived"], h:['Ordet since visar att något har pågått fram till nu.','Använd have + verbets tredje form. Live är regelbundet.']},
-  {s:'Yesterday we ___ (buy) a new sofa.', a:'bought', acc:[], h:['Vilket ord visar när det hände?','Buy är oregelbundet. Svaret börjar på ”b” och har sex bokstäver.']},
-  {s:'She has never ___ (see) snow.', a:'seen', acc:[], h:['Vilket ord står före luckan?','Efter has kommer verbets tredje form: see, saw, …?']},
-  {s:'Every weekend they ___ (visit) their grandparents.', a:'visit', acc:[], h:['Vilka ord visar hur ofta det händer?','Det är en vana, och subjektet är they. Får verbet -s då?']},
-  {s:'Listen! The birds ___ (sing).', a:'are singing', acc:["'re singing"], h:['Vad säger ordet Listen! om när det händer?','Det händer just nu, och subjektet är flera. Använd are + verbet med -ing.']},
-  {s:'He ___ (lose) his wallet last Friday.', a:'lost', acc:[], h:['Vilket ord visar när det hände?','Lose är oregelbundet. Svaret har fyra bokstäver.']},
-  {s:'We have ___ (know) each other for years.', a:'known', acc:[], h:['Vilket ord står före luckan?','Efter have kommer verbets tredje form: know, knew, …?']},
-  {s:'At the moment she ___ (read) a book.', a:'is reading', acc:["'s reading"], h:['Vad betyder at the moment?','Det händer just nu. Använd is + verbet med -ing.']},
-  {s:'Have you ___ (finish) your homework yet?', a:'finished', acc:[], h:['Vilket ord står i början av frågan?','Efter have kommer verbets tredje form. Finish är regelbundet.']}
-];
-
-/* ==========================================================
-   ENGELSKA ÅK 9: AVANCERAD GRAMMATIK
-   ========================================================== */
-const COMP_H = 'Jämför meningen två saker (than) eller säger den vad som är mest av alla (the)? Är adjektivet kort eller långt?';
-const EN9_GRUND = [
-  ['This test is ___ than the last one.','easier','more easy','easyer',COMP_H,'comp_short'],
-  ['Elephants are ___ than horses.','bigger','more big','biger',COMP_H,'comp_short'],
-  ['This is the ___ film I have ever seen.','best','goodest','most good',COMP_H,'comp_irr'],
-  ['Maths is ___ than history for me.','more difficult','difficulter','most difficult',COMP_H,'comp_long'],
-  ['She is the ___ person in our class.','tallest','most tall','taller',COMP_H,'comp_short'],
-  ['Today the weather is ___ than yesterday.','worse','badder','more bad',COMP_H,'comp_irr'],
-  ['My phone is ___ than yours.','newer','more new','newest',COMP_H,'comp_short'],
-  ['It was the ___ day of the year.','hottest','hotest','most hot',COMP_H,'comp_short'],
-  ['This book is ___ than the first one.','more interesting','interestinger','most interesting',COMP_H,'comp_long'],
-  ['He is the ___ player in the team.','most famous','famousest','more famous',COMP_H,'comp_long']
-];
-const EN9_FORD = [
-  ['If it rains tomorrow, we ___ at home.','will stay','would stay','stayed','Titta på if-satsen. Står ”rains” i presens eller preteritum?','cond1'],
-  ['If I ___ a million kronor, I would buy a house.','had','have','will have','Titta på den andra delen. Står det will eller would där?','cond2'],
-  ['If you heat ice, it ___ into water.','turns','would turn','turned','Är det här något som alltid händer, ett faktum?','cond0'],
-  ['If she studies hard, she ___ the test.','will pass','would pass','passed','Titta på if-satsen. Står ”studies” i presens eller preteritum?','cond1'],
-  ['If I were you, I ___ talk to the teacher.','would','will','am','If I were you är något tänkt. Vilket ord passar då i den andra delen?','cond2'],
-  ['If we ___ the bus, we will be late.','miss','will miss','missed','Titta på den andra delen. Står det will eller would där?','cond1'],
-  ['If he had more time, he ___ more books.','would read','will read','reads','Titta på if-satsen. Står ”had” i presens eller preteritum?','cond2'],
-  ['I would travel around the world if I ___ rich.','were','am','will be','Titta på den första delen. Står det will eller would där?','cond2'],
-  ['If you mix blue and yellow, you ___ green.','get','would get','got','Är det här något som alltid gäller?','cond0'],
-  ["If you don't hurry, you ___ the bus.",'will miss','would miss','missed','Titta på if-satsen. Står den i presens eller preteritum?','cond1']
-];
-const EN9_UTM = [
-  ['The window ___ by the wind last night.','was broken','broke','is broken','Fönstret gjorde inget själv. Och vilket ord visar när det hände?','pass'],
-  ['English ___ in many countries.','is spoken','speaks','is speaking','Engelskan talar inte själv. Någon talar den. Vilken form visar det?','pass'],
-  ['The letters ___ every morning.','are delivered','deliver','delivered','Breven delar inte ut sig själva. Händer det ofta eller hände det en gång?','pass'],
-  ['The new school ___ next year.','will be built','will build','is built','Skolan bygger inte sig själv. Vilket ord visar när det ska hända?','pass'],
-  ['This cake ___ by my grandmother.','was made','made','is making','Kakan har inte bakat sig själv. Någon har gjort den. Vilken form visar det?','pass'],
-  ['The match ___ because of the rain.','was cancelled','cancelled','has cancel','Matchen ställde inte in sig själv. Vilken form visar det?','pass'],
-  ['Phones ___ in the classroom.','are not allowed',"don't allow",'not allowed','Mobilerna tillåter inte något själva. Vilken form av be behövs?','pass'],
-  ['The thief ___ by the police yesterday.','was caught','caught','is caught','Tjuven gjorde inget själv. Vilket ord visar när det hände?','pass'],
-  ['Many new words ___ to the dictionary every year.','are added','add','added','Orden lägger inte till sig själva. Händer det ofta eller hände det en gång?','pass'],
-  ['The bridge ___ in 1890.','was built','built','is built','Bron byggde inte sig själv. Och när hände det?','pass']
-];
-
-/* ==========================================================
-   SVENSKA ÅK 7: LÄSFÖRSTÅELSE
-   ========================================================== */
-const STORY = {
-  title:'Sista bussen',
-  paras:[
-    'Noah hade bara tre minuter på sig. Han sprang över skolgården med ryggsäcken studsande mot ryggen, men när han kom fram till hållplatsen såg han bara bakljusen försvinna runt hörnet. Nästa buss gick om en timme.',
-    'Han satte sig på bänken och tog fram mobilen. Fyra procent batteri. Han skrev snabbt till mamma: ”Missade bussen. Kommer sent.” Sedan blev skärmen svart.',
-    'Det började regna. En äldre kvinna med en tung matkasse ställde sig under taket bredvid honom. Plötsligt gick kassen sönder, och apelsiner rullade ut över trottoaren. Noah suckade, reste sig och började plocka. Han hittade sju apelsiner, en av dem i en vattenpöl.',
-    '– Tack, sa kvinnan. Jag bor bara två kvarter bort, men jag kan inte bära allt det här i händerna.',
-    'Noah tittade på klockan i kyrktornet. Fyrtio minuter kvar. Han tog kassen med de trasiga handtagen i famnen och följde med.',
-    'När de kom fram bjöd hon på varm choklad medan de väntade på att regnet skulle ge sig. Hennes telefon låg på bordet, och hon frågade om han ville ringa hem.',
-    '– Mamma? sa Noah. Jag är hos … Han tittade på kvinnan.',
-    '– Margit, sa hon och log.',
-    '– Hos Margit. Jag förklarar sen.',
-    'Han hann till bussen med fem minuter till godo. Den kvällen berättade han allt för mamma. Hon skrattade när han sa att det var den bästa bussen han någonsin missat.'
-  ]
-};
-const SV = (prompt, options, hints, solution) => choiceQ({ instr:'Välj det svar som stämmer bäst.', prompt, options, answer:options[0], hints, solution,
-  diagnose: () => `Det svaret får inte stöd i texten. ${hints[0]}` });
-
-/* ==========================================================
-   SVENSKA ÅK 7: ORDKLASSER
-   ========================================================== */
-const OK_DEF = {
-  substantiv:'Ett substantiv är namnet på en sak, person, plats, ett djur eller en känsla. Du kan sätta en, ett eller flera framför: en bok, ett hus.',
-  verb:'Ett verb berättar vad någon gör eller vad som händer. Du kan sätta jag framför och ändra tiden: jag springer, jag sprang.',
-  adjektiv:'Ett adjektiv beskriver hur någon eller något är: en glad hund, ett stort hus. Det går ofta att jämföra: glad, gladare, gladast.',
-  adverb:'Ett adverb berättar hur, när eller var något händer: snabbt, igår, hemma.',
-  pronomen:'Ett pronomen står i stället för ett namn eller ett substantiv: jag, du, hon, de, min, vår.',
-  preposition:'En preposition visar läge eller riktning: på, i, under, efter.',
-  konjunktion:'En konjunktion binder ihop ord eller meningar: och, men, eller.',
-  räkneord:'Ett räkneord är ett tal eller en ordning: tre, tjugo, första.'
-};
-const OK_TEST = {
-  substantiv:'Testa: kan du sätta en, ett eller flera framför ordet?',
-  verb:'Testa: kan du sätta jag framför och ändra tiden, som jag springer och jag sprang?',
-  adjektiv:'Testa: beskriver ordet hur någon eller något är? Går det att jämföra, som glad, gladare, gladast?',
-  adverb:'Testa: svarar ordet på frågan hur, när eller var något händer?',
-  pronomen:'Testa: kan ordet bytas mot ett namn eller ett substantiv?',
-  preposition:'Testa: visar ordet var något är eller vart något rör sig, som på, i eller under?',
-  konjunktion:'Testa: binder ordet ihop två ord eller två meningar?',
-  räkneord:'Testa: är ordet ett tal eller en ordning?'
-};
-const OK_ART = c => ['preposition','konjunktion'].includes(c) ? 'en' : 'ett';
-const OK_GRUND = [
-  ['Hunden springer i parken.','springer','verb'],['Min syster köpte en ny cykel.','cykel','substantiv'],['Det var en kall morgon.','kall','adjektiv'],
-  ['Eleverna läser en bok.','läser','verb'],['Vi åt glass på stranden.','glass','substantiv'],['Han har en röd jacka.','röd','adjektiv'],
-  ['Läraren skrev på tavlan.','tavlan','substantiv'],['Katten sover hela dagen.','sover','verb'],['Filmen var väldigt spännande.','spännande','adjektiv'],
-  ['Mormor bakade bullar.','bullar','substantiv']
-];
-const OK_FORD = [
-  ['Hon ringde mig igår.','Hon','pronomen'],['Boken ligger på bordet.','på','preposition'],['Vi kommer hem snart.','snart','adverb'],
-  ['De spelade fotboll efter skolan.','efter','preposition'],['Jag tycker om musik.','Jag','pronomen'],['Han pratar alltid högt.','alltid','adverb'],
-  ['Katten gömde sig under sängen.','under','preposition'],['Ni får gärna komma.','gärna','adverb'],['Det här är vår lägenhet.','vår','pronomen'],
-  ['Pennan ligger i väskan.','i','preposition']
-];
-const OK_UTM = [
-  ['Hon sprang snabbt till bussen.','snabbt','adverb','adjektiv'],['Vi köpte tre äpplen.','tre','räkneord','adjektiv'],
-  ['Jag ville gå ut, men det regnade.','men','konjunktion','adverb'],['Löpningen tog en timme.','Löpningen','substantiv','verb'],
-  ['Den glada flickan vinkade.','glada','adjektiv','adverb'],['Att simma är roligt.','simma','verb','substantiv'],
-  ['Han är snäll och hjälpsam.','och','konjunktion','preposition'],['Det blåser mycket idag.','idag','adverb','substantiv'],
-  ['Vi ses på lördag.','lördag','substantiv','adverb'],['Det är den bästa boken jag har läst.','bästa','adjektiv','adverb']
-];
-function okQ([s, w, cls, trap], pool){
-  const others = shuffle(pool.filter(c => c !== cls && c !== trap));
-  const opts = [cls, ...(trap ? [trap] : []), ...others].slice(0, pool.length === 3 ? 3 : 4);
-  return choiceQ({ instr:'Läs meningen och välj ordklass.', prompt:`Vilken ordklass är ”${w}” i meningen ”${s}”`, options:opts.map(cap), answer:cap(cls),
-    hints:[`Vad gör ordet ”${w}” i meningen? Berättar det vad någon gör, vad något heter, hur något är, eller något annat?`, OK_TEST[cls]],
-    solution:`”${w}” är ${OK_ART(cls)} ${cls}. ${OK_DEF[cls]}`,
-    diagnose: raw => { const c = raw.toLowerCase(); return OK_DEF[c] ? `${cap(c)}? ${OK_DEF[c]} Passar det in på ”${w}” här?` : null; } });
-}
-const OK_ALL = Object.keys(OK_DEF);
-
-/* ==========================================================
-   SVENSKA ÅK 8: SATSDELAR
-   ========================================================== */
-const SD_DEF = {
-  predikat:'Predikatet är verbet som visar vad som händer eller vad någon gör: springer, åt, är.',
-  subjekt:'Subjektet är den som gör något, eller den eller det som meningen handlar om. Fråga: vem eller vad + predikatet?',
-  objekt:'Objektet är den eller det som handlingen riktas mot. Fråga: vem eller vad + predikatet + subjektet? Vad åt Lisa? En macka.',
-  'indirekt objekt':'Det indirekta objektet är mottagaren, den som får något. Fråga: till eller åt vem + predikatet + subjektet + objektet?',
-  adverbial:'Ett adverbial berättar hur, när, var eller varför något händer: igår, i skolan, snabbt.'
-};
-const SD_TEST = {
-  predikat:'Testa: vilket ord är verbet, det som visar vad som händer?',
-  subjekt:'Testa: ställ frågan vem eller vad + predikatet. Den som gör något är subjektet.',
-  objekt:'Testa: ställ frågan vem eller vad + predikatet + subjektet.',
-  'indirekt objekt':'Testa: vem får något? Ställ frågan till eller åt vem.',
-  adverbial:'Testa: svarar delen på frågan hur, när, var eller varför?'
-};
-const SD_GRUND = [
-  ['Lisa åt en macka.','Lisa','subjekt'],['Lisa åt en macka.','åt','predikat'],['Lisa åt en macka.','en macka','objekt'],
-  ['Hunden jagade katten.','katten','objekt'],['Hunden jagade katten.','Hunden','subjekt'],['Min bror spelar gitarr.','spelar','predikat'],
-  ['Min bror spelar gitarr.','Min bror','subjekt'],['Vi köpte nya skor.','nya skor','objekt'],['Eleverna skrev ett prov.','skrev','predikat'],
-  ['Mormor stickade en tröja.','en tröja','objekt'],['Läraren öppnade fönstret.','Läraren','subjekt'],['Barnen byggde en koja.','byggde','predikat']
-];
-const SD_FORD = [
-  ['Vi spelade fotboll i parken.','i parken','adverbial'],['Igår regnade det hela dagen.','Igår','adverbial'],['Hon sprang snabbt hem.','snabbt','adverbial'],
-  ['Efter skolan åt vi glass.','vi','subjekt'],['Efter skolan åt vi glass.','glass','objekt'],['På lördag åker de till Göteborg.','de','subjekt'],
-  ['Han läste boken i sängen.','boken','objekt'],['Katten sover ofta i fönstret.','ofta','adverbial'],['I morgon har vi prov.','vi','subjekt'],
-  ['Pappa lagade middag i köket.','i köket','adverbial']
-];
-const SD_UTM = [
-  ['Jag gav min syster en present.','min syster','indirekt objekt','objekt'],['Jag gav min syster en present.','en present','objekt','indirekt objekt'],
-  ['Läraren visade klassen en film.','klassen','indirekt objekt','objekt'],['Mamma skickade mig ett sms.','mig','indirekt objekt','subjekt'],
-  ['Igår gav Ali sin hund ett ben.','Ali','subjekt','indirekt objekt'],['Det snöade hela natten.','Det','subjekt','objekt'],
-  ['I går kväll såg vi en film.','I går kväll','adverbial','subjekt'],['Henne känner jag inte.','Henne','objekt','subjekt'],
-  ['Boken lånade hon på biblioteket.','Boken','objekt','subjekt'],['Han berättade en hemlighet för mig.','en hemlighet','objekt','adverbial']
-];
-function sdQ([s, w, cls, trap], pool){
-  const others = shuffle(pool.filter(c => c !== cls && c !== trap));
-  const opts = [cls, ...(trap ? [trap] : []), ...others].slice(0, Math.min(4, pool.length));
-  return choiceQ({ instr:'Läs meningen och välj satsdel.', prompt:`Vilken satsdel är ”${w}” i meningen ”${s}”?`, options:opts.map(cap), answer:cap(cls),
-    hints:[`Hitta först predikatet, alltså verbet. Vilken uppgift har sedan ”${w}” i meningen?`, SD_TEST[cls]],
-    solution:`”${w}” är ${cls} i meningen. ${SD_DEF[cls]}`,
-    diagnose: raw => { const c = raw.toLowerCase(); return SD_DEF[c] ? `${cap(c)}? ${SD_DEF[c]} Passar det in på ”${w}” här?` : null; } });
-}
-const SD_ALL = Object.keys(SD_DEF);
-
-/* ==========================================================
-   SVENSKA ÅK 9: SPRÅKRIKTIGHET
-   ========================================================== */
-const SV_RULE = {
-  dedem:'Byt ut ordet mot vi eller oss. Passar vi ska det vara de. Passar oss ska det vara dem.',
-  attoch:'Att står före ett verb i grundform (att springa) och inleder en bisats (jag hoppas att du kommer). Och binder ihop två likadana delar (vi åt och drack).',
-  sar:'Sammansatta ord skrivs ihop på svenska. Om orden skrivs isär kan betydelsen ändras: en engelsk lärare kommer från England, en engelsklärare undervisar i engelska.',
-  varvart:'Var handlar om plats, där något är. Vart handlar om riktning, dit något ska.',
-  sin:'Sin, sitt och sina används när något tillhör subjektet i samma sats. Hans, hennes och deras används när ägaren själv ingår i subjektet, eller när saken tillhör någon annan.',
-  anen:'Än använder du när du jämför: större än, äldre än. En är ett räkneord eller en artikel: en bok.'
-};
-const SV_H1 = {
-  dedem:'Prova att byta ut ordet mot vi eller oss.',
-  attoch:'Binder ordet ihop två likadana saker, eller kommer det ett verb i grundform eller en bisats efter?',
-  sar:'Tänk på hur ordet skulle stå i en ordbok.',
-  varvart:'Handlar meningen om var något är, eller vart något ska?',
-  sin:'Vem äger saken? Är det samma person som gör något i meningen?',
-  anen:'Jämför meningen två saker?'
-};
-const SV_GRUND = [
-  ['___ har redan gått hem.','De',['Dem'],'dedem'],
-  ['Jag såg ___ på bussen i morse.','dem',['de'],'dedem'],
-  ['Vi frågade ___ om vägen.','dem',['de'],'dedem'],
-  ['___ som vill får gå ut på rast.','De',['Dem'],'dedem'],
-  ['Jag hoppas ___ du kommer på festen.','att',['och'],'attoch'],
-  ['Hon började ___ skratta.','att',['och'],'attoch'],
-  ['Vi gick ut ___ spelade fotboll.','och',['att'],'attoch'],
-  ['Det är viktigt ___ sova ordentligt.','att',['och'],'attoch'],
-  ['Läraren gav ___ en extra uppgift.','dem',['de'],'dedem'],
-  ['Kan ___ komma i morgon?','de',['dem'],'dedem'],
-  ['Glöm inte ___ ta med gympakläder.','att',['och'],'attoch']
-];
-const SV_FORD = [
-  ['Vilket är rätt skrivet?','skolgården',['skol gården','skol-gården'],'sar'],
-  ['Vilket är rätt skrivet?','sjuksköterska',['sjuk sköterska','sjuk-sköterska'],'sar'],
-  ['Vilket är rätt skrivet?','fotbollsmatch',['fotbolls match','fotboll match'],'sar'],
-  ['Vilket är rätt skrivet?','mobiltelefon',['mobil telefon','mobil-telefon'],'sar'],
-  ['Vilket är rätt skrivet?','engelsklärare',['engelsk lärare','engelska lärare'],'sar'],
-  ['___ ska du åka i sommar?','Vart',['Var'],'varvart'],
-  ['___ bor din kusin?','Var',['Vart'],'varvart'],
-  ['Jag vet inte ___ mina nycklar är.','var',['vart'],'varvart'],
-  ['Hon undrade ___ vi skulle gå efter skolan.','vart',['var'],'varvart'],
-  ['___ ligger biblioteket?','Var',['Vart'],'varvart']
-];
-const SV_UTM = [
-  ['Elsa tog ___ cykel och åkte hem.','sin',['hennes'],'sin'],
-  ['Ali och ___ bror spelar fotboll.','hans',['sin'],'sin'],
-  ['Han lånade ut ___ penna till mig.','sin',['hans'],'sin'],
-  ['Kalle ringde ___ mormor i går.','sin',['hans'],'sin'],
-  ['Mina kompisar och ___ föräldrar kom på avslutningen.','deras',['sina'],'sin'],
-  ['Hon är två år äldre ___ jag.','än',['en'],'anen'],
-  ['Jag har ___ bror och två systrar.','en',['än'],'anen'],
-  ['Det här provet var svårare ___ det förra.','än',['en'],'anen'],
-  ['Jag hjälpte ___ som var nya i klassen.','dem',['de'],'dedem'],
-  ['Det var ___ som vann matchen.','de',['dem'],'dedem'],
-  ['Ingen vet ___ hon tog vägen.','vart',['var'],'varvart']
-];
-function svQ([p, ans, wrongs, type]){
-  const gap = p.includes('___');
-  return choiceQ({ instr: gap ? 'Välj det ord som ska stå i luckan. Handlar det om ägande, så tillhör saken personen i meningen.' : 'Välj det alternativ som är rätt skrivet.',
-    prompt:p, options:[ans, ...wrongs], answer:ans,
-    hints:[SV_H1[type], SV_RULE[type]],
-    solution:(gap ? fill(p, ans) : `Rätt skrivet: ${ans}.`) + ' ' + SV_RULE[type],
-    diagnose: () => SV_RULE[type] });
-}
-
-/* ==========================================================
-   ALLA FÄRDIGA OMRÅDEN
-   ========================================================== */
-const CONTENT = {
-  '7-matte-procent':{
-    intro:[
-      'Procent betyder hundradelar. 1 % är en hundradel, alltså 0,01. 25 % är 25 hundradelar, alltså 0,25.',
-      'Några procent är bra att kunna utantill: 50 % är hälften, 25 % är en fjärdedel och 10 % är en tiondel.',
-      'För att räkna ut en procent av ett tal kan du först räkna ut 1 % genom att dela med 100. Sedan gångar du med antalet procent.'
-    ],
-    example:{title:'Exempel: Vad är 15 % av 240?', steps:['1 % av 240 är 240 / 100 = 2,4.','15 % är 15 gånger så mycket: 2,4 · 15 = 36.','Svar: 15 % av 240 är 36.']},
-    levels:[
-      {name:'Grund', desc:'Hälften, tiondelar och decimalform', make:()=>mix([P.g50,P.g10,P.g25,P.gdec],8)},
-      {name:'Fördjupning', desc:'Procent av ett tal och rabatter', make:()=>mix([P.f1,P.f2,P.f3],8)},
-      {name:'Utmaning', desc:'Förändring, förändringsfaktor och ursprungligt pris', make:()=>mix([P.u1,P.u2,P.u3],8)}
-    ]
-  },
-  '7-matte-brak':{
-    intro:[
-      'Ett bråk visar en del av en helhet. I 3/4 är 4 nämnaren, som visar hur många lika stora delar helheten är delad i. 3 är täljaren, som visar hur många av delarna du har.',
-      'Ju större nämnare, desto mindre är varje del. 1/8 av en pizza är mindre än 1/4 av samma pizza.',
-      'Bråk med samma nämnare kan du lägga ihop direkt: 1/5 + 2/5 = 3/5. Har bråken olika nämnare måste du först göra dem liknämniga, alltså ge dem samma nämnare.'
-    ],
-    example:{title:'Exempel: Vad är 3/4 av 20?', steps:['1/4 av 20 är 20 / 4 = 5.','3/4 är tre sådana delar: 3 · 5 = 15.','Svar: 3/4 av 20 är 15.']},
-    levels:[
-      {name:'Grund', desc:'Delar av tal, decimalform och jämförelser', make:()=>mix([BR.g1,BR.g2,BR.g3],8)},
-      {name:'Fördjupning', desc:'Flera delar, förkortning och addition', make:()=>mix([BR.f1,BR.f2,BR.f3],8)},
-      {name:'Utmaning', desc:'Olika nämnare och bråk i vardagen', make:()=>mix([BR.u1,BR.u2,BR.u3],8)}
-    ]
-  },
-  '7-engelska-verbtider':{
-    intro:[
-      'På engelska använder du presens (present simple) för sådant som händer ofta, vanor och fakta. Med he, she, it eller ett namn får verbet ett -s: she plays, he walks.',
-      'Du använder preteritum (past simple) för sådant som redan har hänt och är avslutat. Regelbundna verb får -ed: played, walked. Oregelbundna verb har egna former: go – went, see – saw.',
-      'Leta efter tidsord. Every day, usually och often betyder oftast presens. Yesterday, last week och ago betyder oftast preteritum.'
-    ],
-    example:{title:'Exempel: Vilken form ska det vara?', steps:['Meningen är: Last Saturday I ___ (play) football.','Tidsordet är ”last Saturday”. Det har redan hänt.','Play är ett regelbundet verb, så det får -ed.','Svar: Last Saturday I played football.']},
-    levels:[
-      {name:'Grund', desc:'Välj rätt form med hjälp av tidsorden', make:()=>shuffle(EN_GRUND).slice(0,8).map(([s,base,sf,past,key,sig])=>{
-        const ans = key==='past' ? past : key==='s' ? sf : base;
-        const kind = o => o===past ? 'past' : o===sf ? 's' : 'base';
-        return choiceQ({ instr:'Välj rätt form av verbet.', prompt:s, lang:'en', options:[base,sf,past], answer:ans,
-          hints:[`Titta på ordet ”${sig}”. Handlar meningen om något som händer ofta, eller något som redan har hänt?`,
-                 key==='past' ? 'Det har redan hänt. Hur ser verbet ut i preteritum?' : 'Det händer ofta. Vem gör något? Med he, she, it eller ett namn får verbet -s, med I, you, we och they får det inget -s.'],
-          solution: fill(s, ans),
-          diagnose: raw => { const k = kind(raw);
-            if (key==='past') return `Ordet ”${sig}” visar att det redan har hänt. Då behövs preteritum.`;
-            if (k==='past') return `Ordet ”${sig}” visar att det händer ofta, inte att det redan har hänt.`;
-            if (key==='s' && k==='base') return 'Rätt tid! Men kolla vem som gör något. Med he, she, it eller ett namn får verbet -s.';
-            if (key==='base' && k==='s') return 'Rätt tid! Men med I, you, we och they får verbet inget -s.';
-            return null; } }); })},
-      {name:'Fördjupning', desc:'Oregelbundna verb i preteritum', make:()=>shuffle(EN_FORD).slice(0,8).map(([s,base,a])=>
-        textQ({ instr:'Skriv verbet i preteritum.', prompt:s, lang:'en', answer:a,
-          hints:['Är verbet regelbundet eller oregelbundet? Säg meningen tyst för dig själv. Vilken form låter rätt?',`Svaret börjar på ”${a[0]}” och har ${a.length} bokstäver.`],
-          solution:`${base} → ${a}: ${fill(s, a)}`,
-          diagnose: raw => { const r = norm(raw);
-            if (/ed$/.test(r)) return `${cap(base)} är oregelbundet, så det får inte -ed. Vilken form har du hört i meningar som ”Yesterday I …”?`;
-            if (r===base || r===base+'s') return 'Det där är presens. Meningen handlar om något som redan har hänt.';
-            return null; } }))},
-      {name:'Utmaning', desc:'Presens eller preteritum? Plus en skrivuppgift', make:()=>shuffle(EN_UTM).slice(0,8).map(it=>
-        textQ({ instr:'Skriv verbet i rätt form: presens eller preteritum.', prompt:it.s, lang:'en', answer:it.a, hints:it.h, solution:fill(it.s, it.a),
-          diagnose: raw => { const r = norm(raw);
-            if (it.t==='past') {
-              if (r===it.base || r===it.sform) return 'Tidsordet visar att det redan har hänt. Då behövs preteritum.';
-              if (/ed$/.test(r) && it.a!==it.base+'ed' && it.a!==it.base+'d') return `${cap(it.base)} är oregelbundet och får inte -ed.`;
-            } else {
-              if (r===it.past || /ed$/.test(r)) return 'Meningen handlar om något som händer ofta eller alltid gäller. Då behövs presens.';
-              if (it.a===it.sform && r===it.base) return 'Rätt tid! Men med he, she, it eller ett namn får verbet -s.';
-              if (it.a===it.base && r===it.sform) return 'Rätt tid! Men subjektet är flera, och då får verbet inget -s.';
-            }
-            return null; } })),
-        writing:{
-          task:'Skriv 5–8 meningar på engelska om vad du gjorde förra helgen. Använd preteritum (past simple).',
-          check:['Har du skrivit 5–8 meningar?','Står verben i preteritum, till exempel went, played och saw?','Har du använt tidsord som first, then och after that?','Börjar varje mening med stor bokstav och slutar med punkt?'],
-          focus:'Fokusera på om verben står i preteritum. Om något verb är fel, visa ett exempel ur elevens text och hur det blir rätt. Citera engelska ord på engelska.'
-        }}
-    ]
-  },
-  '7-svenska-lasforstaelse':{
-    text:STORY,
-    intro:[
-      'Du kan förstå en text på tre sätt. På raderna: det som står direkt i texten. Mellan raderna: det du kan räkna ut fast det inte står rakt ut. Bortom raderna: vad texten betyder och vad den vill säga.',
-      'Läs hela texten en gång först. Gå sedan tillbaka till texten när du svarar. Det är inte fusk, det är så duktiga läsare gör.'
-    ],
-    example:{title:'Exempel: Att läsa mellan raderna', steps:['I en text står det: Hon tittade ut genom fönstret och suckade.','Det står inte att hon är uttråkad eller ledsen.','Men sucken visar att hon inte mår så bra, eller att hon längtar efter något.','Det kallas att läsa mellan raderna.']},
-    levels:[
-      {name:'Grund', desc:'På raderna: hitta svaret i texten', make:()=>[
-        SV('Varför satt Noah på busshållplatsen?',['Han hade missat bussen.','Han väntade på en kompis.','Han skulle möta sin mamma.'],['Läs första stycket igen. Vad såg Noah försvinna runt hörnet?','Bakljusen tillhörde något som Noah ville hinna med.'],'Noah såg bussens bakljus försvinna. Han hade missat den.'),
-        SV('Hur mycket batteri hade Noahs mobil kvar?',['4 procent','14 procent','40 procent'],['Läs andra stycket. Leta efter ett tal före ordet procent.','Talet är skrivet med bokstäver i texten.'],'Det står att mobilen hade fyra procent batteri.'),
-        SV('Vad rullade ut över trottoaren?',['Apelsiner','Äpplen','Potatisar'],['Läs tredje stycket. Vad låg i kvinnans matkasse?','Noah hittade sju stycken, och en låg i en vattenpöl.'],'Apelsiner rullade ut när kassen gick sönder.'),
-        SV('Hur länge dröjde det till nästa buss när Noah kom fram?',['En timme','En kvart','Fyrtio minuter'],['Läs slutet av första stycket.','Fyrtio minuter står också i texten, men det är hur lång tid som var kvar senare.'],'Det står att nästa buss gick om en timme.'),
-        SV('Vad bjöd Margit på?',['Varm choklad','Te och bullar','Apelsinjuice'],['Läs stycket där de kommer fram till Margits hem.','Det var något varmt att dricka medan det regnade.'],'Margit bjöd på varm choklad.'),
-        SV('Hur kunde Noah ringa till sin mamma?',['Han lånade Margits telefon.','Han laddade sin mobil hos Margit.','Han ringde från en telefonkiosk.'],['Noahs mobil hade slutat fungera. Vems telefon låg på bordet?','Läs stycket om den varma chokladen.'],'Margits telefon låg på bordet, och hon lät Noah ringa hem.')
-      ]},
-      {name:'Fördjupning', desc:'Mellan raderna: dra slutsatser', make:()=>[
-        SV('Varför suckade Noah innan han började plocka upp apelsinerna?',['Han var trött och besviken, men hjälpte ändå till.','Han var arg på kvinnan för att hon tappade kassen.','Han ville inte hjälpa till och gick därifrån.'],['Hur har Noahs dag varit hittills?','Han reste sig och började plocka. Vad säger det om honom?'],'Noah hade missat bussen och mobilen var död. Sucken visar att han var trött på allt, men han hjälpte ändå till.'),
-        SV('Varför tittade Noah på klockan i kyrktornet?',['Hans mobil var död, så han kunde inte se tiden på den.','Han tyckte om gamla kyrkor.','Han ville veta när kyrkan stängde.'],['Vad hände med Noahs mobil tidigare i texten?','Vad behövde han veta innan han följde med Margit?'],'Mobilen var död, så Noah använde kyrkklockan för att se hur mycket tid han hade kvar.'),
-        SV('Varför gjorde Noah en paus och tittade på kvinnan när han pratade med mamma?',['Han visste inte vad hon hette.','Han ville att hon skulle prata i stället.','Han hade glömt vad han skulle säga om bussen.'],['Vad säger kvinnan direkt efter att Noah har tittat på henne?','Hon säger sitt namn. Varför behövde hon göra det?'],'Noah visste inte vad kvinnan hette. Därför säger hon ”Margit”.'),
-        SV('Vad menar Noah med att det var den bästa bussen han någonsin missat?',['Att det blev något bra av att han missade bussen.','Att bussen var ny och fin.','Att han inte tycker om att åka buss.'],['Noah missade ju bussen. Vad hände efter det?','Hur kändes eftermiddagen hos Margit, jämfört med att sitta ensam och vänta?'],'Att missa bussen ledde till något bra: han hjälpte Margit och fick en fin stund.'),
-        SV('Vilket ord beskriver Noah bäst i texten?',['Hjälpsam','Blyg','Slarvig'],['Vad gör Noah när kassen går sönder?','Han bär kassen hela vägen hem till Margit. Vad säger det om honom?'],'Hjälpsam. Han plockar upp apelsinerna och bär kassen trots att hans dag är jobbig.')
-      ]},
-      {name:'Utmaning', desc:'Bortom raderna och en skrivuppgift', make:()=>[
-        SV('Vilket budskap passar bäst till texten?',['Små handlingar kan göra skillnad, även en dag när allt går fel.','Man ska alltid ladda mobilen innan man går hemifrån.','Man ska aldrig prata med människor man inte känner.'],['Ett budskap handlar om något större än just det som händer i texten. Vad kan läsaren lära sig?','Hur förändrades Noahs dag av att han hjälpte någon?'],'Budskapet är att små handlingar kan göra skillnad. Noahs dåliga dag blev bra för att han hjälpte någon.'),
-        SV('Varför tror du att författaren låter det börja regna?',['Det gör läget jobbigare och visar att Noah hjälper till trots allt.','Det förklarar varför bussen var sen.','Det visar att berättelsen utspelar sig på hösten.'],['Hur påverkar regnet Noahs situation?','Om allt redan är jobbigt och Noah ändå hjälper, vad säger det om honom?'],'Regnet gör allt jobbigare. Att Noah hjälper till ändå visar vilken sorts person han är.'),
-        SV('Vem berättar historien?',['En berättare som står utanför och berättar om Noah.','Noah själv, i jag-form.','Margit, i jag-form.'],['Vilka ord används om Noah i texten: han eller jag?','Det står till exempel ”Noah hade” och ”han sprang”.'],'En berättare som står utanför händelserna. Texten säger han om Noah, inte jag.')
-      ],
-        writing:{
-          task:'Skriv 4–6 meningar: Vad tror du att Noah lärde sig den dagen? Använd minst ett exempel från texten för att visa vad du menar.',
-          check:['Svarar du på frågan om vad Noah lärde sig?','Har du med minst ett exempel från texten?','Använder du ord som eftersom, därför eller till exempel för att förklara?','Börjar meningarna med stor bokstav och slutar med punkt?'],
-          focus:'Fokusera på om eleven svarar på frågan och stödjer sitt svar med exempel från texten ”Sista bussen”, där Noah missar bussen, hjälper en äldre kvinna som heter Margit och till slut tycker att det var den bästa bussen han missat.'
-        }}
-    ]
-  },
-  '7-svenska-ordklasser':{
-    intro:[
-      'Ord delas in i ordklasser efter vad de gör i en mening. När du vet ordklassen blir det lättare att böja orden rätt och att förstå grammatik, även i andra språk.',
-      'Tre vanliga ordklasser är substantiv (en bok, ett hus), verb (springer, läste) och adjektiv (glad, stor). Andra är pronomen (jag, hon), adverb (snabbt, igår) och prepositioner (på, under).',
-      'Samma ord kan höra till olika ordklasser beroende på hur det används. Titta därför alltid på hela meningen.'
-    ],
-    example:{title:'Exempel: Vilken ordklass är ”glada”?', steps:['Meningen är: Den glada hunden skäller.','Ordet beskriver hur hunden är.','Det går att jämföra: glad, gladare, gladast.','Svar: ”glada” är ett adjektiv.']},
-    levels:[
-      {name:'Grund', desc:'Substantiv, verb och adjektiv', make:()=>shuffle(OK_GRUND).slice(0,8).map(x=>okQ(x,['substantiv','verb','adjektiv']))},
-      {name:'Fördjupning', desc:'Pronomen, adverb och prepositioner', make:()=>shuffle(OK_FORD).slice(0,8).map(x=>okQ(x,['substantiv','verb','adjektiv','pronomen','adverb','preposition']))},
-      {name:'Utmaning', desc:'Alla ordklasser och ord som lurar', make:()=>shuffle(OK_UTM).slice(0,8).map(x=>okQ(x,OK_ALL))}
-    ]
-  },
-  '8-matte-ekvationer':{
-    intro:[
-      'En ekvation är som en våg i jämvikt. Det som står på vänster sida är lika mycket värt som det som står på höger sida.',
-      'Målet är att få x ensamt på ena sidan. Du gör det genom att göra samma sak på båda sidor, så att vågen fortsätter att väga jämnt.',
-      'Gör det motsatta: står det + 5 drar du bort 5, och står det 3x delar du med 3. Kontrollera gärna svaret genom att sätta in det i ekvationen.'
-    ],
-    example:{title:'Exempel: Lös 3x + 4 = 19', steps:['Dra bort 4 från båda sidor: 3x = 15.','Dela båda sidor med 3: x = 5.','Kontroll: 3 · 5 + 4 = 19. Det stämmer.','Svar: x = 5.']},
-    levels:[
-      {name:'Grund', desc:'Ett steg: plus, minus och gånger', make:()=>mix([EQ.g1,EQ.g2,EQ.g3],8)},
-      {name:'Fördjupning', desc:'Två steg och division', make:()=>mix([EQ.f1,EQ.f2,EQ.f3],8)},
-      {name:'Utmaning', desc:'x på båda sidor, parenteser och textuppgifter', make:()=>mix([EQ.u1,EQ.u2,EQ.u3],8)}
-    ]
-  },
-  '8-engelska-fler-verbtider':{
-    intro:[
-      'Present continuous (am, is eller are + -ing) använder du för sådant som händer just nu: I am reading. Present simple använder du för vanor och fakta: I read every day.',
-      'Present perfect (have eller has + verbets tredje form) använder du när något har hänt fram till nu, utan att det sägs exakt när: I have been to London. Past simple använder du när det sägs när det hände: I went to London last year.',
-      'Tidsorden hjälper dig. Now och look! pekar på continuous. Ever, never, yet, already, since och for pekar ofta på present perfect. Yesterday, ago och last pekar på past simple.'
-    ],
-    example:{title:'Exempel: Present perfect eller past simple?', steps:['Meningen är: I ___ (see) that film last week.','Tidsordet ”last week” säger exakt när det hände.','Då ska det vara past simple. See är oregelbundet.','Svar: I saw that film last week.']},
-    levels:[
-      {name:'Grund', desc:'Just nu eller brukar: continuous och simple', make:()=>shuffle(EN8_GRUND).slice(0,8).map(x=>enQ(x[0],x[1],x[2],x[3],enSig(x[4],x[5]),x[5]))},
-      {name:'Fördjupning', desc:'Present perfect eller past simple', make:()=>shuffle(EN8_FORD).slice(0,8).map(x=>enQ(x[0],x[1],x[2],x[3],enSig(x[4],x[5]),x[5]))},
-      {name:'Utmaning', desc:'Skriv rätt form själv, plus en skrivuppgift', make:()=>shuffle(EN8_UTM).slice(0,8).map(it=>
-        textQ({ instr:'Skriv verbet i rätt form. Ibland behövs två ord, till exempel is reading.', prompt:it.s, lang:'en', answer:it.a, accept:it.acc, hints:it.h, solution:fill(it.s, it.a) })),
-        writing:{
-          task:'Skriv 5–8 meningar på engelska om något du har gjort i år och något du gjorde förra sommaren. Använd både present perfect (I have …) och past simple (I went …).',
-          check:['Har du skrivit 5–8 meningar?','Har du med både present perfect, som I have tried, och past simple, som I went?','Använder du past simple när du säger exakt när något hände?','Börjar varje mening med stor bokstav och slutar med punkt?'],
-          focus:'Fokusera på om eleven använder present perfect och past simple på rätt ställen. Om något verb är fel, visa ett exempel ur elevens text och hur det blir rätt. Citera engelska ord på engelska.'
-        }}
-    ]
-  },
-  '8-svenska-satsdelar':{
-    intro:[
-      'Satsdelar visar vilken uppgift orden har i en mening. Ordklasser handlar om vad ett ord är, satsdelar om vad det gör i just den meningen.',
-      'Börja alltid med att hitta predikatet, alltså verbet som visar vad som händer. Sedan kan du ställa frågor för att hitta resten.',
-      'Subjektet hittar du med frågan vem eller vad + predikatet. Objektet hittar du med frågan vem eller vad + predikatet + subjektet. Adverbial berättar hur, när, var eller varför.'
-    ],
-    example:{title:'Exempel: Satsdelarna i ”Lisa åt en macka i skolan.”', steps:['Predikat: åt. Det är verbet.','Subjekt: Vem åt? Lisa.','Objekt: Vad åt Lisa? En macka.','Adverbial: Var åt hon? I skolan.']},
-    levels:[
-      {name:'Grund', desc:'Subjekt, predikat och objekt', make:()=>shuffle(SD_GRUND).slice(0,8).map(x=>sdQ(x,['subjekt','predikat','objekt']))},
-      {name:'Fördjupning', desc:'Adverbial och omvänd ordföljd', make:()=>shuffle(SD_FORD).slice(0,8).map(x=>sdQ(x,['subjekt','predikat','objekt','adverbial']))},
-      {name:'Utmaning', desc:'Indirekt objekt och satsdelar som lurar', make:()=>shuffle(SD_UTM).slice(0,8).map(x=>sdQ(x,SD_ALL))}
-    ]
-  },
-  '9-matte-sannolikhet':{
-    intro:[
-      'Sannolikhet visar hur troligt det är att något händer. Den är ett tal mellan 0 och 1, där 0 betyder att det aldrig händer och 1 att det alltid händer.',
-      'Sannolikheten räknar du ut som antalet gynnsamma utfall delat med antalet möjliga utfall. Gynnsamma utfall är de du är ute efter.',
-      'Sannolikheten kan skrivas som bråk, decimaltal eller procent: 1/4 = 0,25 = 25 %. När flera saker ska hända efter varandra gångrar du sannolikheterna.'
-    ],
-    example:{title:'Exempel: Att få en femma eller en sexa på en tärning', steps:['En tärning har 6 möjliga utfall.','Femma och sexa är 2 gynnsamma utfall.','Sannolikheten är 2/6 = 1/3, ungefär 0,33 eller 33 %.']},
-    levels:[
-      {name:'Grund', desc:'Tärningar, påsar och lyckohjul', make:()=>mix([SA.g1,SA.g2,SA.g3],8)},
-      {name:'Fördjupning', desc:'Motsatt händelse, procent och flera försök', make:()=>mix([SA.f1,SA.f2,SA.f3],8)},
-      {name:'Utmaning', desc:'Dragning med och utan återläggning, förväntat antal', make:()=>mix([SA.u1,SA.u2,SA.u3],8)}
-    ]
-  },
-  '9-engelska-grammatik':{
-    intro:[
-      'Adjektiv kan jämföras. Korta adjektiv får -er och -est: big, bigger, biggest. Långa adjektiv får more och most: more interesting, most interesting. Några är oregelbundna: good, better, best och bad, worse, worst.',
-      'If-satser visar villkor. Om något är troligt använder du presens i if-satsen och will i den andra delen: If it rains, we will stay inside. Om något är tänkt eller osannolikt använder du preteritum och would: If I had a dog, I would walk it every day.',
-      'Passiv form använder du när det viktiga är vad som händer, inte vem som gör det: The window was broken. Du bildar den med en form av be + verbets tredje form.'
-    ],
-    example:{title:'Exempel: Vilken if-sats?', steps:['Meningen är: If I ___ (win) the lottery, I would buy a boat.','Den andra delen har would. Det är något tänkt, inte troligt.','Då ska if-satsen stå i preteritum.','Svar: If I won the lottery, I would buy a boat.']},
-    levels:[
-      {name:'Grund', desc:'Jämförelser: bigger, more och best', make:()=>shuffle(EN9_GRUND).slice(0,8).map(x=>enQ(...x))},
-      {name:'Fördjupning', desc:'If-satser: will eller would, plus en skrivuppgift', make:()=>shuffle(EN9_FORD).slice(0,8).map(x=>enQ(...x)),
-        writing:{
-          task:'Skriv 5–8 meningar på engelska: Vad skulle du göra om du fick bestämma över din skola i en vecka? Använd if-satser, till exempel If I were the principal, I would …',
-          check:['Har du skrivit 5–8 meningar?','Använder du would i dina meningar?','Står if-satsen i preteritum, till exempel If I were eller If I had?','Börjar varje mening med stor bokstav och slutar med punkt?'],
-          focus:'Fokusera på om eleven använder andra konditionalis rätt: preteritum i if-satsen och would i den andra delen. Om något är fel, visa ett exempel ur elevens text och hur det blir rätt. Citera engelska ord på engelska.'
-        }},
-      {name:'Utmaning', desc:'Passiv form', make:()=>shuffle(EN9_UTM).slice(0,8).map(x=>enQ(...x))}
-    ]
-  },
-  '9-svenska-sprakriktighet':{
-    intro:[
-      'Språkriktighet handlar om att skriva så att läsaren förstår direkt och inte fastnar på fel. Några fel är vanliga, även hos vuxna, och de går att lära sig att undvika.',
-      'De och dem: byt ut ordet mot vi eller oss. Passar vi ska det vara de. Passar oss ska det vara dem.',
-      'Sammansatta ord skrivs ihop på svenska: skolgården, inte skol gården. Var handlar om plats och vart om riktning. Sin, sitt och sina använder du när något tillhör subjektet.'
-    ],
-    example:{title:'Exempel: De eller dem?', steps:['Meningen är: Jag träffade ___ i parken.','Byt ut ordet: ”Jag träffade oss i parken” låter rätt. ”Jag träffade vi” låter fel.','Oss betyder att det ska vara dem.','Svar: Jag träffade dem i parken.']},
-    levels:[
-      {name:'Grund', desc:'De eller dem, att eller och', make:()=>shuffle(SV_GRUND).slice(0,8).map(svQ)},
-      {name:'Fördjupning', desc:'Särskrivning, var och vart', make:()=>shuffle(SV_FORD).slice(0,8).map(svQ)},
-      {name:'Utmaning', desc:'Sin eller hans, än eller en, och blandat', make:()=>shuffle(SV_UTM).slice(0,8).map(svQ)}
-    ]
-  }
-};
-
+/* Alla färdiga områden. Fylls på av ak7.js, ak8.js och ak9.js. */
+const CONTENT = {};
+</script>
+<script src="ak7.js"></script>
+<script src="ak8.js"></script>
+<script src="ak9.js"></script>
+<script>
 /* ==========================================================
    FRAMSTEG (sparas bara i webbläsaren)
    ========================================================== */
@@ -1594,7 +873,7 @@ function viewAreas(){
 
 function storyBlock(t){
   return `<details class="n-card text" ${S.showText ? 'open' : ''}><summary>Texten: ${esc(t.title)}</summary>
-    <div class="story"><div class="story-head"><h3 class="n-h n-h3">${esc(t.title)}</h3>${speakBtn('story','Lyssna på texten')}</div>${t.paras.map(p => `<p>${esc(p)}</p>`).join('')}</div></details>`;
+    <div class="story" ${t.lang === 'en' ? 'lang="en"' : ''}><div class="story-head"><h3 class="n-h n-h3">${esc(t.title)}</h3>${speakBtn('story','Lyssna på texten')}</div>${t.paras.map(p => `<p>${esc(p)}</p>`).join('')}</div></details>`;
 }
 
 function viewArea(){
@@ -1655,6 +934,7 @@ function viewQuiz(){
     <div class="q-anim q-panel" data-q="${R.i}">
     <p class="instr">${esc(q.instr)}</p>
     <div class="prompt-row"><p class="prompt" ${q.lang === 'en' ? 'lang="en"' : ''}>${esc(q.prompt)}</p>${speakBtn('prompt')}</div>
+    ${q.figure ? `<div class="figure">${q.figure}</div>` : ''}
     ${answer}
     <div class="actions">${actions.join('')}</div>
     ${q.hints.slice(0, R.hints).map((h, i) => `<div class="hint"><strong>Ledtråd ${i + 1}:</strong> ${esc(h)}</div>`).join('')}
@@ -2046,7 +1326,7 @@ function speakSrc(src){
   }
   if (src === 'prompt') { const q = S.R.qs[S.R.i]; return q.lang === 'en' ? [q.prompt.replace(/___/g, ' … '), 'en'] : [`${q.instr} ${q.prompt}`, 'sv']; }
   const c = content() || {};
-  if (src === 'story') { const t = (S.R && S.view === 'quiz' && S.R.qs[S.R.i].text) || c.text; return [`${t.title}. ${t.paras.join(' ')}`, 'sv']; }
+  if (src === 'story') { const t = (S.R && S.view === 'quiz' && S.R.qs[S.R.i].text) || c.text; return [`${t.title}. ${t.paras.join(' ')}`, t.lang === 'en' ? 'en' : 'sv']; }
   if (src === 'intro') return [c.intro.join(' '), 'sv'];
   if (src === 'task') return [c.levels[S.level].writing.task, 'sv'];
   return ['', 'sv'];
