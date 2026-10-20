@@ -168,7 +168,12 @@ a{color:inherit}
    ELEVGUIDEN – appens egna delar (form: cirkel, layout: delad)
    ========================================================== */
 .main{max-width:760px}
+/* Tydlig tillbaka-knapp högst upp på alla sidor utom startsidan */
+.backbtn{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font:inherit;font-size:.95rem;font-weight:600;color:var(--n-accent);background:var(--n-surface);border:1px solid var(--n-line);border-radius:999px;padding:8px 18px;min-height:42px;cursor:pointer;transition:background .15s,border-color .15s}
+.backbtn:hover{background:var(--n-tint);border-color:var(--n-accent)}
+.backbtn span{font-size:1.1rem;line-height:1}
 .crumbs{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;padding:20px 0 4px;font-size:.92rem;color:var(--n-ink-soft)}
+.backbtn + .crumbs{padding-top:12px}
 .crumbs button{font:inherit;background:none;border:0;padding:0;color:var(--n-ink-soft);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .crumbs button:hover{color:var(--n-ink)}
 .crumbs .here{color:var(--n-ink)}
@@ -377,13 +382,13 @@ textarea:focus{border-color:var(--n-accent);outline:none}
 }
 
 @media print{
-  .n-footer,.crumbs,.page-head,.facts,.scens,.help,.section-title,.plan-form,.actions{display:none!important}
+  .n-footer,.crumbs,.backbtn,.page-head,.facts,.scens,.help,.section-title,.plan-form,.actions{display:none!important}
   .exercise{border:0!important;padding:0!important}
 }
 
 @media print{
       :root,:root[data-theme="dark"]{--n-bg:#fff;--n-surface:#fff;--n-ink:#000;--n-ink-soft:#333;--n-line:#ccc;--n-tint:#eee;--n-accent:#000;--n-on-accent:#fff}
-  .n-theme,.actions,.crumbs{display:none!important}
+  .n-theme,.actions,.crumbs,.backbtn{display:none!important}
 }
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="2e81b730-fb1d-4183-9323-de51c8949318" data-tag="elevguiden" data-do-not-track="true"></script>
@@ -744,8 +749,41 @@ function viewTone(){
 }
 const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
+/* Webbläsarens tillbaka-knapp: varje sida i appen sparas som ett steg i webbläsarens historik.
+   Bara i minnet medan sidan är öppen. Inget sparas eller skickas någonstans. */
+const HIST = [];
+let hIdx = 0;
+const snap = () => ({ view:S.view, grade:S.grade, subject:S.subject, area:S.area, level:S.level, theme:S.theme, picks:S.picks, R:S.R });
 let enterTimer = null;
-function go(view, patch={}){ stopSpeech(); Object.assign(S, patch, {view}); $app.classList.add('enter'); render(); window.scrollTo(0,0); clearTimeout(enterTimer); enterTimer = setTimeout(() => $app.classList.remove('enter'), 900); }
+function show(){ $app.classList.add('enter'); render(); window.scrollTo(0,0); clearTimeout(enterTimer); enterTimer = setTimeout(() => $app.classList.remove('enter'), 900); }
+function go(view, patch={}, replace=false){
+  stopSpeech(); Object.assign(S, patch, {view});
+  try {
+    if (replace) { HIST[hIdx] = snap(); history.replaceState({eg:hIdx}, ''); }
+    else { HIST.length = hIdx + 1; HIST.push(snap()); hIdx++; history.pushState({eg:hIdx}, ''); }
+  } catch(e) {}
+  show();
+}
+window.addEventListener('popstate', e => {
+  const i = e.state && typeof e.state.eg === 'number' && HIST[e.state.eg] ? e.state.eg : 0;
+  hIdx = i; stopSpeech(); Object.assign(S, HIST[i] || {view:'home', grade:null, subject:null, area:null}); show();
+});
+/* Om det inte finns något att backa till i historiken: gå till sidan ovanför */
+function parentView(){
+  switch (S.view) {
+    case 'subjects': return ['school', {subject:null, area:null}];
+    case 'areas': return ['subjects', {area:null}];
+    case 'area': case 'write': return ['area', {}];
+    case 'quiz': case 'result': return S.R && S.R.mode === 'daily' ? ['home', {}] : ['area', {}];
+    case 'theme': return ['life', {}];
+    default: return ['home', {grade:null, subject:null, area:null}];
+  }
+}
+function goBack(){
+  if (hIdx > 0) { history.back(); return; }
+  const [v, p] = S.view === 'area' ? ['areas', {}] : parentView();
+  go(v, p);
+}
 function areaTitle(){ const a = AREAS[S.grade] && AREAS[S.grade][S.subject] && AREAS[S.grade][S.subject].find(x => x[0] === S.area); return a ? a[1] : ''; }
 function content(){ return CONTENT[areaKey()]; }
 function dailyPool(){
@@ -771,7 +809,8 @@ function crumbs(){
     if (S.subject && S.view !== 'subjects') parts.push(S.view === 'areas' ? `<span class="here">${SUBJECTS[S.subject].name}</span>` : `<button data-act="toAreas">${SUBJECTS[S.subject].name}</button>`);
     if (S.area && !['subjects','areas'].includes(S.view)) parts.push(S.view === 'area' ? `<span class="here">${esc(areaTitle())}</span>` : `<button data-act="toArea">${esc(areaTitle())}</button>`);
   }
-  return `<nav class="crumbs" aria-label="Var du är">${parts.join('<span aria-hidden="true">›</span>')}</nav>`;
+  return `<button class="backbtn" data-act="back" aria-label="Tillbaka till föregående sida"><span aria-hidden="true">←</span> Tillbaka</button>
+    <nav class="crumbs" aria-label="Var du är">${parts.join('<span aria-hidden="true">›</span>')}</nav>`;
 }
 
 function speakBtn(src, label='Lyssna'){
@@ -1176,22 +1215,24 @@ function setFeedback(text){
 function newRound(qs, mode){
   return { qs, mode, i:0, score:0, tries:0, hints:0, revealed:false, done:false, picked:null, wrong:[], input:'', feedback:null, firstOk:false, log:[], lvl:[0,0,0], streak:0, fx:null };
 }
+/* När en ny runda startas från en resultatsida ersätts den i historiken, så att tillbaka går till nivåerna */
+const inRound = () => ['quiz','result'].includes(S.view);
 function startLevel(i){
-  const c = content();
+  const c = content(), rep = inRound();
   S.level = i;
   const qs = c.levels[i].make(); qs.forEach(q => { q.text = q.text || c.text; });
   S.R = newRound(qs, 'level');
-  go('quiz');
+  go('quiz', {}, rep);
 }
 function startDiag(){
-  const c = content(), qs = [];
+  const c = content(), qs = [], rep = inRound();
   c.levels.forEach((lv, i) => shuffle(lv.make()).slice(0, 2).forEach(q => { q.lvl = i; q.text = c.text; qs.push(q); }));
   S.R = newRound(qs, 'diag');
-  go('quiz');
+  go('quiz', {}, rep);
 }
 function startDaily(){
   const pool = dailyPool(); if (!pool.length) return;
-  const qs = [], seen = new Set();
+  const qs = [], seen = new Set(), rep = inRound();
   for (let t = 0; qs.length < 5 && t < 40; t++) {
     const [k, i] = pick(pool); const c = CONTENT[k];
     const q = pick(c.levels[i].make());
@@ -1199,7 +1240,7 @@ function startDaily(){
     seen.add(q.prompt); q.meta = labelFor(k); q.text = c.text; qs.push(q);
   }
   S.R = newRound(qs, 'daily');
-  go('quiz');
+  go('quiz', {}, rep);
 }
 function resetQ(){ Object.assign(S.R, { tries:0, hints:0, revealed:false, done:false, picked:null, wrong:[], input:'', feedback:null, firstOk:false }); }
 
@@ -1279,7 +1320,8 @@ function next(){
   }
   markPracticed();
   saveProgress();
-  go('result');
+  /* Resultatet ersätter frågorna i historiken, så att tillbaka går till nivåerna */
+  go('result', {}, true);
 }
 
 async function askFeedback(){
@@ -1340,6 +1382,7 @@ $app.addEventListener('click', e => {
   if (!b || b.disabled) return;
   const v = b.dataset.v;
   switch (b.dataset.act) {
+    case 'back': goBack(); break;
     case 'home': go('home', {grade:null, subject:null, area:null}); break;
     case 'grade': go('subjects', {grade:+v, subject:null, area:null}); break;
     case 'toSubjects': go('subjects', {subject:null, area:null}); break;
@@ -1409,6 +1452,9 @@ themeBtn.addEventListener('click', () => {
 });
 paintThemeBtn();
 
+/* Startsidan blir första steget i historiken */
+HIST[0] = snap();
+try { history.replaceState({eg:0}, ''); } catch(e) {}
 render();
 </script>
 </body>
