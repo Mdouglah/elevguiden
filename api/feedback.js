@@ -1,11 +1,30 @@
 // Elevguiden – AI-feedback på skrivuppgifter och meddelanden.
 // Anropar Claude med nyckeln i miljövariabeln ANTHROPIC_API_KEY.
 // Elevens text sparas inte här. Den skickas bara vidare till Anthropic för att skapa feedbacken.
+// Skydd: bara anrop från appens egna adresser tillåts, varje val kontrolleras mot listorna nedan,
+// systeminstruktionen byggs här på servern och svarets längd har ett tak.
 
 const MODEL = process.env.ANTHROPIC_MODEL || 'claude-haiku-5-5';
 const SUBJECTS = { svenska: 'svenska', engelska: 'engelska', matte: 'matematik' };
+const GRADES = [7, 8, 9];
+const TYPES = ['writing', 'message'];
+
+const MAX_BODY = 20000; // max storlek på hela förfrågan (tecken). Elevens text kortas ändå av nedan.
+
+// Adresser som får anropa funktionen. Fler kan läggas till i Vercel som
+// miljövariabeln ALLOWED_ORIGINS (kommaseparerad), t.ex. en egen domän.
+function tillatnaAdresser() {
+  const lista = ['https://elevguiden.norvayapp.se', 'https://elevguiden.vercel.app'];
+  if (process.env.VERCEL_URL) lista.push(`https://${process.env.VERCEL_URL}`);
+  if (process.env.VERCEL_BRANCH_URL) lista.push(`https://${process.env.VERCEL_BRANCH_URL}`);
+  if (process.env.ALLOWED_ORIGINS) {
+    lista.push(...process.env.ALLOWED_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean));
+  }
+  return lista;
+}
 
 // Enkel spärr mot missbruk: högst 20 anrop per 10 minuter per besökare.
+// Räknaren finns bara i minnet och nollställs när servern startar om.
 const hits = new Map();
 function limited(ip) {
   const now = Date.now(), win = 10 * 60 * 1000;
@@ -18,8 +37,8 @@ function limited(ip) {
 const clip = (s, n) => String(s || '').slice(0, n);
 
 function buildWriting(b) {
-  const subject = SUBJECTS[b.subject] || 'svenska';
-  const grade = [7, 8, 9].includes(Number(b.grade)) ? Number(b.grade) : 7;
+  const subject = SUBJECTS[b.subject];
+  const grade = Number(b.grade);
   const system =
 `Du är en vänlig och uppmuntrande lärare i ${subject} för en elev i årskurs ${grade} i svensk grundskola. Ge kort återkoppling på svenska, högst 120 ord, och skriv direkt till eleven med "du".
 
@@ -47,14 +66,37 @@ Ställ inga personliga frågor. Skriv vanlig text utan rubriker och utan markdow
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'Endast POST' }); return; }
-  if (!process.env.ANTHROPIC_API_KEY) { res.status(500).json({ error: 'API-nyckel saknas' }); return; }
+
+  const origin = req.headers.origin;
+  if (!origin || !tillatnaAdresser().includes(origin)) {
+    res.status(403).json({ error: 'Förfrågan kommer inte från Elevguiden.' });
+    return;
+  }
 
   const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'okand';
   if (limited(ip)) { res.status(429).json({ error: 'För många förfrågningar' }); return; }
 
   let b = req.body || {};
   if (typeof b === 'string') { try { b = JSON.parse(b || '{}'); } catch (_) { b = {}; } }
-  if (!b.text || typeof b.text !== 'string') { res.status(400).json({ error: 'Text saknas' }); return; }
+  if (!b || typeof b !== 'object' || Array.isArray(b) || JSON.stringify(b).length > MAX_BODY) {
+    res.status(400).json({ error: 'Ogiltig förfrågan' });
+    return;
+  }
+
+  // Kontrollera varje val mot listorna ovan
+  const giltigt =
+    TYPES.includes(b.type) &&
+    typeof b.text === 'string' && b.text.trim() !== '' &&
+    (b.type === 'message' || (
+      Object.hasOwn(SUBJECTS, b.subject) &&
+      GRADES.includes(Number(b.grade)) &&
+      (b.task === undefined || typeof b.task === 'string') &&
+      (b.focus === undefined || typeof b.focus === 'string')
+    ));
+  if (!giltigt) { res.status(400).json({ error: 'Ogiltig förfrågan' }); return; }
+
+  if (!process.env.ANTHROPIC_API_KEY) { res.status(500).json({ error: 'API-nyckel saknas' }); return; }
+
   const { system, user } = b.type === 'message' ? buildMessage(b) : buildWriting(b);
 
   try {
