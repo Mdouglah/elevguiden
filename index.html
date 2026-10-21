@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <script>
   /* Nattläge, samma som på Norvay: sätts innan sidan ritas. Utan sparat val följer sidan enhetens inställning.
-     Valet sparas bara i webbläsaren (localStorage, nyckeln "norvay-tema"). */
-  (function(){var t;try{t=localStorage.getItem('norvay-tema')}catch(e){}if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)})();
+     Valet sparas i kakan "norvay-tema" (bara light eller dark) för hela norvayapp.se, så att det följer med
+     mellan Norvays verktyg. Ett äldre val i localStorage läses fortfarande. */
+  (function(){var t,m=document.cookie.match(/(?:^|; )norvay-tema=(light|dark)/);if(m)t=m[1];if(!t){try{t=localStorage.getItem('norvay-tema')}catch(e){}}if(t!=='dark'&&t!=='light'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)})();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Elevguiden – öva och väx i din egen takt | Norvay</title>
@@ -92,13 +93,17 @@ a{color:inherit}
 :root[data-theme="dark"] .norvay-bar a{color:#ece7da}
 :root[data-theme="dark"] .norvay-bar-mark{border-color:#ece7da}
 .norvay-bar-right{display:inline-flex;align-items:center;gap:12px}
-.n-theme{width:32px;height:32px;border-radius:50%;border:1px solid rgba(18,63,55,.14);background:transparent;color:#123f37;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
-.n-theme:hover{background:#d7e2d7}
+/* Månknappen: samma som på Norvays startsida (40 px, rund, ikon 18 px) */
+.n-theme{width:40px;height:40px;flex:0 0 40px;border-radius:50%;border:1px solid rgba(18,63,55,.14);background:transparent;color:#123f37;display:inline-grid;place-items:center;cursor:pointer;padding:0;transition:border-color .3s ease,color .3s ease}
+.n-theme:hover{border-color:#c9785f;color:#c9785f}
 .n-theme:focus-visible{outline:3px solid #2f6b5a;outline-offset:3px}
-.n-theme svg{width:16px;height:16px}
+.n-theme svg{width:18px;height:18px}
 :root[data-theme="dark"] .n-theme{color:#ece7da;border-color:rgba(236,231,218,.14)}
-:root[data-theme="dark"] .n-theme:hover{background:#1f4239}
+:root[data-theme="dark"] .n-theme:hover{border-color:#e3a58f;color:#e3a58f}
 :root[data-theme="dark"] .n-theme:focus-visible{outline-color:#8fc2a8}
+/* Större tryckytor i listen på mobil (minst 44 px höga länkar) */
+.norvay-bar{padding-top:0;padding-bottom:0}
+.norvay-bar a{display:inline-flex;align-items:center;min-height:44px}
 
 /* ---------- Färgtoner (Norvays palett) ---------- */
 [data-tone="sage"]{--t-bg:#dfe9df;--t-deep:#2f6b5a}
@@ -401,7 +406,7 @@ textarea:focus{border-color:var(--n-accent);outline:none}
 
   <footer class="n-footer">
     <p>Sparas bara i den här webbläsaren: hur långt du har kommit i skolämnena. Det du skriver i skrivuppgifter och meddelanden sparas inte. När du ber om feedback skickas texten till en AI-tjänst som skriver svaret, men den sparas inte av Elevguiden.</p>
-    <p>Elevguiden är ett verktyg från Norvay. Frågor och synpunkter: <a href="mailto:kontakt@norvayapp.se">kontakt@norvayapp.se</a></p>
+    <p>Ett verktyg från <a href="https://norvayapp.se">Norvay</a> · <a href="https://norvayapp.se/integritet">Integritet</a> · <a href="mailto:kontakt@norvayapp.se">kontakt@norvayapp.se</a></p>
   </footer>
 </div>
 
@@ -1460,6 +1465,12 @@ $app.addEventListener('input', e => {
 const MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
 const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
 const themeBtn = document.getElementById('themeBtn');
+/* Sparar valet i kakan "norvay-tema" för alla Norvays verktyg (ett år). Bara ordet light eller dark. */
+function sparaTema(t){
+  const doman = /(^|\.)norvayapp\.se$/.test(location.hostname) ? '; domain=.norvayapp.se' : '';
+  const saker = location.protocol === 'https:' ? '; secure' : '';
+  document.cookie = 'norvay-tema=' + t + '; path=/; max-age=31536000; samesite=lax' + saker + doman;
+}
 function paintThemeBtn(){
   const dark = document.documentElement.getAttribute('data-theme') === 'dark';
   themeBtn.innerHTML = dark ? SUN : MOON;
@@ -1469,7 +1480,7 @@ function paintThemeBtn(){
 themeBtn.addEventListener('click', () => {
   const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
-  try { localStorage.setItem('norvay-tema', next); } catch(e) {}
+  sparaTema(next);
   paintThemeBtn();
 });
 paintThemeBtn();
