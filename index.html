@@ -413,7 +413,8 @@ textarea:focus{border-color:var(--n-accent);outline:none}
 <script>
 /* ==========================================================
    HJÄLPFUNKTIONER
-   Används av innehållsfilerna ak7.js, ak8.js och ak9.js,
+   Används av innehållsfilerna ak7.js, ak8.js och ak9.js
+   och av matte7.js, matte8.js och matte9.js,
    som laddas direkt efter det här skriptet.
    ========================================================== */
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -431,10 +432,22 @@ const simp = (n,d) => { const s = fracStr(n,d); return s === `${n}/${d}` ? '' : 
 const cx = n => n === 1 ? 'x' : `${n}x`;
 /* Byter ut luckan ___ (och ett eventuellt (verb)) mot svaret */
 const fill = (s, a) => s.replace(/___( \(\w+\))?/, a);
+/* Stora tal med mellanrum: 45000 -> 45 000 */
+const numSp = n => fmt(n).replace(/^(-?\d+)/, m => m.replace(/\B(?=(\d{3})+(?!\d))/g, ' '));
+/* Negativa tal med riktigt minustecken: -4 -> −4 */
+const negStr = n => n < 0 ? '−' + fmt(-n) : fmt(n);
+/* Exponenter som små siffror: 10 och 4 -> 10⁴ */
+const supStr = n => String(n).split('').map(c => c === '-' ? '⁻' : '⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]).join('');
+/* Lista med "och" sist: 3, 5 och 8 */
+const andList = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' och ' + a[a.length - 1];
 
-/* Tolkar tal: 12 / 0,25 / 150 kr / 25 % / 3/4 / x = 5 */
+/* Tolkar tal: 12 / 0,25 / 150 kr / 25 % / 3/4 / x = 5 / −4 / 12 cm */
 function parseNum(raw){
-  const s = String(raw).toLowerCase().replace(/kr|%|procent|st/g,'').replace(/[\s\u00a0]/g,'').replace(/,/g,'.').replace(/^[a-z]=/,'');
+  const s = String(raw).toLowerCase().replace(/[−–]/g,'-')
+    .replace(/kr|%|procent|poäng|grader|timmar|liter|meter|gram|°c|°|st/g,'')
+    .replace(/[\s\u00a0]/g,'').replace(/,/g,'.')
+    .replace(/(cm³|cm²|dm³|m³|m²|km|cm|dm|m|g|l|h)$/,'')
+    .replace(/^[a-z]=/,'');
   const f = s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);
   if (f) { const d = parseFloat(f[2]); return d ? parseFloat(f[1]) / d : NaN; }
   if (!/^-?\d+(\.\d+)?$/.test(s)) return NaN;
@@ -468,6 +481,8 @@ const FIG = {
 /* ==========================================================
    ÄMNEN OCH OMRÅDEN
    Fördelningen kan ändras här om lärarna vill flytta ett område.
+   Matten följer samma ordning i alla årskurser, som i Lgr22:
+   tal först, sedan algebra, samband, geometri och sist statistik och sannolikhet.
    ========================================================== */
 const SUBJECTS = { svenska:{name:'Svenska'}, engelska:{name:'Engelska'}, matte:{name:'Matematik'} };
 const ORDER = ['svenska','engelska','matte'];
@@ -475,17 +490,17 @@ const AREAS = {
   7:{
     svenska:[['lasforstaelse','Läsförståelse: berättande text'],['ordklasser','Ordklasser'],['berattande','Skriva berättande text']],
     engelska:[['vardagsord','Vardagsord'],['verbtider','Presens och preteritum'],['korta-texter','Läsa och förstå korta texter']],
-    matte:[['brak','Bråk'],['procent','Procent'],['geometri','Geometri: area och omkrets']]
+    matte:[['tal','Tal: decimaltal, negativa tal och räkneordning'],['brak','Bråk'],['procent','Procent'],['monster','Algebra: mönster och uttryck'],['geometri','Geometri: area och omkrets'],['medelvarde','Statistik: medelvärde, median och typvärde']]
   },
   8:{
     svenska:[['satsdelar','Satsdelar'],['utredande','Skriva utredande text'],['kallkritik','Källkritisk läsning']],
     engelska:[['fler-verbtider','Fler verbtider'],['faktatext','Läsa faktatext'],['beskrivande','Skriva beskrivande text']],
-    matte:[['algebra','Algebra och uttryck'],['ekvationer','Ekvationer'],['statistik','Statistik']]
+    matte:[['potenser','Tal: potenser och grundpotensform'],['algebra','Algebra och uttryck'],['ekvationer','Ekvationer'],['proportionalitet','Proportionalitet och skala'],['volym','Geometri: volym och vinklar'],['statistik','Statistik']]
   },
   9:{
     svenska:[['argumenterande','Skriva argumenterande text'],['analys','Analysera skönlitteratur'],['sprakriktighet','Språkriktighet']],
     engelska:[['argumentera','Argumentera på engelska'],['grammatik','Avancerad grammatik'],['langre-texter','Läsa längre texter']],
-    matte:[['funktioner','Funktioner'],['sannolikhet','Sannolikhet'],['problemlosning','Problemlösning inför nationella provet']]
+    matte:[['rotter','Tal: kvadratrötter och grundpotensform'],['forandringsfaktor','Procent och förändringsfaktor'],['funktioner','Funktioner'],['pythagoras','Geometri: Pythagoras sats och likformighet'],['sannolikhet','Sannolikhet'],['problemlosning','Problemlösning inför nationella provet']]
   }
 };
 
@@ -514,12 +529,15 @@ const enSig = (sig, type) => type === 'part'
   ? `Titta på ordet ”${sig}” före luckan. Vilken form av verbet kommer efter det?`
   : `Titta på ”${sig}”. Säger det att något händer just nu, brukar hända, har hänt fram till nu eller hände vid en viss tidpunkt?`;
 
-/* Alla färdiga områden. Fylls på av ak7.js, ak8.js och ak9.js. */
+/* Alla färdiga områden. Fylls på av ak7.js, ak8.js, ak9.js och matte7.js, matte8.js, matte9.js. */
 const CONTENT = {};
 </script>
 <script src="ak7.js"></script>
 <script src="ak8.js"></script>
 <script src="ak9.js"></script>
+<script src="matte7.js"></script>
+<script src="matte8.js"></script>
+<script src="matte9.js"></script>
 <script>
 /* ==========================================================
    FRAMSTEG (sparas bara i webbläsaren)
