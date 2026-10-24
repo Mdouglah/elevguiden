@@ -175,6 +175,61 @@ const VOL8 = {
       wrongs:[[180-top,'Det där är båda basvinklarna tillsammans. Dela med 2.'],[top,'Basvinklarna är lika stora som varandra, men inte som toppvinkeln.'],[(360-top)/2,'Vinkelsumman i en triangel är 180°.']] }); }
 };
 
+/* ---------- MATEMATIK: EKVATIONER ----------
+   Området Ekvationer i ak8.js använder EQ, men EQ saknades i filen,
+   så nivåerna gick inte att starta. Här finns frågorna. Om EQ redan
+   finns någon annanstans används den i stället. */
+if (typeof EQ === 'undefined') {
+  const xq = o => numQ({ instr:'Skriv värdet på x, till exempel 5.', ...o });
+  window.EQ = {
+    g1(){ const x=rnd(2,15), a=rnd(2,15);
+      return xq({ prompt:`Lös ekvationen: x + ${a} = ${x+a}`, answer:x,
+        hints:['Vad behöver du göra för att x ska stå ensamt? Gör samma sak på båda sidor.',`Dra bort ${a} från båda sidor.`],
+        solution:`x = ${x+a} − ${a} = ${x}`,
+        wrongs:[[x+2*a,`Du lade till ${a}. Gör det motsatta: dra bort ${a}.`]] }); },
+    g2(){ const a=rnd(2,12), x=rnd(a+1,a+15);
+      return xq({ prompt:`Lös ekvationen: x − ${a} = ${x-a}`, answer:x,
+        hints:['Vad är motsatsen till att dra bort?',`Lägg till ${a} på båda sidor.`],
+        solution:`x = ${x-a} + ${a} = ${x}`,
+        wrongs:[[x-2*a,`Du drog bort ${a}. Gör det motsatta: lägg till ${a}.`]] }); },
+    g3(){ const a=rnd(2,9), x=rnd(2,12);
+      return xq({ prompt:`Lös ekvationen: ${a}x = ${a*x}`, answer:x,
+        hints:[`${a}x betyder ${a} gånger x. Vad är motsatsen till gånger?`,`Dela båda sidor med ${a}.`],
+        solution:`x = ${a*x} / ${a} = ${x}`,
+        wrongs:[[a*x-a,`Du drog bort ${a}. ${a}x betyder ${a} gånger x, så du ska dela.`],[a*a*x,'Du gångrade. Gör det motsatta: dela.']] }); },
+    f1(){ const a=rnd(2,6), x=rnd(2,10), b=rnd(1,12);
+      return xq({ prompt:`Lös ekvationen: ${a}x + ${b} = ${a*x+b}`, answer:x,
+        hints:[`Ta ett steg i taget. Börja med att dra bort ${b} från båda sidor.`,`Då får du ${a}x = ${a*x}. Dela sedan med ${a}.`],
+        solution:`${a}x = ${a*x+b} − ${b} = ${a*x}. x = ${a*x} / ${a} = ${x}`,
+        wrongs:[[(a*x+b)/a,`Glöm inte att dra bort ${b} först.`],[a*x,`Bra start! ${a}x = ${a*x}. Dela nu med ${a}.`]] }); },
+    f2(){ const a=rnd(2,6), q=rnd(2,9), x=a*q;
+      return xq({ prompt:`Lös ekvationen: x / ${a} = ${q}`, answer:x,
+        hints:['Vad är motsatsen till att dela?',`Gånga båda sidor med ${a}.`],
+        solution:`x = ${q} · ${a} = ${x}`,
+        wrongs:[[q/a,'Du delade igen. Gör det motsatta: gånga.'],[q+a,'Du lade till. Gör det motsatta mot att dela, alltså gånga.']] }); },
+    f3(){ const a=rnd(2,6), x=rnd(2,10), b=rnd(1,Math.max(1,a*x-1));
+      return xq({ prompt:`Lös ekvationen: ${a}x − ${b} = ${a*x-b}`, answer:x,
+        hints:[`Börja med att lägga till ${b} på båda sidor.`,`Då får du ${a}x = ${a*x}. Dela sedan med ${a}.`],
+        solution:`${a}x = ${a*x-b} + ${b} = ${a*x}. x = ${a*x} / ${a} = ${x}`,
+        wrongs:[[(a*x-2*b)/a,`Du drog bort ${b}. Lägg till ${b} i stället.`],[a*x,`Bra start! ${a}x = ${a*x}. Dela nu med ${a}.`]] }); },
+    u1(){ const c=rnd(1,4), a=c+rnd(1,4), x=rnd(1,9), b=rnd(1,10), d=(a-c)*x+b;
+      return xq({ prompt:`Lös ekvationen: ${a}x + ${b} = ${cx(c)} + ${d}`, answer:x,
+        hints:[`Samla x på en sida. Dra bort ${cx(c)} från båda sidor.`,`Då får du ${cx(a-c)} + ${b} = ${d}. Lös den som vanligt.`],
+        solution:`${cx(a-c)} + ${b} = ${d}. ${cx(a-c)} = ${d-b}. x = ${x}`,
+        wrongs:[[(d-b)/(a+c),`Du lade ihop x-termerna. Dra bort ${cx(c)} från båda sidor i stället.`]] }); },
+    u2(){ const a=rnd(2,5), b=rnd(1,6), x=rnd(1,9);
+      return xq({ prompt:`Lös ekvationen: ${a}(x + ${b}) = ${a*(x+b)}`, answer:x,
+        hints:[`Du kan börja med att dela båda sidor med ${a}.`,`Då får du x + ${b} = ${x+b}.`],
+        solution:`x + ${b} = ${a*(x+b)} / ${a} = ${x+b}. x = ${x}`,
+        wrongs:[[x+b,`Bra start! x + ${b} = ${x+b}. Dra nu bort ${b}.`],[(a*(x+b)-b)/a,'Talet framför parentesen gäller allt inuti, även talet efter plustecknet.']] }); },
+    u3(){ const a=pick([2,3,4]), x=rnd(3,15), b=rnd(1,10);
+      return numQ({ instr:'Skriv talet.', prompt:`Jag tänker på ett tal. Om jag gångrar det med ${a} och sedan lägger till ${b} får jag ${a*x+b}. Vilket tal tänker jag på?`, answer:x,
+        hints:['Skriv det som en ekvation. Kalla talet för x.',`${a}x + ${b} = ${a*x+b}. Lös ekvationen.`],
+        solution:`${a}x + ${b} = ${a*x+b}. ${a}x = ${a*x}. x = ${x}`,
+        wrongs:[[(a*x+b)/a,`Glöm inte att dra bort ${b} först.`],[a*x,`Bra start! ${a}x = ${a*x}. Dela nu med ${a}.`]] }); }
+  };
+}
+
 /* ---------- NYA OMRÅDEN I ÅRSKURS 8 ---------- */
 Object.assign(CONTENT, {
   '8-matte-potenser':{
