@@ -337,6 +337,53 @@ textarea:focus{border-color:var(--n-accent);outline:none}
 .plan li:first-child{border-top:0}
 .plan .day{font-weight:600;color:var(--n-accent)}
 
+/* ---------- Ny layout: ämnesrutor, områden som en stig, stjärnor ---------- */
+.subj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.subj{display:flex;flex-direction:column;align-items:flex-start;gap:6px;font:inherit;color:inherit;text-align:left;cursor:pointer;border:1px solid transparent;border-radius:var(--n-radius);padding:22px;background:var(--t-bg);transition:transform .18s ease,box-shadow .18s,border-color .15s}
+.subj:hover{border-color:var(--t-deep);transform:translateY(-3px);box-shadow:0 10px 24px -14px rgba(18,63,55,.45)}
+.subj-ic{width:58px;height:58px;border-radius:18px;background:var(--n-surface);color:var(--t-deep);display:inline-flex;align-items:center;justify-content:center;margin-bottom:6px}
+.subj-ic svg{width:30px;height:30px}
+.subj .t{font-family:var(--n-font-display);font-size:1.8rem;line-height:1.1}
+.subj .s{font-size:.92rem;color:var(--n-ink-soft)}
+.mini{display:block;height:7px;width:100%;background:var(--n-surface);border-radius:999px;overflow:hidden;margin-top:8px}
+.mini span{display:block;height:100%;background:var(--t-deep,var(--n-accent));border-radius:999px}
+.stop{flex:none;width:42px;height:42px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:600;background:var(--n-surface);border:2px solid var(--t-deep,var(--n-accent));color:var(--t-deep,var(--n-accent))}
+.stop.done{background:var(--t-deep,var(--n-accent));color:var(--n-surface)}
+.row[disabled] .stop{border-style:dashed;opacity:.6}
+.next-chip{display:inline-block;margin-left:8px;font-size:.76rem;font-weight:600;padding:2px 10px;border-radius:999px;background:var(--t-deep,var(--n-accent));color:var(--n-surface);vertical-align:middle}
+.stars{display:inline-flex;gap:2px;color:var(--t-deep,var(--n-terracotta))}
+.stars svg{width:17px;height:17px}
+.stars .off{opacity:.22}
+.step .stars{margin-top:6px}
+.big-stars{margin:6px 0 12px}
+.big-stars .stars svg{width:42px;height:42px}
+.how{margin-top:28px;padding:16px 24px}
+.how summary{cursor:pointer;font-weight:600}
+.how[open] summary{margin-bottom:12px}
+.pts{display:inline-flex;align-items:center;gap:4px;font-weight:600;color:var(--n-accent)}
+.pts svg{width:15px;height:15px}
+.listen{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:4px 0 18px;padding:14px 16px;border-radius:var(--n-radius-sm);background:var(--n-surface);border:1.5px dashed var(--n-line);max-width:520px}
+.listen svg{width:20px;height:20px}
+/* Livet i skolan som spel */
+.goal{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:20px 24px;margin:0 0 20px}
+.goal .bar{flex:1 1 180px;margin:0;background:var(--n-surface)}
+.goal .bar span{background:var(--n-terracotta)}
+.trophy{display:inline-block;width:52px;height:52px;color:var(--n-terracotta)}
+.trophy svg{width:100%;height:100%}
+.game-steps{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 4px}
+.gstep{font:inherit;font-size:.92rem;font-weight:600;display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 8px;min-height:42px;border-radius:999px;border:1.5px solid var(--n-line);background:var(--n-surface);color:var(--n-ink);cursor:pointer}
+.gstep b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--n-tint);font-size:.8rem}
+.gstep.on{border-color:var(--t-deep);color:var(--t-deep)}
+.gstep.ok b{background:var(--t-deep);color:var(--n-surface)}
+.finish{text-align:center;padding:28px 24px}
+.finish .trophy{width:84px;height:84px;margin:0 auto 6px;display:block}
+.finish .actions{justify-content:center}
+.row .txt .stars{margin-top:4px}
+.enter .subj-grid>*,.enter .game-steps{animation:rise .5s cubic-bezier(.2,.7,.3,1) both}
+.enter .subj-grid>*:nth-child(2){animation-delay:.07s}
+.enter .subj-grid>*:nth-child(3){animation-delay:.14s}
+@media (prefers-reduced-motion: reduce){ .enter .subj-grid>*,.enter .game-steps{animation:none!important} .subj:hover{transform:none} }
+
 /* ---------- Liv och rörelse (stängs av vid ”minska rörelse”) ---------- */
 .rot{display:inline-block}
 .rot em{display:inline-block;color:var(--n-terracotta);transition:opacity .6s ease,transform .6s ease}
@@ -405,7 +452,7 @@ textarea:focus{border-color:var(--n-accent);outline:none}
   <main class="main" id="app"></main>
 
   <footer class="n-footer">
-    <p>Sparas bara i den här webbläsaren: hur långt du har kommit i skolämnena. Det du skriver i skrivuppgifter och meddelanden sparas inte. När du ber om feedback skickas texten till en AI-tjänst som skriver svaret, men den sparas inte av Elevguiden.</p>
+    <p>Sparas bara i den här webbläsaren: hur långt du har kommit i skolämnena och i Livet i skolan. Det du väljer i situationerna och det du skriver i skrivuppgifter och meddelanden sparas inte. När du ber om feedback skickas texten till en AI-tjänst som skriver svaret, men den sparas inte av Elevguiden.</p>
     <p>Ett verktyg från <a href="https://norvayapp.se">Norvay</a> · <a href="https://norvayapp.se/integritet">Integritet</a> · <a href="mailto:kontakt@norvayapp.se">kontakt@norvayapp.se</a></p>
   </footer>
 </div>
@@ -445,7 +492,7 @@ const andList = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' o
 function parseNum(raw){
   const s = String(raw).toLowerCase().replace(/[−–]/g,'-')
     .replace(/kr|%|procent|poäng|grader|timmar|liter|meter|gram|°c|°|st/g,'')
-    .replace(/[\s\u00a0]/g,'').replace(/,/g,'.')
+    .replace(/[\s ]/g,'').replace(/,/g,'.')
     .replace(/(cm³|cm²|dm³|m³|m²|km|cm|dm|m|g|l|h)$/,'')
     .replace(/^[a-z]=/,'');
   const f = s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);
@@ -481,25 +528,26 @@ const FIG = {
 /* ==========================================================
    ÄMNEN OCH OMRÅDEN
    Fördelningen kan ändras här om lärarna vill flytta ett område.
-   Matten följer samma ordning i alla årskurser, som i Lgr22:
-   tal först, sedan algebra, samband, geometri och sist statistik och sannolikhet.
+   Ordningen följer Lgr22. Matte: tal först, sedan algebra, samband, geometri
+   och sist statistik och sannolikhet. Svenska: läsa, språket, skriva och tala.
+   Engelska: lyssna och läsa, ord och fraser, grammatik och sist skriva.
    ========================================================== */
 const SUBJECTS = { svenska:{name:'Svenska'}, engelska:{name:'Engelska'}, matte:{name:'Matematik'} };
 const ORDER = ['svenska','engelska','matte'];
 const AREAS = {
   7:{
-    svenska:[['lasforstaelse','Läsförståelse: berättande text'],['ordklasser','Ordklasser'],['berattande','Skriva berättande text']],
-    engelska:[['vardagsord','Vardagsord'],['verbtider','Presens och preteritum'],['korta-texter','Läsa och förstå korta texter']],
+    svenska:[['lasforstaelse','Läsförståelse: berättande text'],['ordforrad','Ordförråd: synonymer, motsatsord och uttryck'],['ordklasser','Ordklasser'],['stavning','Stavning och skiljetecken'],['berattande','Skriva berättande text']],
+    engelska:[['vardagsord','Vardagsord'],['horforstaelse','Hörförståelse: vardagsengelska'],['korta-texter','Läsa och förstå korta texter'],['verbtider','Presens och preteritum'],['fragor','Ställa frågor: do, does och frågeord']],
     matte:[['tal','Tal: decimaltal, negativa tal och räkneordning'],['brak','Bråk'],['procent','Procent'],['monster','Algebra: mönster och uttryck'],['geometri','Geometri: area och omkrets'],['medelvarde','Statistik: medelvärde, median och typvärde']]
   },
   8:{
-    svenska:[['satsdelar','Satsdelar'],['utredande','Skriva utredande text'],['kallkritik','Källkritisk läsning']],
-    engelska:[['fler-verbtider','Fler verbtider'],['faktatext','Läsa faktatext'],['beskrivande','Skriva beskrivande text']],
+    svenska:[['sammanfatta','Läsa faktatext och sammanfatta'],['kallkritik','Källkritisk läsning'],['satsdelar','Satsdelar'],['utredande','Skriva utredande text'],['presentera','Tala inför andra']],
+    engelska:[['horforstaelse','Hörförståelse: meddelanden och instruktioner'],['faktatext','Läsa faktatext'],['fraser','Vardagsfraser och artighet'],['fler-verbtider','Fler verbtider'],['beskrivande','Skriva beskrivande text']],
     matte:[['potenser','Tal: potenser och grundpotensform'],['algebra','Algebra och uttryck'],['ekvationer','Ekvationer'],['proportionalitet','Proportionalitet och skala'],['volym','Geometri: volym och vinklar'],['statistik','Statistik']]
   },
   9:{
-    svenska:[['argumenterande','Skriva argumenterande text'],['analys','Analysera skönlitteratur'],['sprakriktighet','Språkriktighet']],
-    engelska:[['argumentera','Argumentera på engelska'],['grammatik','Avancerad grammatik'],['langre-texter','Läsa längre texter']],
+    svenska:[['analys','Analysera skönlitteratur'],['skolord','Skolord: förstå vad uppgiften ber om'],['sprakriktighet','Språkriktighet'],['argumenterande','Skriva argumenterande text'],['norden','Språken i Sverige och Norden']],
+    engelska:[['horforstaelse','Hörförståelse: nyheter och intervjuer'],['langre-texter','Läsa längre texter'],['varlden','Engelska i världen'],['grammatik','Avancerad grammatik'],['argumentera','Argumentera på engelska']],
     matte:[['rotter','Tal: kvadratrötter och grundpotensform'],['forandringsfaktor','Procent och förändringsfaktor'],['funktioner','Funktioner'],['pythagoras','Geometri: Pythagoras sats och likformighet'],['sannolikhet','Sannolikhet'],['problemlosning','Problemlösning inför nationella provet']]
   }
 };
@@ -538,12 +586,15 @@ const CONTENT = {};
 <script src="matte7.js"></script>
 <script src="matte8.js"></script>
 <script src="matte9.js"></script>
+<script src="sprak7.js"></script>
+<script src="sprak8.js"></script>
+<script src="sprak9.js"></script>
 <script>
 /* ==========================================================
    FRAMSTEG (sparas bara i webbläsaren)
    ========================================================== */
 const STORE = 'elevguiden-v2';
-const freshProgress = () => ({ areas:{}, last:null, daily:null, days:[] });
+const freshProgress = () => ({ areas:{}, last:null, daily:null, days:[], life:{} });
 let progress = freshProgress();
 try { const p = JSON.parse(localStorage.getItem(STORE)); if (p && p.areas) progress = p; } catch(e) {}
 function markPracticed(){
@@ -763,6 +814,39 @@ const HELP = [
   ['BRIS','Ring 116 111 eller chatta på bris.se. För dig under 18 år. Det är gratis, och du behöver inte säga vem du är.'],
   ['Vid fara','Ring 112.']
 ];
+/* Kunskapsfrågor till spelet i Livet i skolan. Första alternativet är rätt. */
+const LIFE_QUIZ = {
+  hjalp:[
+    ['Vem är oftast din första kontakt på skolan?',['Mentorn','Skolsköterskan','Rektorn'],'Mentorn har koll på hur det går för dig i alla ämnen och kan hjälpa dig vidare.'],
+    ['Du har ofta ont i magen och sover dåligt. Vem kan hjälpa dig med det?',['Skolsköterskan','Ämnesläraren','Specialpedagogen'],'Skolsköterskan hjälper till med frågor om hälsa, sömn och kroppen.'],
+    ['Du är ledsen och orolig för något hemma. Vem kan du prata med?',['Kuratorn','Ingen, det är privat','Vaktmästaren'],'Kuratorn finns där för att lyssna, både om skolan och om annat.'],
+    ['Vad är ett bra första steg när du ber om hjälp?',['Välja ett bra tillfälle och säga kort vad det gäller','Vänta tills det blir riktigt jobbigt','Skicka ett argt meddelande'],'Ett bra tillfälle och ett kort, tydligt besked gör det lättare för den du frågar.']
+  ],
+  vanskap:[
+    ['Vad är skillnaden mellan en konflikt och mobbning?',['Mobbning är när någon gång på gång blir illa behandlad och har svårt att försvara sig','Det är samma sak','En konflikt är alltid värre'],'En konflikt är ett bråk mellan två som är ungefär lika starka. Mobbning upprepas, och den som utsätts har svårt att försvara sig.'],
+    ['Vad är ett bra sätt att börja när ni ska reda ut ett bråk?',['Vänta tills ni båda är lugna','Säga allt direkt medan du är arg','Berätta för alla andra först'],'När båda är lugna blir det lättare att lyssna på varandra.'],
+    ['Vilken mening är ett bra förlåt?',['Förlåt att jag sa så. Jag förstår att det sårade dig.','Förlåt, men det var du som började.','Förlåt om du blev ledsen.'],'Ett bra förlåt säger vad du gjorde och att du förstår att det sårade, utan ”men”.'],
+    ['Vad måste skolan göra om någon blir mobbad?',['Ta tag i det, eftersom det står i lagen','Låta eleverna lösa det själva','Ingenting, det är föräldrarnas sak'],'Enligt lagen måste skolan agera när någon blir kränkt eller mobbad.']
+  ],
+  grupptryck:[
+    ['Vad är grupptryck?',['När du känner att du måste göra som de andra fast du inte vill','När man spelar i ett lag','När man pratar högt i en grupp'],'Grupptryck är känslan av att behöva göra som andra för att inte hamna utanför.'],
+    ['Måste du förklara varför du säger nej?',['Nej, ett kort nej räcker','Ja, alltid','Bara om det är en vuxen som frågar'],'Du har rätt att säga nej utan att förklara dig.'],
+    ['Vad gör en riktig vän när du säger nej?',['Respekterar ditt nej','Blir arg och slutar prata med dig','Tjatar tills du säger ja'],'En riktig vän respekterar ditt nej.'],
+    ['Varför är det lättare att aldrig börja snusa än att sluta?',['Nikotin gör att man snabbt blir beroende','Snus är dyrt','Det är förbjudet att sluta'],'Nikotin skapar snabbt ett beroende, och det är svårt att sluta.']
+  ],
+  natet:[
+    ['Vad gör du först om någon är elak mot dig på nätet?',['Svarar inte, tar skärmdumpar och berättar för en vuxen','Svarar lika elakt tillbaka','Raderar allt direkt'],'Spara bevis, svara inte och berätta för en vuxen du litar på.'],
+    ['Får du lägga upp en bild på en kompis utan att fråga?',['Nej, fråga alltid först','Ja, om bilden är snygg','Ja, om ni är vänner'],'Alla har rätt att bestämma över bilder på sig själva.'],
+    ['Någon du bara känner från nätet vill att ni håller er kontakt hemlig. Vad betyder det?',['Det är en varningssignal, och du bör prata med en vuxen','Att personen är snäll','Ingenting särskilt'],'Den som ber dig hålla hemligheter för vuxna kan vilja dig illa. Det är aldrig ditt fel.'],
+    ['Vilket nummer ringer du för att anmäla något till polisen som inte är akut?',['114 14','112','116 111'],'114 14 är polisens nummer för sådant som inte är akut. 112 är vid fara, och 116 111 är BRIS.']
+  ],
+  studieteknik:[
+    ['Vilket är det bästa sättet att plugga?',['Testa dig själv, till exempel genom att skriva ner det du minns','Läsa samma text många gånger','Plugga hela natten före provet'],'Att testa sig själv gör att kunskapen fastnar mycket bättre än att läsa om.'],
+    ['Hur långt är ett bra fokuspass?',['20–25 minuter, sedan en kort paus','Fem timmar i sträck','Två minuter'],'Korta pass med pauser hjälper dig att hålla fokus.'],
+    ['Varför är sömn viktig före ett prov?',['Det du har lärt dig sparas medan du sover','Man blir längre','Det spelar ingen roll'],'Hjärnan sparar det du har lärt dig medan du sover.'],
+    ['Var är det bäst att ha mobilen när du pluggar?',['I ett annat rum','Bredvid dig med ljudet på','I handen'],'Avstånd till mobilen hjälper mest, eftersom bara att se den kan locka.']
+  ]
+};
 function makePlan(n){
   const days = [];
   const m = Math.max(0, n - 2), parts = Math.max(1, Math.ceil(m / 2));
@@ -779,7 +863,7 @@ function makePlan(n){
 /* ==========================================================
    TILLSTÅND OCH NAVIGERING
    ========================================================== */
-const S = { view:'home', grade:null, subject:null, area:null, level:0, R:null, showText:true, drafts:{}, theme:null, picks:{}, planDays:7, planSubject:'' };
+const S = { view:'home', grade:null, subject:null, area:null, level:0, R:null, showText:true, drafts:{}, theme:null, picks:{}, planDays:7, planSubject:'', tstep:0, tq:null, justFinished:false };
 const $app = document.getElementById('app');
 const BADGE = { svenska:'Sv', engelska:'En', matte:'Ma' };
 /* Färgtoner från Norvays palett: salvia, sand, lila, rosa och dimma */
@@ -793,12 +877,23 @@ function viewTone(){
   return '';
 }
 const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+/* Ikoner för ämnena, stjärnor och pokal */
+const ICON = {
+  svenska:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V6a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h13"/><path d="M8 8h7M8 12h5"/></svg>',
+  engelska:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+  matte:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7.5h7M8.5 12h1M14.5 12h1M8.5 16h1M14.5 16h1"/></svg>'
+};
+const STAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"/></svg>';
+const TROPHY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0Z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M8 21h8M9.5 17h5v4h-5Z"/></svg>';
+/* Stjärnor för en nivå: halva rätt ger en, klarad nivå (80 %) ger två och alla rätt ger tre */
+function starsFor(b){ if (!b || !b.total) return 0; const r = b.score / b.total; return r >= 1 ? 3 : r >= PASS ? 2 : r >= 0.5 ? 1 : 0; }
+function starRow(n){ return `<span class="stars" role="img" aria-label="${n} av 3 stjärnor">${[0,1,2].map(i => `<span class="${i < n ? '' : 'off'}">${STAR}</span>`).join('')}</span>`; }
 
 /* Webbläsarens tillbaka-knapp: varje sida i appen sparas som ett steg i webbläsarens historik.
    Bara i minnet medan sidan är öppen. Inget sparas eller skickas någonstans. */
 const HIST = [];
 let hIdx = 0;
-const snap = () => ({ view:S.view, grade:S.grade, subject:S.subject, area:S.area, level:S.level, theme:S.theme, picks:S.picks, R:S.R });
+const snap = () => ({ view:S.view, grade:S.grade, subject:S.subject, area:S.area, level:S.level, theme:S.theme, picks:S.picks, R:S.R, tstep:S.tstep, tq:S.tq });
 let enterTimer = null;
 function show(){ $app.classList.add('enter'); render(); window.scrollTo(0,0); clearTimeout(enterTimer); enterTimer = setTimeout(() => $app.classList.remove('enter'), 900); }
 function go(view, patch={}, replace=false){
@@ -902,8 +997,8 @@ function viewHome(){
     <button class="mode" data-tone="blush" data-act="life">
       <span class="mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.5" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><path d="M14.5 14.4c.6-.3 1.3-.4 2-.4 2.3 0 4 1.5 4.5 4"/></svg></span>
       <span class="mode-title">Livet i skolan</span>
-      <span class="mode-desc">Om vänskap, att be om hjälp, att säga nej, livet på nätet och hur man pluggar smart.</span>
-      <span class="mode-go">Välj tema <span aria-hidden="true">→</span></span>
+      <span class="mode-desc">Ett spel om vänskap, att be om hjälp, att säga nej, livet på nätet och hur man pluggar smart. Samla stjärnor och gå i mål.</span>
+      <span class="mode-go">Börja spela <span aria-hidden="true">→</span></span>
     </button>
   </div>
   ${cards.length ? `<div class="home-cards">${cards.join('')}</div>` : ''}
@@ -915,26 +1010,47 @@ function viewSchool(){
     <p class="n-lead">Öva svenska, engelska och matte. Vilken årskurs går du i?</p></div>
   <div class="grades">${[7,8,9].map(g => `<button class="grade" data-tone="${TONE_GRADE[g]}" data-act="grade" data-v="${g}"><span class="num">${g}</span><span class="lbl">årskurs</span></button>`).join('')}</div>`;
 }
+/* ---------- Livet i skolan som spel: fyra steg per tema ---------- */
+function lifeP(id){ if (!progress.life) progress.life = {}; return progress.life[id] || (progress.life[id] = {}); }
+/* Stjärnor för ett tema: 4 poäng i testet och 3 i situationerna. 7 ger tre stjärnor, 5–6 två och resten en. */
+function lifeStars(id){ const p = lifeP(id); if (!p.done) return 0; const pts = (p.quiz || 0) + (p.scen || 0); return pts >= 7 ? 3 : pts >= 5 ? 2 : 1; }
+function newTq(id){ return { qs: LIFE_QUIZ[id].map(([p, opts, why]) => ({ p, opts: shuffle(opts), ans: opts[0], why })), i:0, score:0, tries:0, wrong:[], done:false, finished:false, msg:null }; }
+/* Poäng i situationerna: bara elevens första val i varje situation räknas */
+function scenScore(t){ return t.scenarios.reduce((s, sc, i) => { const a = S.picks[`${t.id}-${i}`]; return s + (a && a.length && sc.c[a[0]][1] ? 1 : 0); }, 0); }
+
 function viewLife(){
+  const doneN = THEMES.filter(t => lifeP(t.id).done).length, all = doneN === THEMES.length;
+  const stars = THEMES.reduce((s, t) => s + lifeStars(t.id), 0);
   return `<div class="page-head"><h1 class="n-h n-h2">Livet i skolan</h1>
-    <p class="n-lead">Skolan handlar inte bara om ämnen. Här kan du läsa, fundera och öva på sådant som gör vardagen lättare, med vänner, vuxna och dig själv.</p></div>
-  <div class="list">${THEMES.map(t => `<button class="row" data-tone="${TONE_THEME[t.id]}" data-act="theme" data-v="${t.id}">
-      <span class="badge" aria-hidden="true">${t.badge}</span>
-      <span class="txt"><span class="t">${esc(t.title)}</span><span class="s">${esc(t.lead)}</span></span>
-      <span class="go" aria-hidden="true">›</span></button>`).join('')}</div>
-  <p class="n-small" style="margin-top:24px;max-width:62ch">Inget av det du väljer eller skriver här sparas.</p>`;
+    <p class="n-lead">Ett spel i fem teman. I varje tema lär du dig först lite, sedan testar du dig och väljer vad du skulle göra i olika situationer. Samla stjärnor och gå i mål!</p></div>
+  <div class="n-card n-card--tint goal" role="group" aria-label="Hur långt du har kommit">
+    <div><strong>${all ? 'Du har gått i mål med alla teman!' : `${doneN} av ${THEMES.length} teman i mål`}</strong><div class="n-small">${stars} av ${THEMES.length * 3} stjärnor</div></div>
+    <div class="bar" aria-hidden="true"><span style="width:${doneN / THEMES.length * 100}%"></span></div>
+    <span class="trophy" aria-hidden="true">${TROPHY}</span>
+  </div>
+  <div class="list">${THEMES.map(t => { const p = lifeP(t.id);
+    return `<button class="row" data-tone="${TONE_THEME[t.id]}" data-act="theme" data-v="${t.id}">
+      <span class="badge" aria-hidden="true">${p.done ? '✓' : t.badge}</span>
+      <span class="txt"><span class="t">${esc(t.title)}</span><span class="s">${esc(t.lead)}</span>${p.done ? starRow(lifeStars(t.id)) : ''}</span>
+      <span class="go" aria-hidden="true">›</span></button>`; }).join('')}</div>
+  <p class="n-small" style="margin-top:24px;max-width:62ch">Bara hur långt du har kommit och dina stjärnor sparas, i den här webbläsaren. Det du väljer i situationerna och det du skriver sparas aldrig.</p>`;
 }
 
+function subjProgress(g, s){
+  let done = 0, total = 0;
+  for (const [id] of AREAS[g][s]) { const k = `${g}-${s}-${id}`, c = CONTENT[k]; if (!c) continue; total += c.levels.length; done += c.levels.filter((_, i) => passed(k, i)).length; }
+  return [done, total];
+}
 function viewSubjects(){
   return `<div class="page-head"><h1 class="n-h n-h2">Årskurs ${S.grade}</h1>
     <p class="n-lead">Vilket ämne vill du öva på?</p></div>
-  <div class="list">${ORDER.map(s => {
-    const areas = AREAS[S.grade][s];
-    const ready = areas.filter(a => CONTENT[`${S.grade}-${s}-${a[0]}`]).length;
-    return `<button class="row" data-tone="${TONE_SUBJ[s]}" data-act="subject" data-v="${s}">
-      <span class="badge" aria-hidden="true">${BADGE[s]}</span>
-      <span class="txt"><span class="t">${SUBJECTS[s].name}</span><span class="s">${ready ? `${ready} av ${areas.length} områden går att öva på` : 'Områdena kommer snart'}</span></span>
-      <span class="go" aria-hidden="true">›</span></button>`;
+  <div class="subj-grid">${ORDER.map(s => {
+    const areas = AREAS[S.grade][s], ready = areas.filter(a => CONTENT[`${S.grade}-${s}-${a[0]}`]).length, [d, t] = subjProgress(S.grade, s);
+    return `<button class="subj" data-tone="${TONE_SUBJ[s]}" data-act="subject" data-v="${s}">
+      <span class="subj-ic">${ICON[s]}</span>
+      <span class="t">${SUBJECTS[s].name}</span>
+      <span class="s">${ready ? `${ready} områden · ${d} av ${t} nivåer klarade` : 'Områdena kommer snart'}</span>
+      <span class="mini" aria-hidden="true"><span style="width:${t ? d / t * 100 : 0}%"></span></span></button>`;
   }).join('')}</div>`;
 }
 
@@ -944,14 +1060,17 @@ function ring(done, total){
 }
 function viewAreas(){
   const areas = AREAS[S.grade][S.subject];
+  /* Nästa område att öva på: det första i ordningen som inte är helt klart */
+  const next = areas.find(([id]) => { const k = areaKey(S.grade, S.subject, id), c = CONTENT[k]; return c && c.levels.some((_, i) => !passed(k, i)); });
   return `<div class="page-head"><h1 class="n-h n-h2">${SUBJECTS[S.subject].name}</h1>
-    <p class="n-lead">Välj ett område att öva på.</p></div>
-  <div class="list">${areas.map(([id, title]) => {
+    <p class="n-lead">Områdena står i en ordning som är bra att öva i. Börja uppifrån, eller välj det du behöver.</p></div>
+  <div class="list">${areas.map(([id, title], n) => {
     const k = areaKey(S.grade, S.subject, id), c = CONTENT[k];
-    if (!c) return `<button class="row" disabled><span class="txt"><span class="t">${esc(title)}</span><span class="s">Kommer snart</span></span></button>`;
-    const done = c.levels.filter((_, i) => passed(k, i)).length;
-    return `<button class="row" data-act="area" data-v="${id}">${ring(done, c.levels.length)}<span class="txt"><span class="t">${esc(title)}</span>
-      <span class="s">${done ? `Du har klarat ${done} av ${c.levels.length} nivåer` : `${c.levels.length} nivåer, från lätt till svår`}</span></span><span class="go" aria-hidden="true">›</span></button>`;
+    if (!c) return `<button class="row" disabled><span class="stop" aria-hidden="true">${n + 1}</span><span class="txt"><span class="t">${esc(title)}</span><span class="s">Kommer snart</span></span></button>`;
+    const done = c.levels.filter((_, i) => passed(k, i)).length, all = done === c.levels.length;
+    return `<button class="row" data-act="area" data-v="${id}"><span class="stop ${all ? 'done' : ''}" aria-hidden="true">${all ? '✓' : n + 1}</span>
+      <span class="txt"><span class="t">${esc(title)}${next && next[0] === id ? '<span class="next-chip">Nästa</span>' : ''}</span>
+      <span class="s">${done ? `Du har klarat ${done} av ${c.levels.length} nivåer` : `${c.levels.length} nivåer, från lätt till svår`}</span></span>${ring(done, c.levels.length)}</button>`;
   }).join('')}</div>`;
 }
 
@@ -973,18 +1092,20 @@ function viewArea(){
     }
     const status = passed(k, i) ? `Klarad, ${b.score} av ${b.total}` : (b ? `Bästa: ${b.score} av ${b.total}` : (i === firstOpen ? 'Börja här' : 'Öppen'));
     return `<button class="step ${passed(k, i) ? 'done' : ''}" style="--i:${i}" data-act="start" data-v="${i}">
-      <span class="name">${lv.name}</span><span class="d">${esc(lv.desc)}</span><span class="n-chip st">${status}</span></button>`;
+      <span class="name">${lv.name}</span><span class="d">${esc(lv.desc)}</span>${b ? starRow(starsFor(b)) : ''}<span class="n-chip st">${status}</span></button>`;
   }).join('');
-  return `<div class="page-head"><h1 class="n-h n-h2">${esc(areaTitle())}</h1></div>
-  <section class="n-card intro"><div class="story-head"><h2 class="n-h n-h3">Så fungerar det</h2>${speakBtn('intro')}</div>${c.intro.map(p => `<p>${esc(p)}</p>`).join('')}
-    <div class="example"><strong>${esc(c.example.title)}</strong><ol>${c.example.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol></div>
-  </section>
-  ${c.text ? `<div style="margin-top:16px">${storyBlock(c.text)}</div>` : ''}
+  /* Nivåerna kommer först, så att eleven kan börja direkt. Förklaringen finns i en ruta som går att fälla ut. */
+  return `<div class="page-head"><h1 class="n-h n-h2">${esc(areaTitle())}</h1>
+    <p class="n-lead" style="margin:0">Välj en nivå och sätt igång. Du får ledtrådar om du fastnar.</p></div>
+  <div class="stairs">${steps}</div>
+  <p class="n-small" style="margin:12px 0 0">Du klarar en nivå med minst 80 % rätt på första försöket. Alla rätt ger tre stjärnor.</p>
   ${!tried ? `<div class="n-card n-card--tint diag-card"><p><strong>Osäker på var du ska börja?</strong> Gör ett kort test med ${c.levels.length * 2} frågor, så föreslår vi en nivå.</p>
     <button class="n-btn n-btn--ghost" data-act="diag">Gör testet</button></div>` : ''}
-  <h2 class="n-h n-h3 section-title">Välj nivå</h2>
-  <p class="n-small" style="margin:0">Du klarar en nivå när du har minst 80 % rätt på första försöket.</p>
-  <div class="stairs">${steps}</div>`;
+  <details class="n-card intro how"><summary>Så fungerar det, med ett exempel</summary>
+    <div class="story-head"><span></span>${speakBtn('intro')}</div>${c.intro.map(p => `<p>${esc(p)}</p>`).join('')}
+    <div class="example"><strong>${esc(c.example.title)}</strong><ol>${c.example.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol></div>
+  </details>
+  ${c.text ? `<p class="n-small" style="margin:12px 0 0">Texten ”${esc(c.text.title)}” visas när du börjar öva.</p>` : ''}`;
 }
 
 function viewQuiz(){
@@ -1011,13 +1132,18 @@ function viewQuiz(){
   } else {
     actions.push(`<button class="n-btn" data-act="next" id="nextBtn">${R.i < n - 1 ? 'Nästa fråga' : 'Se resultatet'}</button>`);
   }
-  return `<div class="qhead"><span>${head}</span><span>Fråga ${R.i + 1} av ${n}</span></div>
+  const pts = diag ? '' : ` · <span class="pts" aria-label="${R.score} poäng">${STAR}${R.score}</span>`;
+  const listen = q.audio ? `<div class="listen">${canSpeak
+      ? `<button class="n-btn" data-act="speak" data-src="audio">${SPEAKER}<span>Lyssna</span></button><span class="n-small">Lyssna så många gånger du vill.</span>`
+      : `<p style="margin:0" lang="en">${esc(q.audio)}</p>`}</div>` : '';
+  return `<div class="qhead"><span>${head}${pts}</span><span>Fråga ${R.i + 1} av ${n}</span></div>
     <div class="bar" aria-hidden="true"><span style="width:${(R.i / n) * 100}%"></span></div>
     ${q.text ? storyBlock(q.text) : ''}
     ${q.meta ? `<p class="meta">${esc(q.meta)}</p>` : ''}
     <div class="q-anim q-panel" data-q="${R.i}">
     <p class="instr">${esc(q.instr)}</p>
-    <div class="prompt-row"><p class="prompt" ${q.lang === 'en' ? 'lang="en"' : ''}>${esc(q.prompt)}</p>${speakBtn('prompt')}</div>
+    ${listen}
+    <div class="prompt-row"><p class="prompt" ${q.lang === 'en' ? 'lang="en"' : ''}>${esc(q.prompt)}</p>${speakBtn('prompt', q.audio ? 'Frågan' : 'Lyssna')}</div>
     ${q.figure ? `<div class="figure">${q.figure}</div>` : ''}
     ${answer}
     <div class="actions">${actions.join('')}</div>
@@ -1066,6 +1192,7 @@ function viewResult(){
   actions.push(`<button class="textlink" data-act="toArea">Tillbaka till nivåerna</button>`);
   return `<div class="page-head"><span class="n-chip">${lv.name}</span>
     <p class="score"><span class="big">${R.score}</span><span class="n-lead" style="margin:0">av ${n} rätt på första försöket</span></p>
+    <div class="big-stars">${starRow(starsFor({score:R.score, total:n}))}</div>
     <p style="max-width:56ch;margin:0">${ok
       ? (next ? 'Bra jobbat! Du har klarat nivån och kan gå vidare.' : 'Bra jobbat! Du har klarat den svåraste nivån i det här området.')
       : `För att klara nivån behöver du ${need} rätt. Titta på frågorna nedanför och öva igen. Varje försök gör dig säkrare.`}</p>
@@ -1103,9 +1230,11 @@ function viewProgress(){
     }).join('');
     rows.push(`<div class="prog-row"><div><strong>${esc(title)}</strong><div class="n-small">Åk ${g}, ${SUBJECTS[s].name}</div></div><div class="chips">${chips}</div></div>`);
   }
+  const life = THEMES.map(t => lifeP(t.id).done ? `<span class="n-chip">${esc(t.title)}: ${lifeStars(t.id)} av 3 stjärnor</span>` : `<span class="chip-off">${esc(t.title)}</span>`).join('');
   return `<div class="page-head"><h1 class="n-h n-h2">Mina framsteg</h1>
     <p class="n-lead">Det här syns bara i den här webbläsaren.</p></div>
     <section class="n-card">${rows.join('')}</section>
+    <section class="n-card" style="margin-top:14px"><div class="prog-row"><div><strong>Livet i skolan</strong><div class="n-small">Teman i mål</div></div><div class="chips">${life}</div></div></section>
     <div class="actions"><button class="n-btn n-btn--ghost" data-act="reset">Börja om från noll</button></div>`;
 }
 
@@ -1170,17 +1299,62 @@ function exerciseBlock(t){
   }
   return '';
 }
+function lifeQuizBlock(t){
+  const Q = S.tq, n = Q.qs.length;
+  if (Q.finished) return `<section class="n-card exercise"><h2 class="n-h n-h3">Bra jobbat!</h2>
+    <p style="margin:0 0 6px">Du fick ${Q.score} av ${n} rätt på första försöket.</p>
+    <div class="actions"><button class="n-btn" data-act="tstep" data-v="2">Vidare: Vad gör du?</button><button class="textlink" data-act="tqagain">Gör testet igen</button></div></section>`;
+  const q = Q.qs[Q.i];
+  return `<section class="q-panel q-anim" data-q="${Q.i}"><div class="qhead" style="padding-top:0"><span>Testa dig · <span class="pts" aria-label="${Q.score} poäng">${STAR}${Q.score}</span></span><span>Fråga ${Q.i + 1} av ${n}</span></div>
+    <div class="bar" aria-hidden="true"><span style="width:${Q.i / n * 100}%"></span></div>
+    <div class="prompt-row"><p class="prompt">${esc(q.p)}</p>${speakBtn('tq')}</div>
+    <div class="opts" role="group" aria-label="Svarsalternativ">${q.opts.map((o, idx) => {
+      let cls = '', dis = '';
+      if (Q.done && o === q.ans) cls = 'right';
+      else if (Q.wrong.includes(idx)) { cls = 'wrong'; dis = 'disabled'; }
+      if (Q.done) dis = 'disabled';
+      return `<button class="opt ${cls}" data-act="tqpick" data-v="${idx}" ${dis}>${esc(o)}</button>`; }).join('')}</div>
+    ${Q.msg ? `<div class="msg ${Q.msg.type}" role="status">${esc(Q.msg.text)}</div>` : ''}
+    ${Q.done ? `<div class="actions"><button class="n-btn" data-act="tqnext" id="nextBtn">${Q.i < n - 1 ? 'Nästa fråga' : 'Se resultatet'}</button></div>` : ''}</section>`;
+}
+function finishBlock(t){
+  const p = lifeP(t.id);
+  if (!p.done) return `<section class="n-card"><p style="margin:0">Gör testet och situationerna först, så går du i mål.</p>
+    <div class="actions"><button class="n-btn" data-act="tstep" data-v="${p.quiz == null ? 1 : 2}">Fortsätt spelet</button></div></section>`;
+  const st = lifeStars(t.id);
+  return `<section class="n-card n-card--tint finish"><span class="trophy" aria-hidden="true">${TROPHY}</span>
+    <h2 class="n-h n-h2" style="margin-bottom:4px">Du gick i mål!</h2>
+    <div class="big-stars">${starRow(st)}</div>
+    <p style="margin:0 auto;max-width:48ch">Du fick ${p.quiz || 0} av ${LIFE_QUIZ[t.id].length} rätt i testet och ${p.scen || 0} av ${t.scenarios.length} bra val i situationerna.${st < 3 ? ' Spela temat igen om du vill samla alla tre stjärnorna.' : ' Alla tre stjärnorna. Snyggt!'}</p>
+    <div class="actions"><button class="n-btn" data-act="life">Till nästa tema</button><button class="textlink" data-act="treplay">Spela temat igen</button></div></section>
+  <h2 class="n-h n-h3 section-title">Sista uppdraget</h2>`;
+}
 function viewTheme(){
-  const t = themeObj();
+  const t = themeObj(), p = lifeP(t.id), st = S.tstep || 0;
+  if (!S.tq || !S.tq.qs || S.tq.qs.length !== LIFE_QUIZ[t.id].length) S.tq = newTq(t.id);
+  const names = ['Lär dig','Testa dig','Vad gör du?','Mål'];
+  const ok = [!!p.learn, p.quiz != null, p.scen != null, !!p.done];
+  const tabs = `<div class="game-steps" role="group" aria-label="Stegen i temat">${names.map((nm, i) =>
+    `<button class="gstep ${i === st ? 'on' : ''} ${ok[i] ? 'ok' : ''}" data-act="tstep" data-v="${i}" ${i === st ? 'aria-current="step"' : ''}><b>${ok[i] ? '✓' : i + 1}</b>${nm}</button>`).join('')}</div>`;
+  let body = '';
+  if (st === 0) body = `<h2 class="n-h n-h3 section-title">Bra att veta</h2>
+    <div class="facts">${t.facts.map(factBlock).join('')}</div>
+    <div class="actions"><button class="n-btn" data-act="tstep" data-v="1">Jag har läst. Testa mig!</button></div>`;
+  else if (st === 1) body = `<div style="margin-top:24px">${lifeQuizBlock(t)}</div>`;
+  else if (st === 2) {
+    const all = t.scenarios.every((_, i) => (S.picks[`${t.id}-${i}`] || []).length);
+    body = `<h2 class="n-h n-h3 section-title">Vad gör du?</h2>
+    <p class="n-small" style="margin:0 0 12px;max-width:62ch">Ditt första val i varje situation ger poäng. Sedan kan du titta på de andra valen också. <span class="pts">${STAR}${scenScore(t)} av ${t.scenarios.length}</span></p>
+    <div class="scens">${t.scenarios.map((_, i) => scenBlock(t, i)).join('')}</div>
+    ${all ? '<div class="actions"><button class="n-btn" data-act="tfinish">Gå i mål</button></div>' : '<p class="n-small" style="margin:14px 0 0">Välj i alla situationer, så kan du gå i mål.</p>'}`;
+  }
+  else body = finishBlock(t) + `<div style="margin-top:16px">${exerciseBlock(t)}</div>`;
   return `<div class="page-head theme-hero"><span class="theme-badge" aria-hidden="true">${t.badge}</span><h1 class="n-h n-h2">${esc(t.title)}</h1>
     <div class="story-head"><p class="n-lead">${esc(t.lead)}</p>${speakBtn('lead')}</div>
     <a class="textlink" href="#hjalp" data-act="tohelp" style="padding:0">Behöver du prata med någon?</a></div>
-  <h2 class="n-h n-h3 section-title">Bra att veta</h2>
-  <div class="facts">${t.facts.map(factBlock).join('')}</div>
-  <h2 class="n-h n-h3 section-title">Vad gör du?</h2>
-  <div class="scens">${t.scenarios.map((_, i) => scenBlock(t, i)).join('')}</div>
-  <div style="margin-top:40px">${exerciseBlock(t)}</div>
-  <div style="margin-top:24px">${helpBox(t)}</div>`;
+  ${tabs}
+  ${body}
+  <div style="margin-top:32px">${helpBox(t)}</div>`;
 }
 
 function render(){
@@ -1201,6 +1375,8 @@ function render(){
     const b = $app.querySelector('.score .big'); if (b) setTimeout(() => confetti(b, 70), 250);
   }
   if (S.view === 'result') countUp($app.querySelector('.score .big'));
+  if (S.view === 'theme' && S.justFinished) { S.justFinished = false; const tr = $app.querySelector('.finish .trophy'); if (tr) setTimeout(() => confetti(tr, 70), 250); }
+  if (S.view === 'theme' && S.tq && S.tstep === 1) { const nb = document.getElementById('nextBtn'); if (nb) nb.focus({preventScroll:true}); }
 }
 
 /* ---------- Liv i appen: konfetti, uppräkning och ord som byts ---------- */
@@ -1411,6 +1587,8 @@ function speakSrc(src){
     if (src === 'lead') return [`${t.title}. ${t.lead}`, 'sv'];
     if (src.startsWith('scen-')) { const sc = t.scenarios[+src.slice(5)]; return [`${sc.s} Vad gör du? ${sc.c.map((c, i) => `Val ${i + 1}: ${c[0]}`).join(' ')}`, 'sv']; }
   }
+  if (src === 'tq' && S.tq) return [S.tq.qs[S.tq.i].p, 'sv'];
+  if (src === 'audio') return [S.R.qs[S.R.i].audio, 'en'];
   if (src === 'prompt') { const q = S.R.qs[S.R.i]; return q.lang === 'en' ? [q.prompt.replace(/___/g, ' … '), 'en'] : [`${q.instr} ${q.prompt}`, 'sv']; }
   const c = content() || {};
   if (src === 'story') { const t = (S.R && S.view === 'quiz' && S.R.qs[S.R.i].text) || c.text; return [`${t.title}. ${t.paras.join(' ')}`, t.lang === 'en' ? 'en' : 'sv']; }
@@ -1451,7 +1629,21 @@ $app.addEventListener('click', e => {
     case 'next': next(); break;
     case 'write': go('write'); break;
     case 'feedback': askFeedback(); break;
-    case 'theme': go('theme', {theme:v, picks:{}}); break;
+    case 'theme': go('theme', {theme:v, picks:{}, tstep:0, tq:newTq(v)}); break;
+    /* Spelet i Livet i skolan */
+    case 'tstep': { if (+v >= 1) { lifeP(S.theme).learn = true; saveProgress(); } go('theme', {tstep:+v}, true); break; }
+    case 'tqpick': { const Q = S.tq, q = Q.qs[Q.i], idx = +v;
+      if (q.opts[idx] === q.ans) { if (Q.tries === 0) Q.score++; Q.done = true; Q.msg = {type:'ok', text:`${Q.tries === 0 ? 'Rätt!' : 'Rätt! Bra att du inte gav upp.'} ${q.why}`}; }
+      else { Q.tries++; Q.wrong.push(idx); Q.msg = {type:'bad', text:'Inte riktigt. Försök igen.'}; }
+      render(); if (Q.done) { const m = $app.querySelector('.msg.ok'); if (m) confetti(m, 16); } break; }
+    case 'tqnext': { const Q = S.tq;
+      if (Q.i < Q.qs.length - 1) Object.assign(Q, { i:Q.i + 1, tries:0, wrong:[], done:false, msg:null });
+      else { Q.finished = true; const p = lifeP(S.theme); p.quiz = Math.max(p.quiz || 0, Q.score); markPracticed(); saveProgress(); }
+      render(); break; }
+    case 'tqagain': S.tq = newTq(S.theme); render(); break;
+    case 'tfinish': { const t = themeObj(), p = lifeP(t.id); p.scen = Math.max(p.scen || 0, scenScore(t)); p.done = true; markPracticed(); saveProgress();
+      S.justFinished = true; go('theme', {tstep:3}, true); break; }
+    case 'treplay': go('theme', {theme:S.theme, picks:{}, tstep:0, tq:newTq(S.theme)}, true); break;
     case 'school': go('school', {grade:null, subject:null, area:null}); break;
     case 'life': go('life'); break;
     case 'choose': { const [si, ci] = v.split('-').map(Number); const key = `${S.theme}-${si}`; const arr = S.picks[key] || (S.picks[key] = []); if (!arr.includes(ci)) arr.push(ci); render(); const el = $app.querySelector(`[data-v="${v}"]`); if (el) el.focus({preventScroll:true}); break; }
