@@ -24,13 +24,23 @@ function tillatnaAdresser() {
 }
 
 // Enkel spärr mot missbruk: högst 20 anrop per 10 minuter per besökare.
+// IP-adressen görs om till en oigenkännlig kod (HMAC med en slumpad nyckel som bara finns i minnet),
+// så att adressen aldrig sparas. Poster äldre än 10 minuter tas bort vid varje anrop.
 // Räknaren finns bara i minnet och nollställs när servern startar om.
+const crypto = require('crypto');
+const NYCKEL = crypto.randomBytes(32);
+const FONSTER = 10 * 60 * 1000;
 const hits = new Map();
 function limited(ip) {
-  const now = Date.now(), win = 10 * 60 * 1000;
-  const list = (hits.get(ip) || []).filter(t => now - t < win);
+  const now = Date.now();
+  for (const [k, tider] of hits) {
+    const kvar = tider.filter(t => now - t < FONSTER);
+    if (kvar.length) hits.set(k, kvar); else hits.delete(k);
+  }
+  const kod = crypto.createHmac('sha256', NYCKEL).update(ip).digest('hex');
+  const list = hits.get(kod) || [];
   list.push(now);
-  hits.set(ip, list);
+  hits.set(kod, list);
   return list.length > 20;
 }
 
@@ -110,7 +120,9 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({ model: MODEL, max_tokens: 400, stream: true, system, messages: [{ role: 'user', content: user }] })
     });
     if (!r.ok || !r.body) {
-      console.error('Anthropic svarade', r.status, await r.text());
+      // Logga bara statuskod och feltyp, aldrig felmeddelandets text
+      const fel = await r.json().catch(() => null);
+      console.error('Anthropic svarade', r.status, (fel && fel.error && fel.error.type) || 'okänd feltyp');
       res.status(502).json({ error: 'AI-tjänsten svarade inte' });
       return;
     }
@@ -137,7 +149,8 @@ module.exports = async function handler(req, res) {
     }
     res.end();
   } catch (e) {
-    console.error(e);
+    // Bara feltypen, aldrig hela felobjektet
+    console.error('Serverfel:', (e && e.name) || 'okänt fel');
     if (!res.headersSent) res.status(500).json({ error: 'Något gick fel' });
     else res.end();
   }
