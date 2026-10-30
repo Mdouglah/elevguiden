@@ -398,6 +398,7 @@ textarea:focus{border-color:var(--n-accent);outline:none}
 .enter .modes>*:nth-child(3),.enter .home-cards>*:nth-child(3),.enter .grades>*:nth-child(3),.enter .list>*:nth-child(3),.enter .stairs>*:nth-child(3),.enter .facts>*:nth-child(3),.enter .scens>*:nth-child(3){animation-delay:.14s}
 .enter .list>*:nth-child(4),.enter .facts>*:nth-child(4){animation-delay:.21s}
 .enter .list>*:nth-child(5){animation-delay:.28s}
+.enter .list>*:nth-child(6){animation-delay:.35s}
 .mode,.grade,.row,.step,.home-card{transition:transform .18s ease,background .15s,border-color .15s,box-shadow .18s}
 .mode:hover,.grade:hover,.row:hover:not([disabled]),.step:not(.locked):hover,.home-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px -14px rgba(18,63,55,.45)}
 .mode-icon{transition:transform .3s ease}
@@ -492,7 +493,7 @@ const andList = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' o
 function parseNum(raw){
   const s = String(raw).toLowerCase().replace(/[−–]/g,'-')
     .replace(/kr|%|procent|poäng|grader|timmar|liter|meter|gram|°c|°|st/g,'')
-    .replace(/[\s ]/g,'').replace(/,/g,'.')
+    .replace(/[\s ]/g,'').replace(/,/g,'.')
     .replace(/(cm³|cm²|dm³|m³|m²|km|cm|dm|m|g|l|h)$/,'')
     .replace(/^[a-z]=/,'');
   const f = s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);
@@ -531,6 +532,8 @@ const FIG = {
    Ordningen följer Lgr22. Matte: tal först, sedan algebra, samband, geometri
    och sist statistik och sannolikhet. Svenska: läsa, språket, skriva och tala.
    Engelska: lyssna och läsa, ord och fraser, grammatik och sist skriva.
+   I åk 8 ligger ”Vad är din skoltimme värd?” sist i matten, som en
+   avslutning där flera räknesätt används i ett vardagsproblem.
    ========================================================== */
 const SUBJECTS = { svenska:{name:'Svenska'}, engelska:{name:'Engelska'}, matte:{name:'Matematik'} };
 const ORDER = ['svenska','engelska','matte'];
@@ -543,7 +546,7 @@ const AREAS = {
   8:{
     svenska:[['sammanfatta','Läsa faktatext och sammanfatta'],['kallkritik','Källkritisk läsning'],['satsdelar','Satsdelar'],['utredande','Skriva utredande text'],['presentera','Tala inför andra']],
     engelska:[['horforstaelse','Hörförståelse: meddelanden och instruktioner'],['faktatext','Läsa faktatext'],['fraser','Vardagsfraser och artighet'],['fler-verbtider','Fler verbtider'],['beskrivande','Skriva beskrivande text']],
-    matte:[['potenser','Tal: potenser och grundpotensform'],['algebra','Algebra och uttryck'],['ekvationer','Ekvationer'],['proportionalitet','Proportionalitet och skala'],['volym','Geometri: volym och vinklar'],['statistik','Statistik']]
+    matte:[['potenser','Tal: potenser och grundpotensform'],['algebra','Algebra och uttryck'],['ekvationer','Ekvationer'],['proportionalitet','Proportionalitet och skala'],['volym','Geometri: volym och vinklar'],['statistik','Statistik'],['skoltimme','Vad är din skoltimme värd?']]
   },
   9:{
     svenska:[['analys','Analysera skönlitteratur'],['skolord','Skolord: förstå vad uppgiften ber om'],['sprakriktighet','Språkriktighet'],['argumenterande','Skriva argumenterande text'],['norden','Språken i Sverige och Norden']],
@@ -807,6 +810,31 @@ const THEMES = [
         ['Jag förklarar för någon hemma vad texten handlar om.', true, 'Bra! Kan du förklara något för någon annan, har du förstått det.']]}
     ],
     exercise:{type:'plan', title:'Gör en pluggplan'}
+  },
+  {
+    id:'vagafel', title:'Våga göra fel', badge:'Vå',
+    lead:'Ingen lär sig något nytt utan att göra fel på vägen. Ett fel svar betyder inte att du är dålig. Det visar vad du kan titta närmare på.',
+    facts:[
+      {h:'Fel svar är information', p:'När du ser var det blev fel och rättar det, lär du dig ofta mer än om du hade gissat rätt direkt. Felet visar precis vilket steg du behöver öva på. Därför är det värt att titta på dina fel i stället för att gömma dem.'},
+      {h:'Varje försök räknas', p:'Även de bästa jägarna i naturen misslyckas för det mesta. Ett lejon som jagar ensamt lyckas ungefär en gång på fem eller sex försök. En isbjörn som jagar säl lyckas ungefär en gång på tio. Vargar som jagar älg kan behöva femton försök eller fler. De slutar inte för att det blev fel, och det behöver inte du heller göra.'},
+      {h:'När det känns tungt', steps:['Dela upp uppgiften i små steg och börja med det första.','Gör ett försök, även om du är osäker. Ett fel svar är bättre än inget svar.','Titta på var det blev fel. Vilket steg var det?','Försök igen, gärna på ett nytt sätt.']},
+      {h:'Fastna? Fråga!', p:'Att be om hjälp är inte att ge upp. Det är ett sätt att fortsätta. Fråga en lärare, en kompis eller någon hemma, och visa hur du har tänkt, även om det blev fel. Då blir det lättare för den andra att hjälpa dig.'}
+    ],
+    scenarios:[
+      {s:'Du får tillbaka ett matteprov och ser att du har fått fel på flera uppgifter.', c:[
+        ['Jag tittar på uppgifterna och försöker se var det blev fel.', true, 'Precis så. Felen visar vad du behöver öva på, och nästa gång har du redan lärt dig något nytt.'],
+        ['Jag stoppar ner provet i väskan och tittar aldrig på det igen.', false, 'Det är lätt att vilja glömma det som gick dåligt, men då försvinner chansen att lära sig av det.'],
+        ['Jag ber läraren förklara en av uppgifterna jag fick fel på.', true, 'Bra. Läraren kan visa var det blev fel, och då är det lättare att göra rätt nästa gång.']]},
+      {s:'På engelskan ska alla läsa en mening högt. Du är rädd att uttala något fel och att någon ska skratta.', c:[
+        ['Jag läser ändå. Om något blir fel rättar jag mig och fortsätter.', true, 'Modigt. Alla som lär sig ett nytt språk säger fel ibland, och det är så man blir bättre.'],
+        ['Jag säger att jag har ont i halsen.', false, 'Det kan kännas skönt i stunden, men rädslan brukar växa när man undviker det. Varje gång du vågar blir det lite lättare.'],
+        ['Jag säger till läraren efteråt att jag tycker det är jobbigt att läsa högt.', true, 'Bra att säga till. Läraren kan hjälpa dig att öva, till exempel i en mindre grupp först.']]},
+      {s:'Du har försökt lösa samma uppgift fyra gånger, och det blir fel varje gång.', c:[
+        ['Jag ger upp. Jag är bara dålig på det här.', false, 'Det är lätt att tänka så när det känns tungt. Men fyra försök betyder att du kämpar, inte att du är dålig. Ett lejon behöver ofta fler försök än så.'],
+        ['Jag ber en lärare eller kompis om hjälp och visar hur jag har tänkt.', true, 'Precis. När du visar hur du har tänkt kan den andra se var det blev fel och hjälpa dig vidare.'],
+        ['Jag tar en kort paus, läser en ledtråd eller ett exempel och försöker igen.', true, 'Bra. Ibland behöver hjärnan en paus, och en ledtråd kan visa vägen.']]}
+    ],
+    exercise:{type:'reflect', title:'Fundera på', questions:['Tänk på något du kan i dag som du inte kunde förut, till exempel att cykla, simma eller ett spel. Hur många försök tror du att det tog?','Vad brukar du säga till dig själv när något blir fel? Vad skulle du säga till en kompis i samma läge?','Vem kan du fråga när du har fastnat på något?']}
   }
 ];
 const HELP = [
@@ -845,6 +873,12 @@ const LIFE_QUIZ = {
     ['Hur långt är ett bra fokuspass?',['20–25 minuter, sedan en kort paus','Fem timmar i sträck','Två minuter'],'Korta pass med pauser hjälper dig att hålla fokus.'],
     ['Varför är sömn viktig före ett prov?',['Det du har lärt dig sparas medan du sover','Man blir längre','Det spelar ingen roll'],'Hjärnan sparar det du har lärt dig medan du sover.'],
     ['Var är det bäst att ha mobilen när du pluggar?',['I ett annat rum','Bredvid dig med ljudet på','I handen'],'Avstånd till mobilen hjälper mest, eftersom bara att se den kan locka.']
+  ],
+  vagafel:[
+    ['Vad kan ett fel svar visa dig?',['Vad du behöver titta närmare på','Att du är dålig på ämnet','Att du ska sluta försöka'],'Ett fel svar visar vilket steg du behöver öva på. Det säger ingenting om hur smart du är.'],
+    ['Ungefär hur ofta lyckas ett lejon som jagar ensamt?',['En gång på fem eller sex försök','Varje gång','En gång på hundra försök'],'Även ett lejon misslyckas för det mesta. Det fortsätter ändå att försöka.'],
+    ['Du har fastnat på en uppgift länge. Vad är ett bra nästa steg?',['Be en lärare eller kompis om hjälp och visa hur du har tänkt','Låtsas att uppgiften inte finns','Skriva vilket svar som helst'],'Att be om hjälp är ett sätt att fortsätta, inte att ge upp.'],
+    ['Vad är ett bra sätt att ta sig an en svår uppgift?',['Dela upp den i små steg','Göra allt på en gång','Vänta tills den känns lätt'],'Små steg gör en svår uppgift lättare att börja med, och lättare att se var det blir fel.']
   ]
 };
 function makePlan(n){
@@ -869,7 +903,7 @@ const BADGE = { svenska:'Sv', engelska:'En', matte:'Ma' };
 /* Färgtoner från Norvays palett: salvia, sand, lila, rosa och dimma */
 const TONE_SUBJ = { svenska:'sand', engelska:'lila', matte:'sage' };
 const TONE_GRADE = { 7:'sage', 8:'sand', 9:'lila' };
-const TONE_THEME = { hjalp:'sage', vanskap:'blush', grupptryck:'lila', natet:'dimma', studieteknik:'sand' };
+const TONE_THEME = { hjalp:'sage', vanskap:'blush', grupptryck:'lila', natet:'dimma', studieteknik:'sand', vagafel:'sage' };
 function viewTone(){
   if (S.view === 'theme') return TONE_THEME[S.theme];
   if (S.view === 'quiz' || S.view === 'result') { if (S.R && S.R.mode === 'daily') return 'sage'; }
@@ -931,6 +965,8 @@ function dailyPool(){
   for (const k in progress.areas) { const c = CONTENT[k]; if (c) c.levels.forEach((_, i) => { if (passed(k, i)) pool.push([k, i]); }); }
   return pool;
 }
+/* Matteövningar: ledande frågor vid fel svar och räknade försök */
+const isMathQ = q => !!q && q.subj === 'matte';
 
 /* ==========================================================
    VYER
@@ -997,7 +1033,7 @@ function viewHome(){
     <button class="mode" data-tone="blush" data-act="life">
       <span class="mode-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.5" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><path d="M14.5 14.4c.6-.3 1.3-.4 2-.4 2.3 0 4 1.5 4.5 4"/></svg></span>
       <span class="mode-title">Livet i skolan</span>
-      <span class="mode-desc">Ett spel om vänskap, att be om hjälp, att säga nej, livet på nätet och hur man pluggar smart. Samla stjärnor och gå i mål.</span>
+      <span class="mode-desc">Ett spel om vänskap, att be om hjälp, att säga nej, livet på nätet, hur man pluggar smart och att våga göra fel. Samla stjärnor och gå i mål.</span>
       <span class="mode-go">Börja spela <span aria-hidden="true">→</span></span>
     </button>
   </div>
@@ -1022,7 +1058,7 @@ function viewLife(){
   const doneN = THEMES.filter(t => lifeP(t.id).done).length, all = doneN === THEMES.length;
   const stars = THEMES.reduce((s, t) => s + lifeStars(t.id), 0);
   return `<div class="page-head"><h1 class="n-h n-h2">Livet i skolan</h1>
-    <p class="n-lead">Ett spel i fem teman. I varje tema lär du dig först lite, sedan testar du dig och väljer vad du skulle göra i olika situationer. Samla stjärnor och gå i mål!</p></div>
+    <p class="n-lead">Ett spel i sex teman. I varje tema lär du dig först lite, sedan testar du dig och väljer vad du skulle göra i olika situationer. Samla stjärnor och gå i mål!</p></div>
   <div class="n-card n-card--tint goal" role="group" aria-label="Hur långt du har kommit">
     <div><strong>${all ? 'Du har gått i mål med alla teman!' : `${doneN} av ${THEMES.length} teman i mål`}</strong><div class="n-small">${stars} av ${THEMES.length * 3} stjärnor</div></div>
     <div class="bar" aria-hidden="true"><span style="width:${doneN / THEMES.length * 100}%"></span></div>
@@ -1133,10 +1169,12 @@ function viewQuiz(){
     actions.push(`<button class="n-btn" data-act="next" id="nextBtn">${R.i < n - 1 ? 'Nästa fråga' : 'Se resultatet'}</button>`);
   }
   const pts = diag ? '' : ` · <span class="pts" aria-label="${R.score} poäng">${STAR}${R.score}</span>`;
+  /* I matten syns vilket försök eleven är på, så att varje försök räknas */
+  const tryInfo = !diag && isMathQ(q) && R.tries && !R.done ? ` · Försök ${R.tries + 1}` : '';
   const listen = q.audio ? `<div class="listen">${canSpeak
       ? `<button class="n-btn" data-act="speak" data-src="audio">${SPEAKER}<span>Lyssna</span></button><span class="n-small">Lyssna så många gånger du vill.</span>`
       : `<p style="margin:0" lang="en">${esc(q.audio)}</p>`}</div>` : '';
-  return `<div class="qhead"><span>${head}${pts}</span><span>Fråga ${R.i + 1} av ${n}</span></div>
+  return `<div class="qhead"><span>${head}${pts}${tryInfo}</span><span>Fråga ${R.i + 1} av ${n}</span></div>
     <div class="bar" aria-hidden="true"><span style="width:${(R.i / n) * 100}%"></span></div>
     ${q.text ? storyBlock(q.text) : ''}
     ${q.meta ? `<p class="meta">${esc(q.meta)}</p>` : ''}
@@ -1160,6 +1198,12 @@ function reviewBlock(){
     ${missed.map(x => `<div class="review-item"><p class="p" ${x.q.lang === 'en' ? 'lang="en"' : ''}>${esc(x.q.prompt)}</p><p class="n-small" style="margin:4px 0 0">Lösning: ${esc(x.q.solution)}</p></div>`).join('')}
   </details>`;
 }
+/* Beröm för frågor där eleven inte gav upp och fick rätt efter flera försök (matte) */
+function persistLine(){
+  const n = (S.R && S.R.persist) || 0;
+  if (!n) return '';
+  return `<p style="max-width:56ch;margin:12px 0 0">På ${n === 1 ? '1 fråga' : `${n} frågor`} gav du inte upp och kom fram till rätt svar efter flera försök. Det är så man lär sig.</p>`;
+}
 
 function viewResult(){
   const R = S.R, n = R.qs.length;
@@ -1167,6 +1211,7 @@ function viewResult(){
     return `<div class="page-head"><span class="n-chip">Dagens fem</span>
       <p class="score"><span class="big">${R.score}</span><span class="n-lead" style="margin:0">av ${n} rätt på första försöket</span></p>
       <p style="max-width:56ch;margin:0">Bra jobbat! Att repetera lite varje dag gör att kunskaperna sitter kvar längre.</p>
+      ${persistLine()}
       <div class="actions"><button class="n-btn" data-act="daily">Fem frågor till</button><button class="textlink" data-act="home">Till startsidan</button></div>
       ${reviewBlock()}</div>`;
   }
@@ -1196,6 +1241,7 @@ function viewResult(){
     <p style="max-width:56ch;margin:0">${ok
       ? (next ? 'Bra jobbat! Du har klarat nivån och kan gå vidare.' : 'Bra jobbat! Du har klarat den svåraste nivån i det här området.')
       : `För att klara nivån behöver du ${need} rätt. Titta på frågorna nedanför och öva igen. Varje försök gör dig säkrare.`}</p>
+    ${persistLine()}
     <div class="actions">${actions.join('')}</div>
     ${reviewBlock()}</div>`;
 }
@@ -1434,14 +1480,14 @@ function setFeedback(text){
    ÖVNINGSLOGIK
    ========================================================== */
 function newRound(qs, mode){
-  return { qs, mode, i:0, score:0, tries:0, hints:0, revealed:false, done:false, picked:null, wrong:[], input:'', feedback:null, firstOk:false, log:[], lvl:[0,0,0], streak:0, fx:null };
+  return { qs, mode, i:0, score:0, tries:0, hints:0, revealed:false, done:false, picked:null, wrong:[], input:'', feedback:null, firstOk:false, log:[], lvl:[0,0,0], streak:0, fx:null, persist:0 };
 }
 /* När en ny runda startas från en resultatsida ersätts den i historiken, så att tillbaka går till nivåerna */
 const inRound = () => ['quiz','result'].includes(S.view);
 function startLevel(i){
   const c = content(), rep = inRound();
   S.level = i;
-  const qs = c.levels[i].make(); qs.forEach(q => { q.text = q.text || c.text; });
+  const qs = c.levels[i].make(); qs.forEach(q => { q.text = q.text || c.text; q.subj = S.subject; });
   S.R = newRound(qs, 'level');
   go('quiz', {}, rep);
 }
@@ -1458,7 +1504,7 @@ function startDaily(){
     const [k, i] = pick(pool); const c = CONTENT[k];
     const q = pick(c.levels[i].make());
     if (seen.has(q.prompt)) continue;
-    seen.add(q.prompt); q.meta = labelFor(k); q.text = c.text; qs.push(q);
+    seen.add(q.prompt); q.meta = labelFor(k); q.text = c.text; q.subj = k.split('-')[1]; qs.push(q);
   }
   S.R = newRound(qs, 'daily');
   go('quiz', {}, rep);
@@ -1510,18 +1556,36 @@ function check(){
     return render();
   }
 
+  const math = isMathQ(q);
   if (ok) {
-    if (R.tries === 0) { R.score++; R.firstOk = true; R.streak++; } else R.streak = 0;
+    if (R.tries === 0) { R.score++; R.firstOk = true; R.streak++; }
+    else { R.streak = 0; if (math) R.persist = (R.persist || 0) + 1; }
     const streakMsg = R.streak >= 3 ? ` ${R.streak} rätt i rad!` : '';
-    R.feedback = {type:'ok', text: R.tries === 0 ? pick(['Rätt på första försöket!','Rätt! Snyggt tänkt.','Precis rätt!','Snyggt!','Där satt den!']) + streakMsg : 'Rätt! Bra att du inte gav upp.'};
+    let text;
+    if (R.tries === 0) text = pick(['Rätt på första försöket!','Rätt! Snyggt tänkt.','Precis rätt!','Snyggt!','Där satt den!']) + streakMsg;
+    else if (math) {
+      const n = R.tries + 1;
+      text = `Rätt på försök ${n}! Bra att du inte gav upp.` + (n <= 4 ? ' Ett lejon som jagar ensamt behöver ofta fler försök än så.' : ' Varje fel på vägen hjälpte dig hit.');
+    }
+    else text = 'Rätt! Bra att du inte gav upp.';
+    R.feedback = {type:'ok', text};
     R.done = true;
-    R.fx = R.tries === 0 ? (R.streak >= 3 ? 'big' : 'small') : null;
+    R.fx = R.tries === 0 ? (R.streak >= 3 ? 'big' : 'small') : (math ? 'small' : null);
   } else {
     R.tries++; R.streak = 0; R.fx = 'shake';
     if (q.kind === 'choice') { R.shakeIdx = R.picked; R.wrong.push(R.picked); R.picked = null; }
     const why = explain(q, raw);
-    const tail = R.hints < q.hints.length ? 'Försök igen, eller ta en ledtråd.' : 'Försök igen, eller titta på lösningen.';
-    R.feedback = {type:'bad', text: why ? `${why} ${tail}` : `Inte riktigt. ${tail}`};
+    if (math) {
+      /* Matte: nästa ledtråd visas direkt som en ledande fråga */
+      const more = R.hints < q.hints.length;
+      if (more) R.hints++;
+      const lead = R.tries === 1 ? 'Inte riktigt, men ett fel svar visar vad du kan titta närmare på.' : `Försök ${R.tries} blev inte heller rätt. Det gör inget, du lär dig av varje försök.`;
+      const tail = more ? 'Läs ledtråden nedanför och försök igen.' : 'Försök igen, eller titta på lösningen.';
+      R.feedback = {type:'bad', text: why ? `${why} ${tail}` : `${lead} ${tail}`};
+    } else {
+      const tail = R.hints < q.hints.length ? 'Försök igen, eller ta en ledtråd.' : 'Försök igen, eller titta på lösningen.';
+      R.feedback = {type:'bad', text: why ? `${why} ${tail}` : `Inte riktigt. ${tail}`};
+    }
   }
   render();
 }
