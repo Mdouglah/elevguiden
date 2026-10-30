@@ -132,6 +132,67 @@ const ST = {
     return choiceQ({ instr:'Välj det svar som stämmer bäst.', prompt:p, options:o, answer:o[0], hints:h, solution:s, diagnose: () => h[1] }); }
 };
 
+/* ---------- MATEMATIK: VAD ÄR DIN SKOLTIMME VÄRD? ----------
+   Alla löner och timmar är antaganden i uppgiften, inte uppgifter
+   om riktiga yrken. Så slipper siffrorna bli inaktuella. */
+const SKT_LON = () => rnd(25, 45) * 1000;
+const SKT_CONC = [
+  ['Leo har räknat ut att hans skoltimme är värd 900 kr. Saga har fått 1 300 kr. Vad stämmer bäst?',['Siffran visar bara pengar. Skolan ger också kunskap, fler val och chansen till ett jobb man trivs med','Leos skoltid är mindre värd än Sagas','Leo borde byta drömyrke'],
+    ['Är pengar det enda som en utbildning ger?','Tänk på vad du kan välja och göra i livet tack vare skolan.'],'Uträkningen visar bara pengar. Skolan ger också kunskap, valmöjligheter och chansen att få ett jobb man trivs med.'],
+  ['Varför är det rättvisare att jämföra med lönen man hade fått utan utbildningen?',['Då räknar man bara det extra som utbildningen ger','Då blir svaret alltid större','Då behöver man inte räkna med skatt'],
+    ['Skulle man tjäna pengar även utan utbildningen?','Det är skillnaden mellan lönerna som utbildningen ger, inte hela lönen.'],'Man hade tjänat en del även utan utbildningen. Det är skillnaden mellan lönerna som utbildningen ger.'],
+  ['Vilken uppgift behöver du INTE för att räkna ut vad en skoltimme är värd?',['Hur långt det är till skolan','Månadslönen','Antalet skoltimmar'],
+    ['Vilka tal ingår i uträkningen?','Du behöver lön, antal år i arbete och antal skoltimmar.'],'Avståndet till skolan påverkar inte uträkningen.'],
+  ['Varför är nettolönen ett bättre mått än bruttolönen när du räknar på vad du faktiskt får?',['Nettolönen är det du får efter skatt','Nettolönen är alltid högre','Bruttolönen finns inte i Sverige'],
+    ['Vad är skillnaden mellan brutto och netto?','Brutto är lönen före skatt och netto är lönen efter skatt.'],'Nettolönen är det som faktiskt kommer in på kontot efter skatt.']
+];
+const SKT = {
+  g1(){ const d=pick([175,178,180]), h=pick([5,6,7]);
+    return numQ({ instr:'Skriv svaret som ett tal.', prompt:`Ett läsår har ${d} skoldagar. Varje dag har du ungefär ${h} timmar i skolan. Hur många timmar är det på ett läsår?`, answer:d*h,
+    hints:['Varje skoldag ger lika många timmar. Vilket räknesätt passar då?',`Räkna ${d} · ${h}.`],
+    solution:`${d} · ${h} = ${numSp(d*h)} timmar`,
+    wrongs:[[d+h,'Du lade ihop. Varje dag har flera timmar, så du ska gånga.']] }); },
+  g2(){ const y=pick([12,13,15,16,17]), H=pick([900,1000,1100,1200]);
+    return numQ({ instr:'Skriv svaret som ett tal.', prompt:`Anta att du går i skolan i ${y} år, till exempel grundskola, gymnasium och kanske högskola. Varje år har ungefär ${numSp(H)} skoltimmar. Hur många skoltimmar blir det totalt?`, answer:y*H,
+    hints:['Varje år ger lika många timmar. Vilket räknesätt passar då?',`Räkna ${y} · ${numSp(H)}.`],
+    solution:`${y} · ${numSp(H)} = ${numSp(y*H)} timmar`,
+    wrongs:[[y+H,'Du lade ihop. Varje år har lika många timmar, så du ska gånga.']] }); },
+  g3(){ const m=SKT_LON();
+    return numQ({ instr:'Skriv svaret i kronor, bara talet.', prompt:`Anta att du får ett jobb med månadslönen ${numSp(m)} kr. Hur mycket tjänar du på ett år?`, answer:m*12,
+    hints:['Hur många månader har ett år?','Ett år har tolv månader. Räkna månadslönen gånger 12.'],
+    solution:`${numSp(m)} · 12 = ${numSp(m*12)} kr`,
+    wrongs:[[m+12,'Du lade ihop. Lönen kommer varje månad, så du ska gånga med 12.']] }); },
+
+  f1(){ const m=SKT_LON(), w=pick([35,40,42,45]);
+    return numQ({ instr:'Skriv svaret i kronor, bara talet.', prompt:`Anta att du tjänar ${numSp(m)} kr i månaden och jobbar i ${w} år. Hur mycket tjänar du sammanlagt under arbetslivet?`, answer:m*12*w,
+    hints:['Börja med årslönen. Hur mycket tjänar du på ett år?',`Årslönen är ${numSp(m)} · 12 = ${numSp(m*12)} kr. Gånga sedan med ${w}.`],
+    solution:`${numSp(m)} · 12 = ${numSp(m*12)} kr per år. ${numSp(m*12)} · ${w} = ${numSp(m*12*w)} kr`,
+    wrongs:[[m*w,'Du räknade med månadslönen. Gör först om den till årslön genom att gånga med 12.']] }); },
+  f2(){ const v=pick([600,700,750,800,900,1000,1200]), y=pick([12,13,15,16]), hpy=pick([1000,1100,1200]), hrs=y*hpy, T=v*hrs;
+    return numQ({ instr:'Skriv svaret i kronor, bara talet.', prompt:`En person tjänar sammanlagt ${numSp(T)} kr under sitt arbetsliv och har gått i skolan i ${numSp(hrs)} timmar. Hur mycket är varje skoltimme värd?`, answer:v,
+    hints:['Pengarna ska fördelas lika på alla skoltimmar. Vilket räknesätt passar då?',`Räkna ${numSp(T)} / ${numSp(hrs)}.`],
+    solution:`${numSp(T)} / ${numSp(hrs)} = ${numSp(v)} kr per skoltimme`,
+    wrongs:[[T-hrs,'Du drog bort. Pengarna ska delas lika på alla timmar, så du ska dela.']] }); },
+  f3(){ const m=SKT_LON(), w=pick([35,40,45]), y=pick([12,13,15,16]), hpy=pick([1000,1100,1200]), hrs=y*hpy, tot=m*12*w;
+    return numQ({ instr:'Skriv svaret i kronor. Avrunda till hela kronor.', prompt:`Anta att du tjänar ${numSp(m)} kr i månaden i ${w} år. Du har gått i skolan i ${y} år med ${numSp(hpy)} timmar per år. Hur mycket är din skoltimme värd?`, answer:Math.round(tot/hrs),
+    hints:['Räkna först ut hela lönen under arbetslivet: månadslön · 12 · antal år.',`Lönen blir ${numSp(tot)} kr och skoltimmarna ${y} · ${numSp(hpy)} = ${numSp(hrs)}. Dela lönen med timmarna.`],
+    solution:`${numSp(m)} · 12 · ${w} = ${numSp(tot)} kr. ${y} · ${numSp(hpy)} = ${numSp(hrs)} timmar. ${numSp(tot)} / ${numSp(hrs)} ≈ ${numSp(Math.round(tot/hrs))} kr`,
+    wrongs:[[Math.round(m*w/hrs),'Du glömde att gånga månadslönen med 12.'],[Math.round(m*12/hrs),'Du räknade bara med ett års lön. Gånga också med antalet år i arbete.']] }); },
+
+  u1(){ const m0=rnd(22,26)*1000, m1=m0+rnd(5,15)*1000, w=40, ey=pick([3,4,5,6]), hpy=pick([1000,1100,1200]), eh=ey*hpy, d=m1-m0, ans=Math.round(d*12*w/eh);
+    return numQ({ instr:'Skriv svaret i kronor. Avrunda till hela kronor.', prompt:`Anta att du tjänar ${numSp(m1)} kr i månaden med din utbildning och ${numSp(m0)} kr utan den. Skillnaden får du under ${w} år. Utbildningen tar ${numSp(eh)} skoltimmar. Hur mycket är varje extra skoltimme värd?`, answer:ans,
+    hints:['Det är bara skillnaden i lön som utbildningen ger. Hur stor är den varje månad?',`Skillnaden är ${numSp(d)} kr i månaden. Räkna ${numSp(d)} · 12 · ${w} och dela med ${numSp(eh)}.`],
+    solution:`${numSp(m1)} − ${numSp(m0)} = ${numSp(d)} kr. ${numSp(d)} · 12 · ${w} = ${numSp(d*12*w)} kr. ${numSp(d*12*w)} / ${numSp(eh)} ≈ ${numSp(ans)} kr`,
+    wrongs:[[Math.round(m1*12*w/eh),'Du räknade med hela lönen. Räkna bara med skillnaden mellan lönerna.'],[Math.round(d*w/eh),'Du glömde att gånga skillnaden med 12 månader.']] }); },
+  u2(){ const m=SKT_LON(), t=pick([28,30,32]), net=m*(100-t)/100;
+    return numQ({ instr:'Skriv svaret i kronor, bara talet.', prompt:`Anta att din lön före skatt är ${numSp(m)} kr i månaden och att skatten är ${t} %. Hur mycket får du ut efter skatt?`, answer:net,
+    hints:['Skatten är en del av lönen som dras bort. Hur mycket är den i kronor?',`${t} % av ${numSp(m)} är ${numSp(m*t/100)} kr. Dra bort det från lönen.`],
+    solution:`${t} % av ${numSp(m)} = ${numSp(m*t/100)} kr. ${numSp(m)} − ${numSp(m*t/100)} = ${numSp(net)} kr`,
+    wrongs:[[m*t/100,'Det där är skatten. Dra bort den från lönen.'],[m-t,`Procent är hundradelar. Räkna först ut hur mycket ${t} % är i kronor.`]] }); },
+  u3(){ const [p,o,h,s]=pick(SKT_CONC);
+    return choiceQ({ instr:'Välj det svar som stämmer bäst.', prompt:p, options:o, answer:o[0], hints:h, solution:s, diagnose: () => h[1] }); }
+};
+
 /* ---------- ENGELSKA: FLER VERBTIDER ---------- */
 const EN8_GRUND = [
   ['Look! It ___ outside.','is snowing','snows','snowed','Look!','cont'],
@@ -387,6 +448,24 @@ Object.assign(CONTENT, {
       {name:'Grund', desc:'Medelvärde, median och typvärde', make:()=>mix([ST.g1,ST.g2,ST.g3],8)},
       {name:'Fördjupning', desc:'Variationsbredd, jämnt antal och tabeller', make:()=>mix([ST.f1,ST.f2,ST.f3],8)},
       {name:'Utmaning', desc:'Saknade värden, procent och att välja rätt mått', make:()=>mix([ST.u1,ST.u2,ST.u3],8)}
+    ]
+  },
+  '8-matte-skoltimme':{
+    intro:[
+      'Vad är en timme i skolan värd för dig? Det går faktiskt att räkna på. Du jämför vad du kan tjäna under ett helt arbetsliv med hur många timmar du har gått i skolan.',
+      'Först räknar du ut lönen under hela arbetslivet: månadslön · 12 månader · antal år i arbete. Sedan räknar du ut antalet skoltimmar: antal år i skolan · antal timmar per år. Till sist delar du lönen med skoltimmarna.',
+      'Siffran visar bara pengar. En utbildning ger också kunskap, fler val och chansen att få ett jobb du trivs med. Det är också värt något, även om det inte går att räkna i kronor.'
+    ],
+    example:{title:'Exempel: Månadslön 30 000 kr i 40 år, 15 år i skolan', steps:['Lön under arbetslivet: 30 000 · 12 · 40 = 14 400 000 kr.','Skoltimmar: 15 år · 1 000 timmar = 15 000 timmar.','Dela: 14 400 000 / 15 000 = 960.','Svar: varje skoltimme är värd ungefär 960 kr.']},
+    levels:[
+      {name:'Grund', desc:'Timmar på ett läsår, skoltimmar totalt och årslön', make:()=>mix([SKT.g1,SKT.g2,SKT.g3],8)},
+      {name:'Fördjupning', desc:'Lön under arbetslivet och värdet av en skoltimme', make:()=>mix([SKT.f1,SKT.f2,SKT.f3],8)},
+      {name:'Utmaning', desc:'Extra lön, skatt och att motivera ditt svar, plus en skrivuppgift', make:()=>mix([SKT.u1,SKT.u2,SKT.u3],8),
+        writing:{
+          task:'Räkna ut vad din egen skoltimme kan vara värd. Välj ett yrke du är intresserad av, ta reda på ungefär vad det ger i lön och visa din uträkning steg för steg. Skriv sedan 3–5 meningar där du motiverar: Är en skoltimme värd mer än pengarna? Varför?',
+          check:['Har du skrivit vilket yrke och vilken månadslön du räknar med?','Visar du uträkningen steg för steg: lön under arbetslivet, antal skoltimmar och division?','Har du räknat med antal år i arbete och antal skoltimmar?','Motiverar du ditt svar med minst ett skäl som inte handlar om pengar?'],
+          focus:'Det här är en matteuppgift med motivering. Fokusera på om eleven visar en tydlig uträkning (månadslön · 12 · antal år i arbete, delat med antal skoltimmar) och om räkningen stämmer, och på hur väl eleven motiverar sitt svar. Värdera aldrig elevens yrkesval eller lönenivå. Ge ett konkret exempel ur elevens text på något som fungerar och något som kan bli tydligare.'
+        }}
     ]
   },
   '8-engelska-fler-verbtider':{
